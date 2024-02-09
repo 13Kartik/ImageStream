@@ -1,0 +1,76 @@
+<div class="login-container bg-primary">
+
+    <form class="card text-secondary p-3" [formGroup]="loginForm">
+
+        <div class="text-center mb-3">
+            <img src="../../../assets/images/logo.PNG">
+        </div>
+
+        <div class="text-center mb-3">
+            <h2 class="text-primary">Welcome</h2>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input type="email" class="form-control" id="emailInput" placeholder="name@example.com" formControlName="email">
+            <label for="emailInput" class="form-label">
+                <fa-icon [icon]="mailIcon" class="text-primary me-1"></fa-icon>
+                Email address
+            </label>
+
+            <!-- validation -->
+            <div *ngIf="email?.touched"
+              class="text-danger ms-2">
+              @if(email?.errors?.['pattern']){
+                Enter valid mail.
+              }
+              @else if (email?.errors?.['required']) {
+                Email is required.
+              }
+            </div>
+
+        </div>
+
+        <div class="password-container">
+            <div class="form-floating">
+                <input [type]="passwordType" class="form-control" id="passwordInput" placeholder="Password" formControlName="password">
+                <label for="passwordInput" class="form-label">
+                    <fa-icon [icon]="passwordIcon" class="text-primary me-1"></fa-icon>
+                    Password          
+                </label>
+            </div>
+            
+            <div>
+                <div>
+                    <fa-icon [icon]="eyeIcon" class="btn text-primary" (click)="togglePassword()"></fa-icon>  
+                </div>
+            </div> 
+        </div>
+
+        <!-- validation -->
+        <div *ngIf="password?.touched"
+            class="text-danger ms-2">
+            @if(password?.errors?.['required']){
+                Password is required.
+            }
+        </div>
+
+        <div class="mt-3 mb-3 form-check row d-flex">
+            <div class="col-6">
+                <input type="checkbox" class="form-check-input me-1" id="RememberInput" formControlName="remember">
+                <label class="form-check-label" for="RememberInput">Remember me</label>
+            </div>
+            <div class="text-end col-6">
+                <a class="me-3" href="./forgotPassword" style="text-decoration: none;">Forgot Password</a>
+            </div>
+        </div>
+
+        <div class="text-center mb-3">
+            <button type="submit" class="btn btn-primary ">Login <fa-icon [icon]="loginIcon" class="ms-1"></fa-icon> </button>
+        </div>
+        <div class="text-center fs-6 mb-3">
+            not a member? <a href="./signUp" class="dotted text-secondary">Sign up now</a>
+        </div>
+    </form>
+</div>
+
+

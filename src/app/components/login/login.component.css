@@ -1,0 +1,38 @@
+.login-container{
+    height: 100vh;
+    width: 100vw;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+form{
+    width: 500px;
+}
+
+#RememberInput{
+    border-color: rgb(108,117,125,0.6);
+}
+
+a.dotted{
+    text-decoration:underline dotted;
+}
+
+.password-container{
+    width: 100%;
+    display: flex;
+}
+
+.password-container div:first-child{
+    width: 90%;
+}
+.password-container div:nth-child(2){
+    width: 10%;
+    display: flex;
+    align-items: center;
+}
+
+fa-icon{
+    border: 0px;
+}

@@ -1,0 +1,62 @@
+
+<div class="container">
+    <div class="logo-section">
+    <a href="javascript:;">
+        <img src="../../../assets/images/logo.PNG" alt="Logo" class="img-fluid">
+    </a>
+    </div>
+    <h2 class="text-center heading text-primary">Sign Up</h2>
+    <form class="row mx-auto" [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+        <div class="col-md-6 mb-3">
+            <div class="form-floating">
+                <input type="text" class="form-control" id="firstName" placeholder="First Name" formControlName="firstName" >
+                <label for="firstName" class="form-label text-secondary">First Name</label>
+                <div *ngIf="firstNameValidation?.invalid && (firstNameValidation?.dirty || firstNameValidation?.touched)" class="dangerColor">
+                    <div *ngIf="firstNameValidation?.errors?.['required']">Last Name is required.</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <div class="form-floating">
+                <input type="text" class="form-control" id="lastName" placeholder="Last Name" formControlName="lastName">
+                <label for="lastName" class="form-label text-secondary">Last Name</label>
+                <div *ngIf="lastNameValidation?.invalid && (lastNameValidation?.dirty || lastNameValidation?.touched)" class="dangerColor">
+                    <div *ngIf="lastNameValidation?.errors?.['required']">Last Name is required.</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 mb-3">
+            <div class="form-floating">
+                <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com" formControlName="email">
+                <label for="exampleFormControlInput1" class="form-label text-secondary">Email address</label>
+                <div *ngIf="emailValidation?.invalid && (emailValidation?.dirty || emailValidation?.touched)" class="dangerColor">
+                    <div *ngIf="emailValidation?.errors?.['required']">Email is required.</div>
+                    <div *ngIf="emailValidation?.errors?.['pattern']">Inccorect email formate</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 mb-3">
+            <div class="form-floating">
+                <input type="password" class="form-control" id="password" placeholder="Password" formControlName="password">
+                <label for="password" class="form-label text-secondary">Password</label>
+                <div *ngIf="passwordValidation?.invalid && (passwordValidation?.dirty || passwordValidation?.touched)" class="dangerColor">
+                    <div *ngIf="passwordValidation?.errors?.['required']">Password is required.</div>
+                    <div *ngIf="passwordValidation?.errors?.['minlength']">Password must be at least 8 characters long.</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 mb-3">
+            <div class="form-floating">
+                <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm Password" formControlName="confirmPassword">
+                <label for="confirmPassword" class="form-label text-secondary">Confirm Password</label>
+                <div *ngIf="confirmPasswordValidation?.invalid && (confirmPasswordValidation?.dirty || confirmPasswordValidation?.touched)" class="dangerColor">
+                    <div *ngIf="confirmPasswordValidation?.errors?.['required']">Confirm Password is required.</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 text-center">
+            <button type="submit" class="btn btn-primary">SignUp</button>
+        </div>
+        <p class="text-center col-md-12 login-tag"><a href="">Already member? Login</a></p>
+    </form>
+</div>

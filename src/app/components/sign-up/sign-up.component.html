@@ -1,62 +1,170 @@
+<div class="login-container bg-primary main-bg">
+    <form class="card text-secondary p-3" [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+        <div class="text-center mb-3">
+            <a href="javascript:;">
+                <img src="../../../assets/images/logo.PNG" alt="Logo" class="img-fluid">
+            </a>
+        </div>
+        <div class="text-center mb-3">
+            <h2 class="text-primary">Sign Up</h2>
+        </div>
 
-<div class="container">
-    <div class="logo-section">
-    <a href="javascript:;">
-        <img src="../../../assets/images/logo.PNG" alt="Logo" class="img-fluid">
-    </a>
-    </div>
-    <h2 class="text-center heading text-primary">Sign Up</h2>
-    <form class="row mx-auto" [formGroup]="signupForm" (ngSubmit)="onSubmit()">
-        <div class="col-md-6 mb-3">
+        <!-- seprate div for first and last name start -->
+        <div class="row">
+            <!-- first name input field end -->
+            <div class="col mb-3">
+                <div class="form-floating">
+                    <input type="text" class="form-control" id="firstName" placeholder="First Name"
+                        formControlName="firstName">
+                    <label for="firstName">First Name</label>
+                </div>
+                
+                <!-- first name validation start -->
+                <div class="form-text text-danger">
+                    @if(firstNameValidation?.errors?.['required'] && firstNameValidation?.touched){
+                        <div>First name is required.</div>
+                    }
+                    @else if(firstNameValidation?.errors?.['pattern']){
+                        <div >Only characters are allowed!</div>
+                        }
+                        @else if(firstNameValidation?.errors?.['minlength'])
+                        {
+                            <div>Atleast 3 character's required!
+                            </div>
+                        }
+                </div>
+                <!-- first name validation end -->
+            </div>
+            <!-- first name input field end -->
+            
+            <!-- last name input field -->
+            <div class="col mb-3">
+                <div class="form-floating">
+                    <input type="text" class="form-control" id="lastName" placeholder="Last Name"
+                    formControlName="lastName">
+                    <label for="lastName">Last Name</label>
+                </div>
+                
+                
+                <!-- last name validation start -->
+                <div class="form-text text-danger">
+                    @if(lastNameValidation?.errors?.['required'] &&  lastNameValidation?.touched){
+                        <div>Last name is required.</div>
+                    }
+                    @else if(lastNameValidation?.errors?.['pattern']){
+                        <div >Only characters are allowed!</div>
+                    }
+                    @else if(lastNameValidation?.errors?.['minlength'])
+                    {
+                        <div>Atleast 3 character's required!
+                        </div>
+                    }
+                </div>
+                <!-- last name validation end -->
+            </div>
+            <!-- last name input field end -->
+        </div>
+        <!-- seprate div for first and last name end -->
+        
+
+        <!-- user email start -->
+        <div class="mb-3">
             <div class="form-floating">
-                <input type="text" class="form-control" id="firstName" placeholder="First Name" formControlName="firstName" >
-                <label for="firstName" class="form-label text-secondary">First Name</label>
-                <div *ngIf="firstNameValidation?.invalid && (firstNameValidation?.dirty || firstNameValidation?.touched)" class="dangerColor">
-                    <div *ngIf="firstNameValidation?.errors?.['required']">Last Name is required.</div>
+                <!-- <div class="input-group-text">
+                </div> -->
+                <input type="email" class="form-control" id="email"
+                placeholder="name@example.com" formControlName="email">
+                <label for="email">
+                    <fa-icon [icon]="mailIcon" class="text-primary me-1"></fa-icon> 
+                    Email
+                </label>
+            </div>
+
+            <!-- email validation start -->
+            <div class="form-text text-danger">
+                @if(emailValidation?.errors?.['required'] && emailValidation?.touched)
+                {
+                    <div>Email is required.</div>
+                }
+                @else if(emailValidation?.errors?.['pattern']){
+                    <div>Incorrect email formate</div>
+                }
+            </div>
+            <!-- email validation end -->
+        </div>
+        <!-- user email end -->
+
+        <!-- user password start-->
+        <div class="mb-3">
+            <div class="password-container">
+                <div class="form-floating">
+                    <input type={{passwordType}} class="form-control" id="password" placeholder="Password"
+                    formControlName="password" #password>
+                    <label for="password">
+                        <fa-icon [icon]="passwordIcon" class="text-primary me-1"></fa-icon>
+                        Password
+                    </label>
+                </div>
+                <div>
+                    <fa-icon [icon]="eyeIconPassword" class="btn-sm text-primary" (click)="togglePassword(password.type)"></fa-icon>  
                 </div>
             </div>
+
+            <!-- password validation strat -->
+            <div class="form-text text-danger">
+                @if(passwordValidation?.errors?.['required'] && passwordValidation?.touched)
+                {
+                    <div>Password is required.</div>
+                }
+                @else if(passwordValidation?.errors?.['minlength'])
+                {
+                    <div>Password must be at least 8 characters long.</div>
+                }
+            </div>
+            <!-- password validation strat -->
         </div>
-        <div class="col-md-6 mb-3">
-            <div class="form-floating">
-                <input type="text" class="form-control" id="lastName" placeholder="Last Name" formControlName="lastName">
-                <label for="lastName" class="form-label text-secondary">Last Name</label>
-                <div *ngIf="lastNameValidation?.invalid && (lastNameValidation?.dirty || lastNameValidation?.touched)" class="dangerColor">
-                    <div *ngIf="lastNameValidation?.errors?.['required']">Last Name is required.</div>
+        <!-- user password end -->
+
+        <!-- confirm password start -->
+        <div class="mb-3">
+            <div class="password-container">
+                <div class="form-floating">
+                    <input type={{confirmPasswordType}} class="form-control" id="confirmPassword" placeholder="Confirm Password"
+                    formControlName="confirmPassword" #confirmPassword>
+                    <label for="confirmPassword">
+                        <fa-icon [icon]="passwordIcon" class="text-primary me-1"></fa-icon>
+                        Confirm Password
+                    </label>
+                    
+                </div>
+                <div>
+                    <fa-icon [icon]="eyeIconConfirmPassword" class="btn-sm text-primary" (click)="toggleConfirmPassword(confirmPassword.type)"></fa-icon> 
                 </div>
             </div>
-        </div>
-        <div class="col-md-12 mb-3">
-            <div class="form-floating">
-                <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com" formControlName="email">
-                <label for="exampleFormControlInput1" class="form-label text-secondary">Email address</label>
-                <div *ngIf="emailValidation?.invalid && (emailValidation?.dirty || emailValidation?.touched)" class="dangerColor">
-                    <div *ngIf="emailValidation?.errors?.['required']">Email is required.</div>
-                    <div *ngIf="emailValidation?.errors?.['pattern']">Inccorect email formate</div>
-                </div>
+    
+            <!-- confirm validation -->
+            <!-- NOTE: here passwordMismatchError is added to the signupForm and not to the confirmPasswordValidation -->
+            <div class="form-text text-danger">
+                @if (confirmPasswordValidation?.errors?.['required'] && confirmPasswordValidation?.touched) {
+                    <div>Password is required.</div>
+                }
+                @else if(signupForm.errors?.['passwordMismatchError'] && confirmPasswordValidation?.dirty)
+                {
+                    <div>Password and Confirm Password do not match.</div>
+                }
             </div>
+            <!-- confirm validation end -->
         </div>
-        <div class="col-md-12 mb-3">
-            <div class="form-floating">
-                <input type="password" class="form-control" id="password" placeholder="Password" formControlName="password">
-                <label for="password" class="form-label text-secondary">Password</label>
-                <div *ngIf="passwordValidation?.invalid && (passwordValidation?.dirty || passwordValidation?.touched)" class="dangerColor">
-                    <div *ngIf="passwordValidation?.errors?.['required']">Password is required.</div>
-                    <div *ngIf="passwordValidation?.errors?.['minlength']">Password must be at least 8 characters long.</div>
-                </div>
-            </div>
+        <!-- confirm password end -->
+
+        <!-- Submit button strat -->
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary mb-3" [disabled]="signupForm.invalid">
+                <fa-icon [icon]="loginIcon"></fa-icon> SignUp
+            </button>
+            <div class="text-center col-12 login-tag" style="margin-bottom: 2%;">
+                Already member? <a class="text-secondary dotted" href="">Login</a></div>
         </div>
-        <div class="col-md-12 mb-3">
-            <div class="form-floating">
-                <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm Password" formControlName="confirmPassword">
-                <label for="confirmPassword" class="form-label text-secondary">Confirm Password</label>
-                <div *ngIf="confirmPasswordValidation?.invalid && (confirmPasswordValidation?.dirty || confirmPasswordValidation?.touched)" class="dangerColor">
-                    <div *ngIf="confirmPasswordValidation?.errors?.['required']">Confirm Password is required.</div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-12 text-center">
-            <button type="submit" class="btn btn-primary">SignUp</button>
-        </div>
-        <p class="text-center col-md-12 login-tag"><a href="">Already member? Login</a></p>
+        <!-- submit button end -->
     </form>
 </div>

@@ -1,28 +1,51 @@
-.container{
-    border: 2px solid #0d6efd;
-    border-radius: 10px;
-    padding: 15px;
-    width: 40%;
-    margin-top: 60px;
+.login-container{
+    height: 100vh;
+    width: 100vw;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
-.logo-section {
-    width: 100%;
-    margin: 28px 0;
-    text-align: center;
+form{
+    width: 500px;
 }
 
-.img-fluid {
-  height: 70px;
-}   
-
-.heading{
-    padding-bottom: 40px;
+fa-icon{
+    border: 0px;
 }
 
-.dangerColor{
-    color: red;
+/* icon style */
+fa-icon{
+    border: 0px;
 }
-.login-tag a{
-    text-decoration: none;
+
+.password-container{
+  width: 100%;
+  display: flex;
+  border: 1px solid #dee2e6;
+  border-radius: 0.375rem;
+}
+
+.password-container input{
+  border: 0px;
+}
+.password-container div:first-child{
+  width: 90%;
+}
+.password-container div:nth-child(2){
+  width: 10%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+a.dotted{
+    text-decoration:underline dotted;
+}
+
+@media only screen and (max-width: 720px) {
+  form{
+      width: 95vw;
+  }
 }

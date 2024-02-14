@@ -29,7 +29,6 @@ a.dotted{
 .password-container input{
     border: 0px;
 }
-
 .password-container div:first-child{
     width: 90%;
 }
@@ -38,7 +37,16 @@ a.dotted{
     display: flex;
     align-items: center;
 }
+.password-container div:nth-child(2):hover{
+    background-color:rgba(0, 0, 0, 0.021) ;
+}
 
 fa-icon{
     border: 0px;
 }
+
+@media only screen and (max-width: 720px) {
+    form{
+        width: 95vw;
+    }
+  }

@@ -27,7 +27,6 @@
                 Email is required.
               }
             </div>
-
         </div>
 
         <div class="password-container">
@@ -35,14 +34,11 @@
                 <input [type]="passwordType" class="form-control" id="passwordInput" placeholder="Password" formControlName="password">
                 <label for="passwordInput" class="form-label">
                     <fa-icon [icon]="passwordIcon" class="text-primary me-1"></fa-icon>
-                    Password          
+                    Password
                 </label>
             </div>
-
             <div>
-                <div>
-                    <fa-icon [icon]="eyeIcon" class="btn text-primary" (click)="togglePassword()"></fa-icon>  
-                </div>
+                <fa-icon [icon]="eyeIcon" class="btn text-primary" (click)="togglePassword()"></fa-icon>  
             </div> 
         </div>
 
@@ -65,12 +61,10 @@
         </div>
 
         <div class="text-center mb-3">
-            <button type="submit" class="btn btn-primary ">Login <fa-icon [icon]="loginIcon" class="ms-1"></fa-icon> </button>
+            <button type="submit" class="btn btn-primary">Login <fa-icon [icon]="loginIcon" class="ms-1"></fa-icon> </button>
         </div>
         <div class="text-center fs-6 mb-3">
             not a member? <a routerLink="/signup" class="dotted text-secondary">Sign up now</a>
         </div>
     </form>
 </div>
-
-

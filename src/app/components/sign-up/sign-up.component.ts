@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, HostListener, OnDestroy, OnInit, input } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit, Input } from '@angular/core';
 import { AbstractControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormGroup, FormControl } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -10,14 +10,17 @@ import { faArrowRightToBracket, faEnvelope, faKey, faEye, faEyeSlash} from '@for
 
 // importing custome validators
 import { passwordMatch } from '../../custome-validations/passwordMatch';
+import { DbServiceService } from '../../services/db-service.service';
 
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-sign-up',
   standalone: true,
-  imports: [CommonModule ,ReactiveFormsModule, FontAwesomeModule, RouterModule],
+  imports: [CommonModule ,ReactiveFormsModule, FontAwesomeModule, RouterModule,HttpClientModule],
   templateUrl: './sign-up.component.html',
-  styleUrl: './sign-up.component.css'
+  styleUrl: './sign-up.component.css',
+  providers:[DbServiceService]
 })
 export class SignUpComponent implements OnInit{
 
@@ -32,8 +35,7 @@ export class SignUpComponent implements OnInit{
   passwordType:string = 'password';
   confirmPasswordType:string = 'password';
   
-  constructor() {
-    console.log('Constructor called');
+  constructor(private db:DbServiceService) {
   }
 
   ngOnInit() {
@@ -76,7 +78,13 @@ export class SignUpComponent implements OnInit{
   // handling from submit method
   onSubmit()
   {
-    console.log(this.signupForm.value);
+    const obj = this.signupForm.value;
+    delete obj.confirmPassword;
+
+    this.db.signUp(obj).subscribe(res=>{
+      if(res.status===200) console.log(res.message);
+      else console.error(res.message); 
+    });
   }
 
   togglePassword(inputType: string){

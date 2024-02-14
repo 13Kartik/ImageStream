@@ -7,12 +7,20 @@ import { faArrowRightToBracket, faEnvelope, faLock, faEye, faEyeSlash } from '@f
 
 import { CommonModule } from '@angular/common';
 
+//api
+import { HttpClientModule } from '@angular/common/http';
+import { DbServiceService } from '../../services/db-service.service';
+
+//router
+import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FontAwesomeModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, FontAwesomeModule, ReactiveFormsModule, RouterModule, HttpClientModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  styleUrl: './login.component.css',
+  providers:[DbServiceService]
 })
 export class LoginComponent {
 
@@ -23,6 +31,8 @@ export class LoginComponent {
     password: new FormControl('',[Validators.required,Validators.minLength(8)]),
     remember: new FormControl(false),
   });
+
+  constructor(private db:DbServiceService,private router:Router){}
 
   get email(){
     return this.loginForm.get('email');
@@ -49,4 +59,18 @@ export class LoginComponent {
       this.eyeIcon = faEyeSlash;
     }
   }
+
+  onSubmit(){
+    const data = this.loginForm.value;
+    delete data.remember;
+
+    this.db.login(data).subscribe(res=>{
+      if(res.status===200){
+        console.log(res.message);
+        this.router.navigate(['/user']);
+      } 
+      else console.error(res.message);
+    });
+  }
+
 }

@@ -1,6 +1,6 @@
 <div class="login-container bg-primary">
 
-    <form class="card text-secondary p-3" [formGroup]="loginForm">
+    <form class="card text-secondary p-3" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
 
         <div class="text-center mb-3">
             <img src="../../../assets/images/logo.PNG">

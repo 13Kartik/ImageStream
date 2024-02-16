@@ -1,8 +1,38 @@
-<div>
-    <div class="options">
-        options
+<div class="row">
+    <div class="col-3">
+        <div class="card" style="width: 100%">
+            <div class="card-header text-center">
+              Options
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <label for="heightInput">Height</label>
+                    <input type="number" class="form-control" id="heightInput" [(ngModel)]="img_height">
+                </li>
+                <li class="list-group-item">
+                    <label for="widthInput">Width</label>
+                    <input type="number" class="form-control" id="widthInput" [(ngModel)]="img_width">
+                </li>
+            </ul>
+        </div>
+
+        <br>
+
+        <div class="card" style="width: 100%">
+            <div class="card-header text-center">
+              Dragables
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item text-center" draggable="true" (dragstart)="onDragStart()">
+                    Name
+                </li>
+            </ul>
+        </div>
+
     </div>
-    <div class="img-preview">
-        preview
+    <div class="col-9 img-preview">
+        <div class="img-container">
+            <img [height]="img_height" [width]="img_width" src="http://192.168.1.94:8032/api/DynamicImage" (dragover)="onDragOver($event)" (drop)="onDrop($event)">
+        </div>
     </div>
 </div>

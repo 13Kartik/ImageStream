@@ -25,6 +25,8 @@ import { Router } from '@angular/router';
 export class LoginComponent {
 
   passwordType:string = 'password';
+  
+  err_msg:string='';
 
   loginForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$')]),
@@ -60,17 +62,28 @@ export class LoginComponent {
     }
   }
 
-  onSubmit(){
+  onSubmit() {
     const data = this.loginForm.value;
     delete data.remember;
-
-    this.db.login(data).subscribe(res=>{
-      if(res.status===200){
-        console.log(res.message);
-        this.router.navigate(['/user']);
-      } 
-      else console.error(res.message);
-    });
+  
+    this.db.login(data).subscribe({
+      next:(res: any) => {
+          this.router.navigate(['/user']);
+        },
+      error:(error) => {
+          if (error.status === 401) {
+            console.log(error);
+            this.err_msg = error.error.message;
+          } else {
+            console.error(error);
+          }
+        }
+      }
+    );
   }
+  
 
+  clear_err_msg(){
+    this.err_msg='';
+  }
 }

@@ -31,7 +31,7 @@
 
         <div class="password-container">
             <div class="form-floating">
-                <input [type]="passwordType" class="form-control" id="passwordInput" placeholder="Password" formControlName="password">
+                <input [type]="passwordType" class="form-control" id="passwordInput" placeholder="Password" formControlName="password" (focus)="clear_err_msg()">
                 <label for="passwordInput" class="form-label">
                     <fa-icon [icon]="passwordIcon" class="text-primary me-1"></fa-icon>
                     Password
@@ -45,7 +45,10 @@
         <!-- validation -->
         <div *ngIf="password?.touched"
             class="text-danger ms-2">
-            @if(password?.errors?.['required']){
+            @if(err_msg.length){
+                {{err_msg}}
+            }
+            @else if(password?.errors?.['required']){
                 Password is required.
             }
         </div>
@@ -61,7 +64,7 @@
         </div>
 
         <div class="text-center mb-3">
-            <button type="submit" class="btn btn-primary">Login <fa-icon [icon]="loginIcon" class="ms-1"></fa-icon> </button>
+            <button type="submit" class="btn btn-primary" [disabled]="loginForm.invalid">Login <fa-icon [icon]="loginIcon" class="ms-1"></fa-icon> </button>
         </div>
         <div class="text-center fs-6 mb-3">
             not a member? <a routerLink="/signup" class="dotted text-secondary">Sign up now</a>

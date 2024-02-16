@@ -8,23 +8,21 @@ import { Observable } from 'rxjs';
 })
 export class DbServiceService {
 
+  private api:string='http://192.168.1.94:8032/api';
+
   private httpOptions = {
     headers:new HttpHeaders({
       'Content-Type':'application/json'
     })
   }
 
-  private api:string='http://localhost:5174/api';
+  constructor(private http:HttpClient) {}
 
-  constructor(private http:HttpClient) {
-
-   }
-
-  login(userData:any):Observable<any>{
-    return this.http.post<any>(this.api+'/login/api/login',userData,this.httpOptions);
+  login(userData:object):Observable<any>{
+    return this.http.post<any>(this.api+'/login',userData,this.httpOptions);
   }
 
-  signUp(userData:any):Observable<any>{
-    return this.http.post<any>(this.api+'/SignUp/api/SignUp',userData,this.httpOptions);
+  signUp(userData:object):Observable<any>{
+    return this.http.post<any>(this.api+'/SignUp',userData,this.httpOptions);
   }
 }

@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 })
 export class DbServiceService {
 
-  private api:string='http://192.168.1.94:8032/api';
+  private api:string='http://192.168.1.94:8032/api/Auth';
 
   private httpOptions = {
     headers:new HttpHeaders({
@@ -23,6 +23,6 @@ export class DbServiceService {
   }
 
   signUp(userData:object):Observable<any>{
-    return this.http.post<any>(this.api+'/SignUp',userData,this.httpOptions);
+    return this.http.post<any>(this.api+'/signUp',userData,this.httpOptions);
   }
 }

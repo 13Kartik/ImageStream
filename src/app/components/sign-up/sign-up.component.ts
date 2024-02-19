@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, HostListener, OnDestroy, OnInit, Input } from '@angular/core';
 import { AbstractControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormGroup, FormControl } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 // fontawesome import
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -35,7 +35,7 @@ export class SignUpComponent implements OnInit{
   passwordType:string = 'password';
   confirmPasswordType:string = 'password';
   
-  constructor(private db:DbServiceService) {
+  constructor(private db:DbServiceService, private route: Router) {
   }
 
   ngOnInit() {
@@ -81,9 +81,17 @@ export class SignUpComponent implements OnInit{
     const obj = this.signupForm.value;
     delete obj.confirmPassword;
 
-    this.db.signUp(obj).subscribe(res=>{
-      if(res.status===200) console.log(res.message);
-      else console.error(res.message); 
+    this.db.signUp(obj).subscribe({
+      // if(res.status===200) console.log(res.message);
+      // else console.error(res.message); 
+      next: (res)=>{
+        console.log(res);
+        this.route.navigate(['/login']);
+      },
+
+      error: (err)=>{
+        console.log("Unexpected error occurred while Signing Up ", err);
+      }
     });
   }
 

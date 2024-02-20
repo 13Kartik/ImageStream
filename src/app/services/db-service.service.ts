@@ -19,10 +19,10 @@ export class DbServiceService {
   constructor(private http:HttpClient) {}
 
   login(userData:object):Observable<any>{
-    return this.http.post<any>(this.api+'/login',userData,this.httpOptions);
+    return this.http.post<any>(this.api+'/Auth/login',userData,this.httpOptions);
   }
 
   signUp(userData:object):Observable<any>{
-    return this.http.post<any>(this.api+'/SignUp',userData,this.httpOptions);
+    return this.http.post<any>(this.api+'/Auth/Signup',userData,this.httpOptions);
   }
 }

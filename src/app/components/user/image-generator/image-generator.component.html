@@ -1,3 +1,4 @@
+<form [formGroup]="options">
 <div class="row">
     <div class="col-3">
         <div class="card" style="width: 100%">
@@ -6,33 +7,81 @@
             </div>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">
-                    <label for="heightInput">Height</label>
-                    <input type="number" class="form-control" id="heightInput" [(ngModel)]="img_height">
+                    <div class="form-floating">
+                        <input type="number" class="form-control" id="heightInput" [formControl]="options.controls['img_height']" placeholder="600">
+                        <label for="heightInput">Height</label>
+                    </div>
                 </li>
                 <li class="list-group-item">
-                    <label for="widthInput">Width</label>
-                    <input type="number" class="form-control" id="widthInput" [(ngModel)]="img_width">
+                    <div class="form-floating">
+                        <input type="number" class="form-control" id="widthInput" [formControl]="options.controls['img_width']" placeholder="800">
+                        <label for="widthInput">Width</label>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="form-floating">
+                        <input type="number" class="form-control" id="HeaderFontSize" [formControl]="options.controls['headerFontSize']" placeholder="44" (change)="resizeInput()">
+                        <label for="HeaderFontSize">Header Font Size</label>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <div class="form-floating">
+                        <input type="number" class="form-control" id="HeaderFontSize" [formControl]="options.controls['descriptionFontSize']" placeholder="32">
+                        <label for="HeaderFontSize">Description Font Size</label>
+                    </div>
+                </li>
+                <li class="list-group-item text-center">
+                    <button class="btn btn-primary" (click)="generateLink()">Generate</button>
                 </li>
             </ul>
         </div>
 
         <br>
 
-        <div class="card" style="width: 100%">
-            <div class="card-header text-center">
-              Dragables
-            </div>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item text-center" draggable="true" (dragstart)="onDragStart()">
-                    Name
-                </li>
-            </ul>
-        </div>
-
     </div>
-    <div class="col-9 img-preview">
-        <div class="img-container">
-            <img [height]="img_height" [width]="img_width" src="http://192.168.1.94:8032/api/DynamicImage" (dragover)="onDragOver($event)" (drop)="onDrop($event)">
+    <div class="col-9 d-flex justify-content-center">
+        <div class="img-container" [ngStyle]="{'height':img_height+'px','width':img_width+'px','background-image':'url(' + img_url + ')'}">
+
+            <div class="header">
+                <app-dynamic-text-input #headerInputRef [text]="options.controls['header']" [fontSize]="options.controls['headerFontSize']" [fontFamily]="options.controls['fontFamily']"></app-dynamic-text-input>
+                <!-- <app-dynamic-text-input #nameInputRef [text]="options.controls['name']" [fontSize]="options.controls['headerFontSize']" [fontFamily]="options.controls['fontFamily']"></app-dynamic-text-input> -->
+                <div class="text-primary" [ngStyle]="{'font-family':fontFamily,'font-size':headerFontSize+'px','font-weight':'700'}">
+                    &nbsp;&#10216;Name&#10217;
+                </div>
+            </div>
+
+            <textarea #textbox [formControl]="options.controls['description']" [ngStyle]="{'font-size':descriptionFontSize+'px'}"></textarea>
         </div>
     </div>
 </div>
+</form>
+
+<!-- Modal -->
+<ng-template #modalRef let-modal>
+
+    <!-- Alert -->
+    <div class="alert-container" [ngStyle]="{'display':showAlert?'flex':'none'}">
+        <div class="alert alert-primary" role="alert">
+            Link has been copied to Clipboard
+        </div>
+    </div>
+
+	<div class="modal-header">
+		<h4 class="modal-title">Generated Link</h4>
+		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+	</div>
+	<div class="modal-body">
+		<div class="row">
+            <div class="col-10 d-flex align-items-center justify-content-center"><a href={{generatedLink}} target="_blank" class="pb-2" style="white-space: nowrap; overflow: auto;">{{generatedLink}}</a></div>
+            <div class="col-2" (click)="copyLink()"><fa-icon class="btn btn-outline-primary" [icon]="copyIcon"></fa-icon></div>
+        </div>
+	</div>
+	<div class="modal-footer justify-content-center">
+		<button type="button" class="btn btn-success" (click)="modal.close('Close click')">Continue</button>
+	</div>
+</ng-template>
+
+    <!-- Alert
+    <ngb-alert #copyAlert type="success" [hidden]="!showAlert" (closed)="showAlert=false">
+        Link has been copied to clipboard
+    </ngb-alert> -->

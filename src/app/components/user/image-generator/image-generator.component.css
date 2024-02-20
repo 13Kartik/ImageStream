@@ -1,4 +1,40 @@
 .img-container{
+    border-radius: 5px;
+    background-size:cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.header{
+    margin-top: 5%;
+    height: 20%;
     display: flex;
     justify-content: center;
+    overflow:hidden;
+}
+
+.img-container textarea {
+    height: 60%;
+    font-weight: 700;
+    font-size: 32px;
+    padding: 2%;
+    color: black;
+    font-family: monospace;
+    margin-bottom: 5%;
+    background-color: transparent;
+    resize: none;
+    overflow-y: hidden;
+    border: none;
+    width: 100%;
+}
+
+.alert-container{
+    width: 100%;
+    position: fixed;
+    justify-content: center;
+    left:0%;
+    bottom: 15%;
 }

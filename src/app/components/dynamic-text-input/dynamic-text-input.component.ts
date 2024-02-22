@@ -11,8 +11,9 @@ import { ReactiveFormsModule, FormControl, FormGroup, FormsModule } from '@angul
 })
 export class DynamicTextInputComponent {
 @Input() text!:FormControl;
-@Input() fontSize!:FormControl;
-@Input() fontFamily!:FormControl;
+@Input() fontSize!:number;
+@Input() fontFamily!:string;
+@Input() fontColor!:string;
 
 width:number = 0;
 
@@ -29,9 +30,9 @@ getWidthOfText(text: string): number {
   this.renderer.addClass(measureDiv, 'measureDiv');
 
     // Set the desired font properties
-    this.renderer.setStyle(measureDiv, 'font-size', this.fontSize.value+'px');
+    this.renderer.setStyle(measureDiv, 'font-size', this.fontSize+'px');
     this.renderer.setStyle(measureDiv, 'font-weight', '700');
-    this.renderer.setStyle(measureDiv, 'font-family', this.fontFamily.value);
+    this.renderer.setStyle(measureDiv, 'font-family', this.fontFamily);
 
     // Set the text content
     this.renderer.appendChild(measureDiv, this.renderer.createText(text+'0'));

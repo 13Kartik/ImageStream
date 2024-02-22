@@ -2,6 +2,6 @@
 type="text" 
 class="form-control" 
 [formControl]="text"
-[ngStyle]="{'font-family':fontFamily.value,'font-size':fontSize.value+'px','width':width+'px'}"
+[ngStyle]="{'font-family':fontFamily,'font-size':fontSize+'px','width':width+'px','color':fontColor}"
 (input)="resize()"
 >

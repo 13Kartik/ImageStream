@@ -16,6 +16,12 @@ export class DbServiceService {
     })
   }
 
+  private fileHttp = {
+    headers:new HttpHeaders({
+      'Content-Type':'multipart/form-data'
+    })
+  }
+
   constructor(private http:HttpClient) {}
 
   login(userData:object):Observable<any>{
@@ -24,5 +30,8 @@ export class DbServiceService {
 
   signUp(userData:object):Observable<any>{
     return this.http.post<any>(this.api+'/Auth/Signup',userData,this.httpOptions);
+  }
+  upload(file:any):Observable<any>{
+    return this.http.post<any>(this.api+'/Image/uploadImage',file);
   }
 }

@@ -15,13 +15,6 @@ export class DbServiceService {
       'Content-Type':'application/json'
     })
   }
-
-  private fileHttp = {
-    headers:new HttpHeaders({
-      'Content-Type':'multipart/form-data'
-    })
-  }
-
   constructor(private http:HttpClient) {}
 
   login(userData:object):Observable<any>{
@@ -33,5 +26,9 @@ export class DbServiceService {
   }
   upload(file:any):Observable<any>{
     return this.http.post<any>(this.api+'/Image/uploadImage',file);
+  }
+
+  uploadImageBlock(blockData:object){
+    return this.http.post<any>(this.api+'/NewStaticImages/upload',blockData);
   }
 }

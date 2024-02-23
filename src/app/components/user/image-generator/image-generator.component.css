@@ -6,6 +6,8 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    max-height: 100vh;
+    max-width: 95%;
 }
 
 .header{
@@ -18,7 +20,6 @@
 
 .img-container textarea {
     /* height: 60%; */
-    font-weight: 700;
     font-size: 32px;
     padding: 2%;
     color: black;
@@ -67,9 +68,18 @@
     visibility:hidden;
 }
 .change-img-btn .btn{
-    border-radius: 50% 0px 0px 50%;
+    border-radius: 50% 0% 0% 50%;
+    padding: 0% 0% 0% 12% !important;
 }
 
 #img-preview:hover .change-img-btn{
     visibility:visible;
+}
+
+ul.list-group{
+    overflow: auto;
+}
+
+.options-container{
+    height:100vh;
 }

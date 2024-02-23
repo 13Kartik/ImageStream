@@ -1,7 +1,7 @@
 <form [formGroup]="options">
     <div class="row">
         <div class="col-3">
-            <div class="card col-12">
+            <div class="card col-12 options-container">
                 <div class="card-header text-center">
                 Options
                 </div>
@@ -24,6 +24,13 @@
 
                     <li class="list-group-item">
                         <div class="card p-2">
+                            <h6 class="text-center mb-2">Image Opacity</h6>
+                            <input type="range" class="form-range" min="0" max="1" step="0.1" id="opacityInput" [formControl]="options.controls['img_opacity']">
+                        </div>
+                    </li>
+
+                    <li class="list-group-item">
+                        <div class="card p-2">
                             <h6 class="text-center mb-2">Font Size</h6>
                             <div class="d-flex justify-content-between">
                                 <div class="form-floating w-45">
@@ -32,6 +39,22 @@
                                 </div>
                                 <div class="form-floating w-45">
                                     <input type="number" class="form-control" id="HeaderFontSize" [formControl]="options.controls['descriptionFontSize']" placeholder="32">
+                                    <label for="HeaderFontSize">Description</label>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="list-group-item">
+                        <div class="card p-2">
+                            <h6 class="text-center mb-2">Font Weight</h6>
+                            <div class="d-flex justify-content-between">
+                                <div class="form-floating w-45">
+                                    <input type="number" class="form-control" id="HeaderFontSize" [formControl]="options.controls['headerFontWeight']" placeholder="700" min="100" max="900" step="100">
+                                    <label for="HeaderFontSize">Header</label>
+                                </div>
+                                <div class="form-floating w-45">
+                                    <input type="number" class="form-control" id="HeaderFontSize" [formControl]="options.controls['descriptionFontWeight']" placeholder="700" min="100" max="900" step="100">
                                     <label for="HeaderFontSize">Description</label>
                                 </div>
                             </div>
@@ -71,19 +94,16 @@
                             </div>
                         </div>
                     </li>
-                    <li class="list-group-item text-center">
-                        <button class="btn btn-primary" (click)="generateLink()">Generate</button>
-                    </li>
                 </ul>
+                <div class="card-footer text-center">
+                    <button class="btn btn-primary" (click)="generateLink()">Generate</button>
+                </div>
             </div>
-
-            <br>
-
         </div>
 
             <div id="img-preview" class="col-9 d-flex justify-content-center align-items-center">
                 <input #fileInput type="file" [style.display]="'none'" (change)="uploadImage($event)">
-                @if(img_url===undefined){
+                @if(img_src===undefined){
                     <div 
                     class="card w-50 h-50 d-flex justify-content-center align-items-center border-primary"
                     (click)="fileInput.click()"
@@ -97,28 +117,37 @@
                     </div>
                 }
                 @else {
-                    <div class="d-flex align-items-center change-img-btn" style="width:5%;">     
-                        <div class="btn bg-primary w-100 pe-1">
-                            <fa-icon [icon]="changeImgIcon" class="text-white fs-3" (click)="fileInput.click()"></fa-icon>
+                    <div class="d-flex align-items-center justify-content-end change-img-btn" style="width:5%;">     
+                        <div class="btn bg-primary" placement="left" ngbTooltip="change Image">
+                            <fa-icon [icon]="changeImgIcon" class="text-white fs-3" (click)="fileInput.click()" ></fa-icon>
                         </div>
                     </div>
-                    <div class="img-container" [ngStyle]="{'height':img_height+'px','width':img_width+'px','background-image':'url(' + img_url + ')','margin-right':'5%'}">
+                    <div 
+                    class="img-container" 
+                    [ngStyle]="{
+                                'height':img_height+'px',
+                                'width':img_width+'px',
+                                'background-image': 'linear-gradient(rgba(255, 255, 255,'+(1-img_opacity)+'), rgba(255, 255, 255, '+(1-img_opacity)+')), url(' + img_src + ')',
+                                'margin-right':'5%',
+                                }"
+                    >
                         <div class="header">
                             <app-dynamic-text-input 
                             #headerInputRef 
                             [text]="options.controls['header']" 
                             [fontSize]="headerFontSize"  
+                            [fontWeight]="headerFontWeight"
                             [fontFamily]="headerFontFamily"
                             [fontColor]="headerFontColor"
                             >
                             </app-dynamic-text-input>
-                            <!-- <app-dynamic-text-input #nameInputRef [text]="options.controls['name']" [fontSize]="options.controls['headerFontSize']" [fontFamily]="options.controls['fontFamily']"></app-dynamic-text-input> -->
-                            <!-- <div class="text-primary" [ngStyle]="{'font-family':headerFontFamily,'font-size':headerFontSize+'px','font-weight':'700'}">
-                                &nbsp;&#10216;Name&#10217;
-                            </div> -->
                         </div>
                         <div class="d-flex flex-column" style="height: 60%;">
-                            <textarea #textbox [rows]="rows" [formControl]="options.controls['description']" [ngStyle]="{'color':descriptionFontColor,'font-family':descriptionFontFamily,'font-size':descriptionFontSize+'px'}" (input)=" adjustTextareaHeight($event)"></textarea>
+                            <textarea 
+                            [formControl]="options.controls['description']" 
+                            [ngStyle]="{'color':descriptionFontColor,'font-family':descriptionFontFamily,'font-size':descriptionFontSize+'px','font-weight':descriptionFontWeight}" 
+                            (input)=" adjustTextareaHeight($event)">
+                            </textarea>
                         </div>
                     </div>
                 }
@@ -142,8 +171,10 @@
 	</div>
 	<div class="modal-body">
 		<div class="row">
-            <div class="col-10 d-flex align-items-center justify-content-center"><a [routerLink]="['../../login']" routerLinkActive="router-link-active"  target="_blank" class="pb-2" style="white-space: nowrap; overflow: auto;">{{generatedLink}}</a></div>
-            <div class="col-2" (click)="copyLink()"><fa-icon class="btn btn-outline-primary" [icon]="copyIcon"></fa-icon></div>
+            <div class="col-10 d-flex align-items-center justify-content-center"><a [href]="generatedLink" target="_blank" class="pb-2" style="white-space: nowrap; overflow: auto;">{{generatedLink}}</a></div>
+            <div class="col-2" (click)="copyLink()">
+                <fa-icon class="btn btn-outline-primary" [icon]="copyIcon" placement="bottom" ngbTooltip="Copy Generated Link"></fa-icon>
+            </div>
         </div>
 	</div>
 	<div class="modal-footer justify-content-center">

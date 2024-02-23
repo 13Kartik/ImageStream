@@ -19,10 +19,13 @@ import { faRotate } from '@fortawesome/free-solid-svg-icons';
 //Alert
 import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 
-//test
+//database
 import { RouterModule } from '@angular/router';
 import { DbServiceService } from '../../../services/db-service.service';
 import { HttpClientModule } from '@angular/common/http';
+
+//tooltip
+import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-image-generator',
@@ -36,7 +39,8 @@ import { HttpClientModule } from '@angular/common/http';
     FontAwesomeModule,
     NgbAlertModule,
     RouterModule,
-    HttpClientModule
+    HttpClientModule,
+    NgbTooltipModule 
   ],
   templateUrl: './image-generator.component.html',
   styleUrls: ['./image-generator.component.css'],
@@ -50,17 +54,14 @@ export class ImageGeneratorComponent {
 
   constructor(private clipboard: Clipboard, private modalService: NgbModal,private db:DbServiceService) {}
 
-  // img_url = "http://192.168.1.94:8032/api/DynamicImage";
-  img_url!:string;
+  // img_src = "http://192.168.1.94:8032/api/DynamicImage";
+  img_src!:string;
 
   generatedLink:string = "http://192.168.1.94:8032/api/DynamicImage";
   showAlert = false;
   copyIcon = faCopy;
   changeImgIcon= faRotate;
   uploadIcon = faCloudArrowUp;
-
-  //test
-  rows:number = 1;
 
   fonts=['Times New Roman','Georgia','Garamond','Arial','Verdana','Helvetica','Courier New','Lucida Console','Monaco','Brush Script MT','Lucida Handwriting','Copperplate','Papyrus'];
 
@@ -70,8 +71,11 @@ export class ImageGeneratorComponent {
     description: new FormControl('Hello, I am Here!!!!'),
     img_height:new FormControl(600),
     img_width:new FormControl(800),
+    img_opacity:new FormControl(1),
     headerFontSize: new FormControl(44),
     descriptionFontSize: new FormControl(32),
+    headerFontWeight: new FormControl(700),
+    descriptionFontWeight: new FormControl(700),
     headerFontColor: new FormControl('#3B71CA'),
     descriptionFontColor: new FormControl('#000000'),
     headerFontFamily: new FormControl('Courier New'),
@@ -83,6 +87,9 @@ export class ImageGeneratorComponent {
   }
   get img_width(){
     return this.options.get('img_width')?.value;
+  }
+  get img_opacity(){
+    return this.options.get('img_opacity')?.value ?? 1;
   }
   get descriptionFontSize(){
     return this.options.get('descriptionFontSize')?.value;
@@ -112,6 +119,13 @@ export class ImageGeneratorComponent {
     return this.options.get('descriptionFontColor')?.value;
   }
 
+  get headerFontWeight(){
+    return this.options.get('headerFontWeight')?.value ?? 700;
+  }
+  get descriptionFontWeight(){
+    return this.options.get('descriptionFontWeight')?.value ?? 700;
+  }
+
   onSubmit(){
 
   }
@@ -122,6 +136,26 @@ export class ImageGeneratorComponent {
   }
 
   generateLink(){
+
+    //upload Block
+    const blockData={
+      'File':this.img_src,
+      'ImageId':'idk',
+      'Header':this.header,
+      'Description':this.description
+    }
+
+    console.log(blockData);
+
+    this.db.uploadImageBlock(blockData).subscribe({
+      'next':res=>{
+        console.log(res);
+      },
+      'error':err=>{
+        console.error(err);
+      }
+    });
+
     this.generatedLink = "http://192.168.1.94:8032/api/DynamicImage";
     this.generatedLink+='?name=Name';
 
@@ -143,13 +177,11 @@ export class ImageGeneratorComponent {
     const file = event.target.files[0];
     const formData: FormData = new FormData();
     formData.append('file', file);
-
-    console.log(file);
     if (file) {
       const reader = new FileReader();
       
       reader.onload = (e: any) => {
-        this.img_url=e.target.result;
+        this.img_src=e.target.result;
       };
       reader.readAsDataURL(file);
     }

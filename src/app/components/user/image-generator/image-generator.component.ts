@@ -62,6 +62,8 @@ export class ImageGeneratorComponent {
   copyIcon = faCopy;
   changeImgIcon= faRotate;
   uploadIcon = faCloudArrowUp;
+  portrait = false;
+  aspectRatio = 4/3;
 
   fonts=['Times New Roman','Georgia','Garamond','Arial','Verdana','Helvetica','Courier New','Lucida Console','Monaco','Brush Script MT','Lucida Handwriting','Copperplate','Papyrus'];
 
@@ -82,6 +84,8 @@ export class ImageGeneratorComponent {
     descriptionFontFamily: new FormControl('Courier New'),
   });
 
+  blockData = new FormData();
+
   get img_height(){
     return this.options.get('img_height')?.value;
   }
@@ -95,13 +99,13 @@ export class ImageGeneratorComponent {
     return this.options.get('descriptionFontSize')?.value;
   }
   get header(){
-    return this.options.get('header')?.value;
+    return this.options.get('header')?.value ?? '';
   }
   get name(){
     return this.options.get('name')?.value;
   }
   get description(){
-    return this.options.get('description')?.value;
+    return this.options.get('description')?.value ?? '';
   }
   get headerFontFamily(){
     return this.options.get('headerFontFamily')?.value ?? 'Courier New';
@@ -137,27 +141,21 @@ export class ImageGeneratorComponent {
 
   generateLink(){
 
+    this.generatedLink = "http://192.168.1.94:8032/api/NewStaticImages";
+
     //upload Block
-    const blockData={
-      'File':this.img_src,
-      'ImageId':'idk',
-      'Header':this.header,
-      'Description':this.description
-    }
+    this.blockData.append('ImageId','kartik2');
+    this.blockData.append('Header',this.header);
+    this.blockData.append('Description',this.description);
 
-    console.log(blockData);
-
-    this.db.uploadImageBlock(blockData).subscribe({
+    this.db.uploadImageBlock(this.blockData).subscribe({
       'next':res=>{
-        console.log(res);
+        this.generatedLink+='?id='+res.imageId;
       },
       'error':err=>{
         console.error(err);
       }
     });
-
-    this.generatedLink = "http://192.168.1.94:8032/api/DynamicImage";
-    this.generatedLink+='?name=Name';
 
     //open modal
 		this.modalService.open(this.modalRef, { centered: true });
@@ -175,14 +173,24 @@ export class ImageGeneratorComponent {
 
   uploadImage(event:any){
     const file = event.target.files[0];
-    const formData: FormData = new FormData();
-    formData.append('file', file);
+    this.blockData.append('File', file);
     if (file) {
       const reader = new FileReader();
       
       reader.onload = (e: any) => {
         this.img_src=e.target.result;
-      };
+
+        // Get the dimensions using an Image element
+        const img = new Image();
+        img.src = e.target.result;
+        
+        // After the image has loaded, you can access its width and height
+        img.onload = () => {
+          console.log(img.height,img.width);
+          this.portrait=img.height>img.width?true:false;
+          this.aspectRatio=img.width/img.height;
+        };
+      }
       reader.readAsDataURL(file);
     }
     // this.db.upload(formData).subscribe({

@@ -8,27 +8,10 @@
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
                         <div class="card p-2">
-                            <h6 class="text-center mb-2">Image Size</h6>
-                            <div class="d-flex justify-content-between">
-                                <div class="form-floating w-45">
-                                    <input type="number" class="form-control" id="heightInput" [formControl]="options.controls['img_height']" placeholder="600">
-                                    <label for="heightInput">Height</label>
-                                </div>
-                                <div class="form-floating w-45">
-                                    <input type="number" class="form-control" id="widthInput" [formControl]="options.controls['img_width']" placeholder="800">
-                                    <label for="widthInput">Width</label>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-
-                    <li class="list-group-item">
-                        <div class="card p-2">
                             <h6 class="text-center mb-2">Image Opacity</h6>
                             <input type="range" class="form-range" min="0" max="1" step="0.1" id="opacityInput" [formControl]="options.controls['img_opacity']">
                         </div>
                     </li>
-
                     <li class="list-group-item">
                         <div class="card p-2">
                             <h6 class="text-center mb-2">Font Size</h6>
@@ -44,7 +27,6 @@
                             </div>
                         </div>
                     </li>
-
                     <li class="list-group-item">
                         <div class="card p-2">
                             <h6 class="text-center mb-2">Font Weight</h6>
@@ -60,7 +42,6 @@
                             </div>
                         </div>
                     </li>
-
                     <li class="list-group-item">
                         <div class="card p-2">
                             <h6 class="text-center mb-2">Font Color</h6>
@@ -104,7 +85,7 @@
             <div id="img-preview" class="col-9 d-flex justify-content-center align-items-center">
                 <input #fileInput type="file" [style.display]="'none'" (change)="uploadImage($event)">
                 @if(img_src===undefined){
-                    <div 
+                    <div
                     class="card w-50 h-50 d-flex justify-content-center align-items-center border-primary"
                     (click)="fileInput.click()"
                     >
@@ -122,11 +103,12 @@
                             <fa-icon [icon]="changeImgIcon" class="text-white fs-3" (click)="fileInput.click()" ></fa-icon>
                         </div>
                     </div>
-                    <div 
+                    <div
                     class="img-container" 
                     [ngStyle]="{
-                                'height':img_height+'px',
-                                'width':img_width+'px',
+                                'height':portrait?'95%':'auto',
+                                'width':portrait?'auto':'90%',
+                                'aspect-ratio':aspectRatio,
                                 'background-image': 'linear-gradient(rgba(255, 255, 255,'+(1-img_opacity)+'), rgba(255, 255, 255, '+(1-img_opacity)+')), url(' + img_src + ')',
                                 'margin-right':'5%',
                                 }"
@@ -143,7 +125,7 @@
                             </app-dynamic-text-input>
                         </div>
                         <div class="d-flex flex-column" style="height: 60%;">
-                            <textarea 
+                            <textarea
                             [formControl]="options.controls['description']" 
                             [ngStyle]="{'color':descriptionFontColor,'font-family':descriptionFontFamily,'font-size':descriptionFontSize+'px','font-weight':descriptionFontWeight}" 
                             (input)=" adjustTextareaHeight($event)">

@@ -1,13 +1,13 @@
 .img-container{
     border-radius: 5px;
-    background-size:cover;
+    background-size:contain;
     background-repeat: no-repeat;
     background-position: center center;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    max-height: 100vh;
-    max-width: 95%;
+    max-width: 90%;
+    max-height: 95%;
 }
 
 .header{
@@ -70,6 +70,10 @@
 .change-img-btn .btn{
     border-radius: 50% 0% 0% 50%;
     padding: 0% 0% 0% 12% !important;
+}
+
+#img-preview{
+    height: 100vh;
 }
 
 #img-preview:hover .change-img-btn{

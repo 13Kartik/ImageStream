@@ -44,29 +44,29 @@ export class SignUpComponent implements OnInit{
   
   // Validation Code
   signupForm = new FormGroup({
-    firstName: new FormControl('', [Validators.required, Validators.minLength(3), Validators.pattern('^[A-Za-z]+$')]),
-    lastName: new FormControl('', [Validators.required, Validators.minLength(3), Validators.pattern('^[A-Za-z]+$')]),
-    email: new FormControl('', [Validators.required, Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$')]),
-    password: new FormControl('', [Validators.required, Validators.minLength(8)]),
+    FirstName: new FormControl('', [Validators.required, Validators.minLength(3), Validators.pattern('^[A-Za-z]+$')]),
+    LastName: new FormControl('', [Validators.required, Validators.minLength(3), Validators.pattern('^[A-Za-z]+$')]),
+    Email: new FormControl('', [Validators.required, Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$')]),
+    PasswordHash: new FormControl('', [Validators.required, Validators.minLength(8)]),
     confirmPassword: new FormControl('', [Validators.required])
-  }, [passwordMatch("password", "confirmPassword")]);
+  }, [passwordMatch("PasswordHash", "confirmPassword")]);
   
-  get firstNameValidation(): AbstractControl | null
+  get FirstNameValidation(): AbstractControl | null
   {
-    return this.signupForm.get('firstName');
+    return this.signupForm.get('FirstName');
   }
-  get lastNameValidation(): AbstractControl | null
+  get LastNameValidation(): AbstractControl | null
   {
-    return this.signupForm.get('lastName');
+    return this.signupForm.get('LastName');
   }
-  get emailValidation(): AbstractControl | null
+  get EmailValidation(): AbstractControl | null
   {
-    return this.signupForm.get('email');
+    return this.signupForm.get('Email');
   }
   get passwordValidation(): AbstractControl | null
   {
     // console.log(this.signupForm.get('password') as FormControl);
-    return this.signupForm.get('password');
+    return this.signupForm.get('PasswordHash');
   }
   get confirmPasswordValidation(): AbstractControl | null
   {
@@ -78,17 +78,17 @@ export class SignUpComponent implements OnInit{
   // handling from submit method
   onSubmit()
   {
-    const obj = this.signupForm.value;
-    delete obj.confirmPassword;
+    const params = this.signupForm.value;
+    delete params.confirmPassword;
 
-    this.db.signUp(obj).subscribe({
-      // if(res.status===200) console.log(res.message);
-      // else console.error(res.message); 
+    this.db.signUp({
+      'spFor':'InsertUser',
+      params,
+      }).subscribe({
       next: (res)=>{
         console.log(res);
         this.route.navigate(['/login']);
       },
-
       error: (err)=>{
         console.log("Unexpected error occurred while Signing Up ", err);
       }

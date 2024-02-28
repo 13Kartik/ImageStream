@@ -11,19 +11,19 @@
         </div>
 
         <div class="form-floating mb-3">
-            <input type="email" class="form-control" id="emailInput" placeholder="name@example.com" formControlName="email">
+            <input type="email" class="form-control" id="emailInput" placeholder="name@example.com" formControlName="Email">
             <label for="emailInput" class="form-label">
                 <fa-icon [icon]="mailIcon" class="text-primary me-1"></fa-icon>
                 Email address
             </label>
 
             <!-- validation -->
-            <div *ngIf="email?.touched"
+            <div *ngIf="Email?.touched"
               class="text-danger ms-2">
-              @if(email?.errors?.['pattern']){
+              @if(Email?.errors?.['pattern']){
                 Enter valid mail.
               }
-              @else if (email?.errors?.['required']) {
+              @else if (Email?.errors?.['required']) {
                 Email is required.
               }
             </div>
@@ -31,7 +31,7 @@
 
         <div class="password-container">
             <div class="form-floating">
-                <input [type]="passwordType" class="form-control" id="passwordInput" placeholder="Password" formControlName="password" (focus)="clear_err_msg()">
+                <input [type]="passwordType" class="form-control" id="passwordInput" placeholder="Password" formControlName="Password" (focus)="clear_err_msg()">
                 <label for="passwordInput" class="form-label">
                     <fa-icon [icon]="passwordIcon" class="text-primary me-1"></fa-icon>
                     Password
@@ -43,12 +43,12 @@
         </div>
 
         <!-- validation -->
-        <div *ngIf="password?.touched"
+        <div *ngIf="Password?.touched"
             class="text-danger ms-2">
             @if(err_msg.length){
                 {{err_msg}}
             }
-            @else if(password?.errors?.['required']){
+            @else if(Password?.errors?.['required']){
                 Password is required.
             }
         </div>

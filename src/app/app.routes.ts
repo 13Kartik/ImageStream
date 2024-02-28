@@ -6,6 +6,9 @@ import { UserComponent } from './components/user/user.component';
 import { SignUpComponent } from './components/sign-up/sign-up.component';
 import { ImageBlockListComponent } from './components/image-block-list/image-block-list.component';
 
+//test
+import { SelectImageComponent } from './components/select-image/select-image.component';
+
 export const routes: Routes = [
     {
         path:'',
@@ -32,6 +35,10 @@ export const routes: Routes = [
     {
         path: 'signup',
         component: SignUpComponent
+    },
+    {
+        path: 'setImage',
+        component: SelectImageComponent
     },
     {
         path:'**',

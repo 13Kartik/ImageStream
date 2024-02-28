@@ -5,6 +5,9 @@ import { ImageGeneratorComponent } from './components/user/image-generator/image
 import { UserComponent } from './components/user/user.component';
 import { SignUpComponent } from './components/sign-up/sign-up.component';
 
+//test
+import { SelectImageComponent } from './components/select-image/select-image.component';
+
 export const routes: Routes = [
     {
         path:'',
@@ -26,6 +29,10 @@ export const routes: Routes = [
     {
         path: 'signup',
         component: SignUpComponent
+    },
+    {
+        path: 'setImage',
+        component: SelectImageComponent
     },
     {
         path:'**',

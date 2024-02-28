@@ -30,18 +30,18 @@ export class LoginComponent {
   err_msg:string='';
 
   loginForm = new FormGroup({
-    email: new FormControl('', [Validators.required, Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$')]),
-    password: new FormControl('',[Validators.required,Validators.minLength(8)]),
+    Email: new FormControl('', [Validators.required, Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$')]),
+    Password: new FormControl('',[Validators.required,Validators.minLength(8)]),
     remember: new FormControl(false),
   });
 
   constructor(private db:DbServiceService,private router:Router){}
 
-  get email(){
-    return this.loginForm.get('email');
+  get Email(){
+    return this.loginForm.get('Email');
   }
-  get password(){
-    return this.loginForm.get('password');
+  get Password(){
+    return this.loginForm.get('Password');
   }
 
   loginIcon = faArrowRightToBracket;
@@ -64,10 +64,13 @@ export class LoginComponent {
   }
 
   onSubmit() {
-    const data = this.loginForm.value;
-    delete data.remember;
+    const params = this.loginForm.value;
+    delete params.remember;
   
-    this.db.login(data).subscribe({
+    this.db.login({
+        "spFor": "ValidateUser",
+        params,
+    }).subscribe({
       next:(res: any) => {
           this.router.navigate(['/user']);
         },

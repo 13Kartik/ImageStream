@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 })
 export class DbServiceService {
 
-  private api:string='http://192.168.1.94:8032/api/Auth';
+  private api:string='http://192.168.1.94:8032/api/';
 
   private httpOptions = {
     headers:new HttpHeaders({
@@ -18,17 +18,19 @@ export class DbServiceService {
   constructor(private http:HttpClient) {}
 
   login(userData:object):Observable<any>{
-    return this.http.post<any>(this.api+'/Auth/login',userData,this.httpOptions);
+    return this.http.post<any>(this.api+'StoredProcedure/executeSp',userData,this.httpOptions);
   }
 
   signUp(userData:object):Observable<any>{
-    return this.http.post<any>(this.api+'/Auth/Signup',userData,this.httpOptions);
-  }
-  upload(file:any):Observable<any>{
-    return this.http.post<any>(this.api+'/Image/uploadImage',file);
+    return this.http.post<any>(this.api+'StoredProcedure/executeSp',userData,this.httpOptions);
   }
 
-  uploadImageBlock(blockData:object){
-    return this.http.post<any>(this.api+'/NewStaticImages/upload',blockData);
+  uploadImage(file:any):Observable<any>{
+    return this.http.post<any>(this.api+'SPStaticImage/upload',file);
+  }
+
+  uploadImageBlock(imageId:string,userId:string,blockData:object){
+    const req_url = `${this.api}SPStaticImage/generate?imageId=${imageId}&userId=${userId}`;
+    return this.http.post<any>(req_url,blockData);
   }
 }

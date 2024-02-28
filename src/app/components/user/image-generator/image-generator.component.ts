@@ -1,13 +1,15 @@
-import { Component, ViewChild, inject, TemplateRef, OnDestroy, ElementRef } from '@angular/core';
+import { Component, ViewChild, TemplateRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
-import { DynamicTextInputComponent } from '../../dynamic-text-input/dynamic-text-input.component';
-
 import { FormGroup, ReactiveFormsModule, FormControl } from '@angular/forms';
 
+//components
+import { DynamicTextInputComponent } from '../../dynamic-text-input/dynamic-text-input.component';
+import { SelectImageComponent } from '../../select-image/select-image.component';
+
+
 //modal
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Clipboard,ClipboardModule } from '@angular/cdk/clipboard';
 
 //icons
@@ -40,40 +42,65 @@ import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
     NgbAlertModule,
     RouterModule,
     HttpClientModule,
-    NgbTooltipModule 
+    NgbTooltipModule,
+    SelectImageComponent,
   ],
   templateUrl: './image-generator.component.html',
   styleUrls: ['./image-generator.component.css'],
-  providers:[Clipboard,DbServiceService]
+  providers: [Clipboard, DbServiceService],
 })
 export class ImageGeneratorComponent {
-
   @ViewChild('headerInputRef') headerInputRef!: DynamicTextInputComponent;
   @ViewChild('nameInputRef') nameInputRef!: DynamicTextInputComponent;
-  @ViewChild('modalRef') modalRef!: TemplateRef<any>;
+  @ViewChild('appSelectImageRef') appSelectImageRef!: SelectImageComponent;
+  @ViewChild('generatedLinkModal') generatedLinkModal!: TemplateRef<any>;
+ 
 
-  constructor(private clipboard: Clipboard, private modalService: NgbModal,private db:DbServiceService) {}
+  constructor(
+    private clipboard: Clipboard,
+    private modalService: NgbModal,
+    private db: DbServiceService
+  ) {}
 
   // img_src = "http://192.168.1.94:8032/api/DynamicImage";
-  img_src!:string;
+  img_src!: string;
+  img_file: File | null = null;
+  imageId!:string;
 
-  generatedLink:string = "http://192.168.1.94:8032/api/DynamicImage";
+  generatedLink: string = 'http://192.168.1.94:8032/api/DynamicImage';
   showAlert = false;
   copyIcon = faCopy;
-  changeImgIcon= faRotate;
+  changeImgIcon = faRotate;
   uploadIcon = faCloudArrowUp;
   portrait = false;
-  aspectRatio = 4/3;
+  aspectRatio = 4 / 3;
 
-  fonts=['Times New Roman','Georgia','Garamond','Arial','Verdana','Helvetica','Courier New','Lucida Console','Monaco','Brush Script MT','Lucida Handwriting','Copperplate','Papyrus'];
+  //modal
+  private setImageModalRef!: NgbModalRef;
+
+  fonts = [
+    'Times New Roman',
+    'Georgia',
+    'Garamond',
+    'Arial',
+    'Verdana',
+    'Helvetica',
+    'Courier New',
+    'Lucida Console',
+    'Monaco',
+    'Brush Script MT',
+    'Lucida Handwriting',
+    'Copperplate',
+    'Papyrus',
+  ];
 
   options = new FormGroup({
     header: new FormControl('Hey'),
     name: new FormControl('Kartik'),
     description: new FormControl('Hello, I am Here!!!!'),
-    img_height:new FormControl(600),
-    img_width:new FormControl(800),
-    img_opacity:new FormControl(1),
+    img_height: new FormControl(600),
+    img_width: new FormControl(800),
+    img_opacity: new FormControl(1),
     headerFontSize: new FormControl(44),
     descriptionFontSize: new FormControl(32),
     headerFontWeight: new FormControl(700),
@@ -86,128 +113,127 @@ export class ImageGeneratorComponent {
 
   blockData = new FormData();
 
-  get img_height(){
+  get img_height() {
     return this.options.get('img_height')?.value;
   }
-  get img_width(){
+  get img_width() {
     return this.options.get('img_width')?.value;
   }
-  get img_opacity(){
+  get img_opacity() {
     return this.options.get('img_opacity')?.value ?? 1;
   }
-  get descriptionFontSize(){
+  get descriptionFontSize() {
     return this.options.get('descriptionFontSize')?.value;
   }
-  get header(){
+  get header() {
     return this.options.get('header')?.value ?? '';
   }
-  get name(){
+  get name() {
     return this.options.get('name')?.value;
   }
-  get description(){
+  get description() {
     return this.options.get('description')?.value ?? '';
   }
-  get headerFontFamily(){
+  get headerFontFamily() {
     return this.options.get('headerFontFamily')?.value ?? 'Courier New';
   }
-  get descriptionFontFamily(){
+  get descriptionFontFamily() {
     return this.options.get('descriptionFontFamily')?.value ?? 'Courier New';
   }
-  get headerFontSize(){
+  get headerFontSize() {
     return this.options.get('headerFontSize')?.value ?? 44;
   }
-  get headerFontColor(){
+  get headerFontColor() {
     return this.options.get('headerFontColor')?.value ?? '#3B71CA';
   }
-  get descriptionFontColor(){
+  get descriptionFontColor() {
     return this.options.get('descriptionFontColor')?.value;
   }
 
-  get headerFontWeight(){
+  get headerFontWeight() {
     return this.options.get('headerFontWeight')?.value ?? 700;
   }
-  get descriptionFontWeight(){
+  get descriptionFontWeight() {
     return this.options.get('descriptionFontWeight')?.value ?? 700;
   }
 
-  onSubmit(){
+  onSubmit() {}
 
-  }
+  async generateLink() {
 
-  resizeInput(){
-    this.headerInputRef.resize();
-    // this.nameInputRef.resize();
-  }
+    if(this.img_file!==null){
+      console.log('uploading file');
 
-  generateLink(){
+      const fileData = new FormData();
+      fileData.append('file',this.img_file);
 
-    this.generatedLink = "http://192.168.1.94:8032/api/NewStaticImages";
+      const uploadImageResponse: any = await this.db.uploadImage(fileData).toPromise();
+      this.imageId = uploadImageResponse.imageId;
+      console.log(this.imageId);
+    }
+
+    this.generatedLink = 'http://192.168.1.94:8032/api/NewStaticImages';
+
+    //test
+    this.modalService.open(this.generatedLinkModal, { centered: true });
 
     //upload Block
-    this.blockData.append('ImageId','kartik2');
-    this.blockData.append('Header',this.header);
-    this.blockData.append('Description',this.description);
+    this.blockData.append('Header', this.header);
+    this.blockData.append('Description', this.description);
 
-    this.db.uploadImageBlock(this.blockData).subscribe({
-      'next':res=>{
-        this.generatedLink+='?id='+res.imageId;
+    this.db.uploadImageBlock(this.imageId,'9e051ee3-4858-428d-a98b-d5baad632110',{
+      header:this.header,
+      description:this.description,
+      fontFamily:this.descriptionFontFamily,
+      fontSize:this.descriptionFontSize,
+      opacity:this.img_opacity,
+      fontColor:'blue'
+    }).subscribe({
+      next: (res) => {
+        this.generatedLink += '?' + res.imageId;
+        //open modal
+        this.modalService.open(this.generatedLinkModal, { centered: true });
       },
-      'error':err=>{
+      error: (err) => {
         console.error(err);
-      }
+      },
     });
-
-    //open modal
-		this.modalService.open(this.modalRef, { centered: true });
-	}
+  }
 
   copyLink() {
     this.clipboard.copy(this.generatedLink);
 
     //show Alert
-    this.showAlert=true;
+    this.showAlert = true;
     setTimeout(() => {
       this.showAlert = false; // Clear the message to hide the alert
     }, 3000);
   }
 
-  uploadImage(event:any){
-    const file = event.target.files[0];
-    this.blockData.append('File', file);
-    if (file) {
-      const reader = new FileReader();
-      
-      reader.onload = (e: any) => {
-        this.img_src=e.target.result;
-
-        // Get the dimensions using an Image element
-        const img = new Image();
-        img.src = e.target.result;
-        
-        // After the image has loaded, you can access its width and height
-        img.onload = () => {
-          console.log(img.height,img.width);
-          this.portrait=img.height>img.width?true:false;
-          this.aspectRatio=img.width/img.height;
-        };
-      }
-      reader.readAsDataURL(file);
-    }
-    // this.db.upload(formData).subscribe({
-    //   next:(res:any)=>{
-    //     console.log('successfully uploaded image');
-    //     console.log(res);
-    //   },
-    //   error:(error:any)=>{
-    //     console.error(error);
-    //   }
-    // });
-  }
-
   adjustTextareaHeight(event: any): void {
     const textarea = event.target as HTMLTextAreaElement;
     textarea.style.height = 'auto';
-    textarea.style.height = (textarea.scrollHeight) + 'px';
+    textarea.style.height = textarea.scrollHeight + 'px';
   }
 
+  openSetImageModal() {
+    //open modal
+    this.setImageModalRef=this.modalService.open(this.appSelectImageRef.setImageModal, { centered: true, size: 'xl' });
+  }
+
+  handleImageUrl(image: {url:string,file?:File}) {
+    if(image.file) this.img_file = image.file;
+
+    // Get the dimensions using an Image element
+    const img = new Image();
+    img.src = image.url;
+    this.img_src=image.url;
+    this.setImageModalRef.close();
+
+    // After the image has loaded, you can access its width and height
+    img.onload = () => {
+      this.portrait = img.height > img.width ? true : false;
+      this.aspectRatio = img.width / img.height;
+    };
+  }
 }

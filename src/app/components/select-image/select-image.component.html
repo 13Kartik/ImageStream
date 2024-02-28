@@ -1,0 +1,37 @@
+<ng-template #setImageModal let-modal>
+    <div class="page-container">
+        <div class="modal-header">
+            <h4 class="modal-title ms-3">Select Image</h4>
+            <button type="button" class="btn-close me-3" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        </div>
+        <div class="image-list modal-body">
+            @if(page===1){
+                <div class="image-row">
+                    <div class="image-item upload-btn btn card border-primary" (click)="fileInput.click()">
+                        <input #fileInput type="file" [style.display]="'none'" (change)="uploadImage($event)">
+                        <fa-icon class="text-primary fs-1" [icon]="imgIcon"></fa-icon>
+                        <p class="text-secondary">Upload New Image</p>
+                    </div>
+                    <div *ngFor="let link of img_row_1" class="image-item card" (click)="setImage(link)">
+                        <img class="rounded" height="100%" width="auto" [src]="link">
+                    </div>
+                </div>
+                <div *ngFor="let row of imgLinkList_2d.slice(page-1,page+1)" class="image-row">
+                    <div *ngFor="let link of row" class="image-item" (click)="setImage(link)">
+                        <img class="rounded" height="100%" width="100%" [src]="link">
+                    </div>
+                </div>
+            }
+            @else {
+                <div *ngFor="let row of imgLinkList_2d.slice(page-1,page+2)" class="image-row">
+                    <div *ngFor="let link of row" class="image-item" (click)="setImage(link)">
+                        <img class="rounded" height="100%" width="100%" [src]="link">
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="modal-footer">
+            <ngb-pagination [collectionSize]="100" [(page)]="page" [maxSize]="3" size="3" [rotate]="true" [boundaryLinks]="true" />
+        </div>
+    </div>
+</ng-template>

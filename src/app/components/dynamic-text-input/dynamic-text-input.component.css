@@ -1,0 +1,12 @@
+input{
+    background-color: transparent !important;
+    overflow-y: hidden;
+    padding: 0px;
+    /* min-width: 150px; */
+}
+
+.measureDiv{
+    position: absolute;
+    left: -9999px;
+    padding: 0px;
+}

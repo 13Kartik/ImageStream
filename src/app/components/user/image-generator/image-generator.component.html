@@ -1,38 +1,165 @@
-<div class="row">
-    <div class="col-3">
-        <div class="card" style="width: 100%">
-            <div class="card-header text-center">
-              Options
+<form [formGroup]="options">
+    <div class="row">
+        <div class="col-3">
+            <div class="card col-12 options-container">
+                <div class="card-header text-center">
+                Options
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <div class="card p-2">
+                            <h6 class="text-center mb-2">Image Opacity</h6>
+                            <input type="range" class="form-range" min="0" max="1" step="0.1" id="opacityInput" [formControl]="options.controls['img_opacity']">
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <div class="card p-2">
+                            <h6 class="text-center mb-2">Font Size</h6>
+                            <div class="d-flex justify-content-between">
+                                <div class="form-floating w-45">
+                                    <input type="number" class="form-control" id="HeaderFontSize" [formControl]="options.controls['headerFontSize']" placeholder="44" (change)="resizeInput()">
+                                    <label for="HeaderFontSize">Header</label>
+                                </div>
+                                <div class="form-floating w-45">
+                                    <input type="number" class="form-control" id="HeaderFontSize" [formControl]="options.controls['descriptionFontSize']" placeholder="32">
+                                    <label for="HeaderFontSize">Description</label>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <div class="card p-2">
+                            <h6 class="text-center mb-2">Font Weight</h6>
+                            <div class="d-flex justify-content-between">
+                                <div class="form-floating w-45">
+                                    <input type="number" class="form-control" id="HeaderFontSize" [formControl]="options.controls['headerFontWeight']" placeholder="700" min="100" max="900" step="100">
+                                    <label for="HeaderFontSize">Header</label>
+                                </div>
+                                <div class="form-floating w-45">
+                                    <input type="number" class="form-control" id="HeaderFontSize" [formControl]="options.controls['descriptionFontWeight']" placeholder="700" min="100" max="900" step="100">
+                                    <label for="HeaderFontSize">Description</label>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <div class="card p-2">
+                            <h6 class="text-center mb-2">Font Color</h6>
+                                <div class="d-flex justify-content-between">
+                                    <div class="w-45">
+                                        <label for="HeaderColor" class="form-label">Header</label>
+                                        <input type="color" class="form-control form-control-color" id="HeaderColor" [formControl]="options.controls['headerFontColor']">
+                                    </div>
+
+                                    <div class="w-45">
+                                        <label for="DescriptionColor" class="form-label">Description</label>
+                                        <input type="color" class="form-control form-control-color" id="DescriptionColor" [formControl]="options.controls['descriptionFontColor']">
+                                    </div>
+                                </div>
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <div class="card option-container">
+                            <h6>Font Family</h6>
+                            <div class="input-group mb-3">
+                                <span id="headerFontFamily" class="input-group-text">Header</span>
+                                <select class="form-select form-select" aria-label="Header" aria-describedby="headerFontFamily" [formControl]="options.controls['headerFontFamily']">
+                                    <option *ngFor="let font of fonts" [value]="font">{{font}}</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <span id="descriptionFontFamily" class="input-group-text">Description</span>
+                                <select class="form-select form-select" aria-label="Description" aria-describedby="descriptionFontFamily" [formControl]="options.controls['descriptionFontFamily']">
+                                    <option *ngFor="let font of fonts" [value]="font">{{font}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <div class="card-footer text-center">
+                    <button class="btn btn-primary" (click)="generateLink()">Generate</button>
+                </div>
             </div>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">
-                    <label for="heightInput">Height</label>
-                    <input type="number" class="form-control" id="heightInput" [(ngModel)]="img_height">
-                </li>
-                <li class="list-group-item">
-                    <label for="widthInput">Width</label>
-                    <input type="number" class="form-control" id="widthInput" [(ngModel)]="img_width">
-                </li>
-            </ul>
         </div>
 
-        <br>
-
-        <div class="card" style="width: 100%">
-            <div class="card-header text-center">
-              Dragables
+            <div id="img-preview" class="col-9 d-flex justify-content-center align-items-center">
+                <input #fileInput type="file" [style.display]="'none'" (change)="uploadImage($event)">
+                @if(img_src===undefined){
+                    <div
+                    class="card w-50 h-50 d-flex justify-content-center align-items-center border-primary"
+                    (click)="fileInput.click()"
+                    >
+                        <fa-icon 
+                        [icon]="uploadIcon"
+                        class="text-primary"
+                        style="font-size: 60px;"
+                        ></fa-icon>
+                        <h5 class="text-secondary">Upload Image</h5>
+                    </div>
+                }
+                @else {
+                    <div class="d-flex align-items-center justify-content-end change-img-btn" style="width:5%;">     
+                        <div class="btn bg-primary" placement="left" ngbTooltip="change Image">
+                            <fa-icon [icon]="changeImgIcon" class="text-white fs-3" (click)="fileInput.click()" ></fa-icon>
+                        </div>
+                    </div>
+                    <div
+                    class="img-container" 
+                    [ngStyle]="{
+                                'height':portrait?'95%':'auto',
+                                'width':portrait?'auto':'90%',
+                                'aspect-ratio':aspectRatio,
+                                'background-image': 'linear-gradient(rgba(255, 255, 255,'+(1-img_opacity)+'), rgba(255, 255, 255, '+(1-img_opacity)+')), url(' + img_src + ')',
+                                'margin-right':'5%',
+                                }"
+                    >
+                        <div class="header">
+                            <app-dynamic-text-input 
+                            #headerInputRef 
+                            [text]="options.controls['header']" 
+                            [fontSize]="headerFontSize"  
+                            [fontWeight]="headerFontWeight"
+                            [fontFamily]="headerFontFamily"
+                            [fontColor]="headerFontColor"
+                            >
+                            </app-dynamic-text-input>
+                        </div>
+                        <div class="d-flex flex-column" style="height: 60%;">
+                            <textarea
+                            [formControl]="options.controls['description']" 
+                            [ngStyle]="{'color':descriptionFontColor,'font-family':descriptionFontFamily,'font-size':descriptionFontSize+'px','font-weight':descriptionFontWeight}" 
+                            (input)=" adjustTextareaHeight($event)">
+                            </textarea>
+                        </div>
+                    </div>
+                }
             </div>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item text-center" draggable="true" (dragstart)="onDragStart()">
-                    Name
-                </li>
-            </ul>
-        </div>
+    </div>
+</form>
 
-    </div>
-    <div class="col-9 img-preview">
-        <div class="img-container">
-            <img [height]="img_height" [width]="img_width" src="http://192.168.1.94:8032/api/DynamicImage" (dragover)="onDragOver($event)" (drop)="onDrop($event)">
+<!-- Modal -->
+<ng-template #modalRef let-modal>
+
+    <!-- Alert -->
+    <div class="alert-container" [ngStyle]="{'display':showAlert?'flex':'none'}">
+        <div class="alert alert-primary" role="alert">
+            Link has been copied to Clipboard
         </div>
     </div>
-</div>
+
+	<div class="modal-header">
+		<h4 class="modal-title">Generated Link</h4>
+		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+	</div>
+	<div class="modal-body">
+		<div class="row">
+            <div class="col-10 d-flex align-items-center justify-content-center"><a [href]="generatedLink" target="_blank" class="pb-2" style="white-space: nowrap; overflow: auto;">{{generatedLink}}</a></div>
+            <div class="col-2" (click)="copyLink()">
+                <fa-icon class="btn btn-outline-primary" [icon]="copyIcon" placement="bottom" ngbTooltip="Copy Generated Link"></fa-icon>
+            </div>
+        </div>
+	</div>
+	<div class="modal-footer justify-content-center">
+		<button type="button" class="btn btn-success" (click)="modal.close('Close click')">Continue</button>
+	</div>
+</ng-template>

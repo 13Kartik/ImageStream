@@ -1,0 +1,21 @@
+.box{
+    background-color: #88d2e1 ;
+    padding: 8px;
+    border: 1px solid black;
+    border-radius: 10px;
+}
+
+/* (start) Copy icon hide/show style */
+.list-group-item .text-primary {
+    display: none; /* Initially hide the copy icon */
+}
+
+.list-group-item:hover .text-primary {
+    display: inline-block; /* Display the copy icon on hover */
+}
+/* (end) Copy icon hide/show style */
+
+/* image block item hover */
+.hover-bg:hover{
+    background-color: #7fafbe;
+}

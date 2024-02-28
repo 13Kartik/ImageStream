@@ -1,0 +1,4 @@
+.dropdown-menu > li > a:hover {
+    background-image: none;
+    background-color: lightblue;
+}

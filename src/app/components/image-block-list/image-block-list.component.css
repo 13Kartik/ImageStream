@@ -19,3 +19,8 @@
 .hover-bg:hover{
     background-color: #7fafbe;
 }
+
+/* crete-image model header style */
+.my-custom-header-color {
+    background-color: #88d2e1 ;
+}

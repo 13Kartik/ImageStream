@@ -1,0 +1,28 @@
+.options-container{
+    height:100vh;
+}
+.option-container{
+    padding: 3%;
+}
+
+.option-container h6{
+    text-align: center;
+    margin-bottom: 5% ;
+}
+
+.option-container div{
+    display: flex;
+    justify-content: space-between;
+}
+
+.option-container div div{
+    width: 45%;
+}
+
+.w-45{
+    width: 45%;
+}
+
+ul.list-group{
+    overflow: auto;
+}

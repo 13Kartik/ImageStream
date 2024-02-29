@@ -29,8 +29,7 @@ export class DbServiceService {
     return this.http.post<any>(this.api+'SPStaticImage/upload',file);
   }
 
-  uploadImageBlock(imageId:string,userId:string,blockData:object){
-    const req_url = `${this.api}SPStaticImage/generate?imageId=${imageId}&userId=${userId}`;
-    return this.http.post<any>(req_url,blockData);
+  uploadImageBlock(blockData:object){
+    return this.http.post<any>(`${this.api}SPStaticImage/generate`,blockData);
   }
 }

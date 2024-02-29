@@ -6,7 +6,7 @@ import { FormGroup, ReactiveFormsModule, FormControl } from '@angular/forms';
 //components
 import { DynamicTextInputComponent } from '../../dynamic-text-input/dynamic-text-input.component';
 import { SelectImageComponent } from '../../select-image/select-image.component';
-
+import { OptionsMenuComponent } from '../../options-menu/options-menu.component';
 
 //modal
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
@@ -25,6 +25,7 @@ import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 import { RouterModule } from '@angular/router';
 import { DbServiceService } from '../../../services/db-service.service';
 import { HttpClientModule } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
 
 //tooltip
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
@@ -35,8 +36,8 @@ import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
   imports: [
     CommonModule,
     FormsModule,
-    DynamicTextInputComponent,
     ReactiveFormsModule,
+    DynamicTextInputComponent,
     ClipboardModule,
     FontAwesomeModule,
     NgbAlertModule,
@@ -44,6 +45,7 @@ import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
     HttpClientModule,
     NgbTooltipModule,
     SelectImageComponent,
+    OptionsMenuComponent
   ],
   templateUrl: './image-generator.component.html',
   styleUrls: ['./image-generator.component.css'],
@@ -55,14 +57,12 @@ export class ImageGeneratorComponent {
   @ViewChild('appSelectImageRef') appSelectImageRef!: SelectImageComponent;
   @ViewChild('generatedLinkModal') generatedLinkModal!: TemplateRef<any>;
  
-
   constructor(
     private clipboard: Clipboard,
     private modalService: NgbModal,
-    private db: DbServiceService
+    private db: DbServiceService,
   ) {}
 
-  // img_src = "http://192.168.1.94:8032/api/DynamicImage";
   img_src!: string;
   img_file: File | null = null;
   imageId!:string;
@@ -98,8 +98,6 @@ export class ImageGeneratorComponent {
     header: new FormControl('Hey'),
     name: new FormControl('Kartik'),
     description: new FormControl('Hello, I am Here!!!!'),
-    img_height: new FormControl(600),
-    img_width: new FormControl(800),
     img_opacity: new FormControl(1),
     headerFontSize: new FormControl(44),
     descriptionFontSize: new FormControl(32),
@@ -113,12 +111,6 @@ export class ImageGeneratorComponent {
 
   blockData = new FormData();
 
-  get img_height() {
-    return this.options.get('img_height')?.value;
-  }
-  get img_width() {
-    return this.options.get('img_width')?.value;
-  }
   get img_opacity() {
     return this.options.get('img_opacity')?.value ?? 1;
   }
@@ -149,7 +141,6 @@ export class ImageGeneratorComponent {
   get descriptionFontColor() {
     return this.options.get('descriptionFontColor')?.value;
   }
-
   get headerFontWeight() {
     return this.options.get('headerFontWeight')?.value ?? 700;
   }
@@ -157,49 +148,46 @@ export class ImageGeneratorComponent {
     return this.options.get('descriptionFontWeight')?.value ?? 700;
   }
 
-  onSubmit() {}
+  onSubmit() {
+    this.generateLink();
+  }
 
   async generateLink() {
-
     if(this.img_file!==null){
       console.log('uploading file');
 
       const fileData = new FormData();
       fileData.append('file',this.img_file);
 
-      const uploadImageResponse: any = await this.db.uploadImage(fileData).toPromise();
+      const uploadImageResponse: any = await firstValueFrom(this.db.uploadImage(fileData));
       this.imageId = uploadImageResponse.imageId;
       console.log(this.imageId);
     }
 
-    this.generatedLink = 'http://192.168.1.94:8032/api/NewStaticImages';
+    this.generatedLink = 'http://192.168.1.94:8032/api/SPStaticImage/fetch/';
 
     //test
     this.modalService.open(this.generatedLinkModal, { centered: true });
 
     //upload Block
-    this.blockData.append('Header', this.header);
-    this.blockData.append('Description', this.description);
+    // this.blockData.append('Header', this.header);
+    // this.blockData.append('Description', this.description);
 
-    this.db.uploadImageBlock(this.imageId,'9e051ee3-4858-428d-a98b-d5baad632110',{
-      header:this.header,
-      description:this.description,
-      fontFamily:this.descriptionFontFamily,
-      fontSize:this.descriptionFontSize,
-      opacity:this.img_opacity,
-      fontColor:'blue'
-    }).subscribe({
-      next: (res) => {
-        this.generatedLink += '?' + res.imageId;
-        //open modal
-        this.modalService.open(this.generatedLinkModal, { centered: true });
-      },
-      error: (err) => {
-        console.error(err);
-      },
-    });
+    const blockData = {
+      userId:'9e051ee3-4858-428d-a98b-d5baad632110',
+      imageId:this.imageId,
+      'generationName':'testGenerations',
+      'imageProperty':{...this.options.value,backgroundImageOpacity: this.img_opacity*100}
+    }
+    delete blockData.imageProperty.img_opacity
+
+    const uploadImageBlockResponse = await firstValueFrom(this.db.uploadImageBlock(blockData));
+    console.log(uploadImageBlockResponse);
+    this.generatedLink += uploadImageBlockResponse.generationId;
+
+    //open modal
+    this.modalService.open(this.generatedLinkModal, { centered: true });
   }
-
   copyLink() {
     this.clipboard.copy(this.generatedLink);
 
@@ -227,13 +215,13 @@ export class ImageGeneratorComponent {
     // Get the dimensions using an Image element
     const img = new Image();
     img.src = image.url;
-    this.img_src=image.url;
+    this.img_src = image.url;
     this.setImageModalRef.close();
 
     // After the image has loaded, you can access its width and height
     img.onload = () => {
-      this.portrait = img.height > img.width ? true : false;
-      this.aspectRatio = img.width / img.height;
+        this.portrait = img.height > img.width;
+        this.aspectRatio = img.width / img.height;
     };
   }
 }

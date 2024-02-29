@@ -1,86 +1,6 @@
-<form [formGroup]="options">
+<form [formGroup]="options" (submit)="onSubmit()">
     <div class="row">
-        <div class="col-3">
-            <div class="card col-12 options-container">
-                <div class="card-header text-center">
-                Options
-                </div>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">
-                        <div class="card p-2">
-                            <h6 class="text-center mb-2">Image Opacity</h6>
-                            <input type="range" class="form-range" min="0" max="1" step="0.1" id="opacityInput" [formControl]="options.controls['img_opacity']">
-                        </div>
-                    </li>
-                    <li class="list-group-item">
-                        <div class="card p-2">
-                            <h6 class="text-center mb-2">Font Size</h6>
-                            <div class="d-flex justify-content-between">
-                                <div class="form-floating w-45">
-                                    <input type="number" class="form-control" id="HeaderFontSize" [formControl]="options.controls['headerFontSize']" placeholder="44" (change)="headerInputRef.resize()">
-                                    <label for="HeaderFontSize">Header</label>
-                                </div>
-                                <div class="form-floating w-45">
-                                    <input type="number" class="form-control" id="HeaderFontSize" [formControl]="options.controls['descriptionFontSize']" placeholder="32">
-                                    <label for="HeaderFontSize">Description</label>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="list-group-item">
-                        <div class="card p-2">
-                            <h6 class="text-center mb-2">Font Weight</h6>
-                            <div class="d-flex justify-content-between">
-                                <div class="form-floating w-45">
-                                    <input type="number" class="form-control" id="HeaderFontSize" [formControl]="options.controls['headerFontWeight']" placeholder="700" min="100" max="900" step="100">
-                                    <label for="HeaderFontSize">Header</label>
-                                </div>
-                                <div class="form-floating w-45">
-                                    <input type="number" class="form-control" id="HeaderFontSize" [formControl]="options.controls['descriptionFontWeight']" placeholder="700" min="100" max="900" step="100">
-                                    <label for="HeaderFontSize">Description</label>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="list-group-item">
-                        <div class="card p-2">
-                            <h6 class="text-center mb-2">Font Color</h6>
-                                <div class="d-flex justify-content-between">
-                                    <div class="w-45">
-                                        <label for="HeaderColor" class="form-label">Header</label>
-                                        <input type="color" class="form-control form-control-color" id="HeaderColor" [formControl]="options.controls['headerFontColor']">
-                                    </div>
-
-                                    <div class="w-45">
-                                        <label for="DescriptionColor" class="form-label">Description</label>
-                                        <input type="color" class="form-control form-control-color" id="DescriptionColor" [formControl]="options.controls['descriptionFontColor']">
-                                    </div>
-                                </div>
-                        </div>
-                    </li>
-                    <li class="list-group-item">
-                        <div class="card option-container">
-                            <h6>Font Family</h6>
-                            <div class="input-group mb-3">
-                                <span id="headerFontFamily" class="input-group-text">Header</span>
-                                <select class="form-select form-select" aria-label="Header" aria-describedby="headerFontFamily" [formControl]="options.controls['headerFontFamily']">
-                                    <option *ngFor="let font of fonts" [value]="font">{{font}}</option>
-                                </select>
-                            </div>
-                            <div class="input-group">
-                                <span id="descriptionFontFamily" class="input-group-text">Description</span>
-                                <select class="form-select form-select" aria-label="Description" aria-describedby="descriptionFontFamily" [formControl]="options.controls['descriptionFontFamily']">
-                                    <option *ngFor="let font of fonts" [value]="font">{{font}}</option>
-                                </select>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-                <div class="card-footer text-center">
-                    <button class="btn btn-primary" (click)="generateLink()">Generate</button>
-                </div>
-            </div>
-        </div>
+        <app-options-menu class="col-3" [options]="options.controls"></app-options-menu>
 
             <div id="img-preview" class="col-9 d-flex justify-content-center align-items-center">
                 @if(img_src===undefined){
@@ -162,16 +82,5 @@
 		<button type="button" class="btn btn-success" (click)="modal.close('Close click')">Continue</button>
 	</div>
 </ng-template>
-
-<!-- <ng-template #setImageModal let-modal>
-    <div class="modal-header">
-        <h4 class="modal-title">Select Image</h4>
-        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-    </div>
-    <app-select-image class="modal-body" (onSetImage)="handleImageUrl($event)"></app-select-image>
-    <div class="modal-footer">
-		pages
-	</div>
-</ng-template> -->
 
 <app-select-image #appSelectImageRef class="modal-body" (onSetImage)="handleImageUrl($event)"></app-select-image>

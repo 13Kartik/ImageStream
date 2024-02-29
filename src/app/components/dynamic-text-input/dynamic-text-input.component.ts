@@ -1,6 +1,6 @@
 import { Component, Input, Renderer2, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormControl, FormGroup, FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormControl, FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-dynamic-text-input',
@@ -9,7 +9,7 @@ import { ReactiveFormsModule, FormControl, FormGroup, FormsModule } from '@angul
   templateUrl: './dynamic-text-input.component.html',
   styleUrl: './dynamic-text-input.component.css'
 })
-export class DynamicTextInputComponent {
+export class DynamicTextInputComponent implements OnChanges {
 @Input() text!:FormControl;
 @Input() fontSize!:number;
 @Input() fontWeight!:number;
@@ -52,6 +52,12 @@ getWidthOfText(text: string): number {
 
 resize(){
   this.width=this.getWidthOfText(this.text.value);
+}
+
+ngOnChanges(changes: SimpleChanges) {
+  if (changes['fontSize']) {
+    this.resize();
+  }
 }
 
 }

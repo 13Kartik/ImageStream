@@ -1,0 +1,141 @@
+<div class="card col-12 options-container">
+  <div class="card-header text-center">Options</div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">
+      <div class="card p-2">
+        <h6 class="text-center mb-2">Image Opacity</h6>
+        <input
+          type="range"
+          class="form-range"
+          min="0"
+          max="1"
+          step="0.1"
+          id="opacityInput"
+          [formControl]="options['img_opacity']"
+        />
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div class="card p-2">
+        <h6 class="text-center mb-2">Font Size</h6>
+        <div class="d-flex justify-content-between">
+          <div class="form-floating w-45">
+            <input
+              type="number"
+              class="form-control"
+              id="HeaderFontSize"
+              [formControl]="options['headerFontSize']"
+              placeholder="44"
+            />
+            <label for="HeaderFontSize">Header</label>
+          </div>
+          <div class="form-floating w-45">
+            <input
+              type="number"
+              class="form-control"
+              id="HeaderFontSize"
+              [formControl]="options['descriptionFontSize']"
+              placeholder="32"
+            />
+            <label for="HeaderFontSize">Description</label>
+          </div>
+        </div>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div class="card p-2">
+        <h6 class="text-center mb-2">Font Weight</h6>
+        <div class="d-flex justify-content-between">
+          <div class="form-floating w-45">
+            <input
+              type="number"
+              class="form-control"
+              id="HeaderFontSize"
+              [formControl]="options['headerFontWeight']"
+              placeholder="700"
+              min="100"
+              max="900"
+              step="100"
+            />
+            <label for="HeaderFontSize">Header</label>
+          </div>
+          <div class="form-floating w-45">
+            <input
+              type="number"
+              class="form-control"
+              id="HeaderFontSize"
+              [formControl]="options['descriptionFontWeight']"
+              placeholder="700"
+              min="100"
+              max="900"
+              step="100"
+            />
+            <label for="HeaderFontSize">Description</label>
+          </div>
+        </div>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div class="card p-2">
+        <h6 class="text-center mb-2">Font Color</h6>
+        <div class="d-flex justify-content-between">
+          <div class="w-45">
+            <label for="HeaderColor" class="form-label">Header</label>
+            <input
+              type="color"
+              class="form-control form-control-color"
+              id="HeaderColor"
+              [formControl]="options['headerFontColor']"
+            />
+          </div>
+
+          <div class="w-45">
+            <label for="DescriptionColor" class="form-label">Description</label>
+            <input
+              type="color"
+              class="form-control form-control-color"
+              id="DescriptionColor"
+              [formControl]="options['descriptionFontColor']"
+            />
+          </div>
+        </div>
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div class="card option-container">
+        <h6>Font Family</h6>
+        <div class="input-group mb-3">
+          <span id="headerFontFamily" class="input-group-text">Header</span>
+          <select
+            class="form-select form-select"
+            aria-label="Header"
+            aria-describedby="headerFontFamily"
+            [formControl]="options['headerFontFamily']"
+          >
+            <option *ngFor="let font of fonts" [value]="font">
+              {{ font }}
+            </option>
+          </select>
+        </div>
+        <div class="input-group">
+          <span id="descriptionFontFamily" class="input-group-text"
+            >Description</span
+          >
+          <select
+            class="form-select form-select"
+            aria-label="Description"
+            aria-describedby="descriptionFontFamily"
+            [formControl]="options['descriptionFontFamily']"
+          >
+            <option *ngFor="let font of fonts" [value]="font">
+              {{ font }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </li>
+  </ul>
+  <div class="card-footer text-center">
+    <button class="btn btn-primary" type="submit">Generate</button>
+  </div>
+</div>

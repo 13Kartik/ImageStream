@@ -1,5 +1,4 @@
 .box{
-    background-color: #88d2e1 ;
     padding: 8px;
     border: 1px solid black;
     border-radius: 10px;
@@ -17,7 +16,7 @@
 
 /* image block item hover */
 .hover-bg:hover{
-    background-color: #7fafbe;
+    background-color: #162b58;
 }
 
 /* crete-image model header style */

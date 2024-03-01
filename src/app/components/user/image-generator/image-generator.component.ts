@@ -1,4 +1,4 @@
-import { Component, ViewChild, TemplateRef } from '@angular/core';
+import { Component, ViewChild, TemplateRef, ElementRef, AfterViewChecked } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FormGroup, ReactiveFormsModule, FormControl } from '@angular/forms';
@@ -56,11 +56,13 @@ export class ImageGeneratorComponent {
   @ViewChild('nameInputRef') nameInputRef!: DynamicTextInputComponent;
   @ViewChild('appSelectImageRef') appSelectImageRef!: SelectImageComponent;
   @ViewChild('generatedLinkModal') generatedLinkModal!: TemplateRef<any>;
+  @ViewChild('imgContainer') imgContainer!: ElementRef;
  
   constructor(
     private clipboard: Clipboard,
     private modalService: NgbModal,
     private db: DbServiceService,
+    private el: ElementRef
   ) {}
 
   img_src!: string;
@@ -99,8 +101,8 @@ export class ImageGeneratorComponent {
     name: new FormControl('Kartik'),
     description: new FormControl('Hello, I am Here!!!!'),
     img_opacity: new FormControl(1),
-    headerFontSize: new FormControl(44),
-    descriptionFontSize: new FormControl(32),
+    headerFontSize: new FormControl(10),
+    descriptionFontSize: new FormControl(7),
     headerFontWeight: new FormControl(700),
     descriptionFontWeight: new FormControl(700),
     headerFontColor: new FormControl('#3B71CA'),
@@ -115,7 +117,8 @@ export class ImageGeneratorComponent {
     return this.options.get('img_opacity')?.value ?? 1;
   }
   get descriptionFontSize() {
-    return this.options.get('descriptionFontSize')?.value;
+    const height = this.el.nativeElement.querySelector('.img-container').getBoundingClientRect().height;
+    return (this.options.get('descriptionFontSize')?.value ?? 7)*height/100;
   }
   get header() {
     return this.options.get('header')?.value ?? '';
@@ -133,7 +136,8 @@ export class ImageGeneratorComponent {
     return this.options.get('descriptionFontFamily')?.value ?? 'Courier New';
   }
   get headerFontSize() {
-    return this.options.get('headerFontSize')?.value ?? 44;
+    const height = this.el.nativeElement.querySelector('.img-container').getBoundingClientRect().height;
+    return (this.options.get('headerFontSize')?.value ?? 10)*height/100;
   }
   get headerFontColor() {
     return this.options.get('headerFontColor')?.value ?? '#3B71CA';
@@ -164,10 +168,7 @@ export class ImageGeneratorComponent {
       console.log(this.imageId);
     }
 
-    this.generatedLink = 'http://192.168.1.94:8032/api/SPStaticImage/fetch/';
-
-    //test
-    this.modalService.open(this.generatedLinkModal, { centered: true });
+    this.generatedLink = 'http://192.168.1.5:8033/api/SPStaticImage/fetch/';
 
     //upload Block
     // this.blockData.append('Header', this.header);

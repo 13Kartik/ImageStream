@@ -1,4 +1,4 @@
-import { Component, ViewChild, TemplateRef, ElementRef, AfterViewChecked } from '@angular/core';
+import { Component, ViewChild, TemplateRef, ElementRef, AfterViewChecked, AfterContentInit, AfterContentChecked } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FormGroup, ReactiveFormsModule, FormControl } from '@angular/forms';
@@ -57,6 +57,7 @@ export class ImageGeneratorComponent {
   @ViewChild('appSelectImageRef') appSelectImageRef!: SelectImageComponent;
   @ViewChild('generatedLinkModal') generatedLinkModal!: TemplateRef<any>;
   @ViewChild('imgContainer') imgContainer!: ElementRef;
+  @ViewChild('headerTextarea') headerTextarea!: ElementRef;
  
   constructor(
     private clipboard: Clipboard,
@@ -76,6 +77,8 @@ export class ImageGeneratorComponent {
   uploadIcon = faCloudArrowUp;
   portrait = false;
   aspectRatio = 4 / 3;
+
+  //coordinates
 
   //modal
   private setImageModalRef!: NgbModalRef;
@@ -101,10 +104,10 @@ export class ImageGeneratorComponent {
     name: new FormControl('Kartik'),
     description: new FormControl('Hello, I am Here!!!!'),
     img_opacity: new FormControl(1),
-    headerFontSize: new FormControl(10),
-    descriptionFontSize: new FormControl(7),
-    headerFontWeight: new FormControl(700),
-    descriptionFontWeight: new FormControl(700),
+    headerFontSize: new FormControl(8),
+    descriptionFontSize: new FormControl(4),
+    headerFontWeight: new FormControl(100),
+    descriptionFontWeight: new FormControl(100),
     headerFontColor: new FormControl('#3B71CA'),
     descriptionFontColor: new FormControl('#000000'),
     headerFontFamily: new FormControl('Courier New'),
@@ -153,7 +156,17 @@ export class ImageGeneratorComponent {
   }
 
   onSubmit() {
-    this.generateLink();
+    //coordinates
+    const imgContainer = this.el.nativeElement.querySelector('.img-container').getBoundingClientRect();
+    const headerTextarea = this.el.nativeElement.querySelector('.descriptionTextarea').getBoundingClientRect();
+    const x = headerTextarea.x-imgContainer.x;
+    const y = headerTextarea.y-imgContainer.y;
+    console.log(headerTextarea);
+    // this.generateLink();
+  }
+
+  getCoordinates(){
+
   }
 
   async generateLink() {
@@ -225,4 +238,36 @@ export class ImageGeneratorComponent {
         this.aspectRatio = img.width / img.height;
     };
   }
+
+  //drag and drop
+  headerX:number=0;
+  headerY:number=44;
+
+  initialMouseX!:number;
+  initialMouseY!:number;
+  ondragStart(event:any){
+    this.initialMouseX=event.pageX;
+    this.initialMouseY=event.pageY;
+  }
+
+  onDragover(event:any){
+    event.preventDefault(true);
+  }
+
+  onDrop(event:any){
+    event.preventDefault(true);
+  }
+
+  onDragend(event:any){
+    // Set the new position of the element
+    console.log(event);
+
+    const deltaX = (event.pageX-this.initialMouseX);
+    const deltaY = (event.pageY-this.initialMouseY);
+    this.headerX+=deltaX;
+    this.headerY+=deltaY;
+  }
+
+  
+
 }

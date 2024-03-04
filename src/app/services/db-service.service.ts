@@ -9,6 +9,7 @@ import { Observable } from 'rxjs';
 export class DbServiceService {
 
   private api:string='http://192.168.1.5:8033/api/';
+  private user_id:string = '9e051ee3-4858-428d-a98b-d5baad632110';
 
   private httpOptions = {
     headers:new HttpHeaders({
@@ -32,4 +33,9 @@ export class DbServiceService {
   uploadImageBlock(blockData:object){
     return this.http.post<any>(`${this.api}SPStaticImage/generate`,blockData);
   }
+
+  getUploadedImages(){
+    return this.http.get<any>(`${this.api}SPStaticImage/${this.user_id}/images`);
+  }
+
 }

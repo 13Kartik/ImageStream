@@ -19,19 +19,15 @@ export class OptionsMenuComponent {
   @Input() headerInputRef!:DynamicTextInputComponent;
 
   fonts = [
-    'Times New Roman',
-    'Georgia',
-    'Garamond',
-    'Arial',
-    'Verdana',
-    'Helvetica',
-    'Courier New',
-    'Lucida Console',
-    'Monaco',
-    'Brush Script MT',
-    'Lucida Handwriting',
-    'Copperplate',
-    'Papyrus',
+    "Times New Roman",
+    "Georgia",
+    "Arial",
+    "Verdana",
+    "Courier New",
+    "Monaco",
+    "Brush Script MT",
+    "Lucida Handwriting",
+    "Papyrus",
   ];
 
   constructor(){}

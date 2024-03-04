@@ -31,8 +31,10 @@
                                 'background-image': 'linear-gradient(rgba(255, 255, 255,'+(1-img_opacity)+'), rgba(255, 255, 255, '+(1-img_opacity)+')), url(' + img_src + ')',
                                 'margin-right':'5%',
                                 }"
+                    (dragover)="onDragover($event)"
+                    (drop)="onDrop($event)"
                     >
-                        <div class="header">
+                        <!-- <div class="header">
                             <app-dynamic-text-input 
                             #headerInputRef 
                             [text]="options.controls['header']" 
@@ -42,23 +44,27 @@
                             [fontColor]="headerFontColor"
                             >
                             </app-dynamic-text-input>
-                        </div>
+                        </div> -->
 
-                        <!-- <textarea
-                        class="text-center"
+                        <textarea
+                        #headerTextarea
+                        rows="1"
+                        draggable="true"
+                        (dragstart)="ondragStart($event)"
+                        (dragend)="onDragend($event)"
+                        class="headerTextarea text-center"
                         [formControl]="options.controls['header']" 
-                        [ngStyle]="{'color':headerFontColor,'font-family':headerFontFamily,'font-size':headerFontSize+'px','font-weight':headerFontWeight}" 
+                        [ngStyle]="{'color':headerFontColor,'font-family':headerFontFamily,'font-size':headerFontSize+'px','font-weight':headerFontWeight,'max-height':'30%',top:headerY+'px',left:headerX+'px'}"
                         (input)=" adjustTextareaHeight($event)">
-                        </textarea> -->
+                        </textarea>
 
-                        <div class="d-flex flex-column" style="height: 60%;">
-                            <textarea
-                            class="text-center"
-                            [formControl]="options.controls['description']" 
-                            [ngStyle]="{'color':descriptionFontColor,'font-family':descriptionFontFamily,'font-size':descriptionFontSize+'px','font-weight':descriptionFontWeight}" 
-                            (input)=" adjustTextareaHeight($event)">
-                            </textarea>
-                        </div>
+                        <textarea
+                        rows="2"
+                        class="descriptionTextarea text-center"
+                        [formControl]="options.controls['description']" 
+                        [ngStyle]="{'color':descriptionFontColor,'font-family':descriptionFontFamily,'font-size':descriptionFontSize+'px','font-weight':descriptionFontWeight,'max-height':'58%','margin-bottom':'2%'}" 
+                        (input)=" adjustTextareaHeight($event)">
+                        </textarea>
                     </div>
                 }
             </div>

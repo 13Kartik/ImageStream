@@ -1,6 +1,12 @@
-<form [formGroup]="options" (submit)="onSubmit()">
+<form [formGroup]="activeFontProperties" (submit)="onSubmit()">
     <div class="row">
-        <app-options-menu #imgContainer class="col-3" [options]="options.controls"></app-options-menu>
+        <app-options-menu 
+        class="col-3" 
+        [options]="activeFontProperties.controls"
+        (onOpacityChange)="setOpacity($event)"
+        (onAddTextBox)="this.addTextBox()"
+        >
+        </app-options-menu>
 
             <div id="img-preview" class="col-9 d-flex justify-content-center align-items-center">
                 @if(img_src===undefined){
@@ -23,16 +29,15 @@
                         </div>
                     </div>
                     <div
+                    #imgContainer
                     class="img-container" 
                     [ngStyle]="{
                                 'height':portrait?'95%':'auto',
                                 'width':portrait?'auto':'90%',
                                 'aspect-ratio':aspectRatio,
-                                'background-image': 'linear-gradient(rgba(255, 255, 255,'+(1-img_opacity)+'), rgba(255, 255, 255, '+(1-img_opacity)+')), url(' + img_src + ')',
+                                'background-image': 'linear-gradient(rgba(255, 255, 255,'+(1-imageOpacity)+'), rgba(255, 255, 255, '+(1-imageOpacity)+')), url(' + img_src + ')',
                                 'margin-right':'5%',
                                 }"
-                    (dragover)="onDragover($event)"
-                    (drop)="onDrop($event)"
                     >
                         <!-- <div class="header">
                             <app-dynamic-text-input 
@@ -46,12 +51,11 @@
                             </app-dynamic-text-input>
                         </div> -->
 
-                        <textarea
+                        <!-- <textarea
                         #headerTextarea
                         rows="1"
-                        draggable="true"
-                        (dragstart)="ondragStart($event)"
-                        (dragend)="onDragend($event)"
+                        cdkDrag
+                        cdkDragBoundary=".img-container"
                         class="headerTextarea text-center"
                         [formControl]="options.controls['header']" 
                         [ngStyle]="{'color':headerFontColor,'font-family':headerFontFamily,'font-size':headerFontSize+'px','font-weight':headerFontWeight,'max-height':'30%',top:headerY+'px',left:headerX+'px'}"
@@ -64,7 +68,20 @@
                         [formControl]="options.controls['description']" 
                         [ngStyle]="{'color':descriptionFontColor,'font-family':descriptionFontFamily,'font-size':descriptionFontSize+'px','font-weight':descriptionFontWeight,'max-height':'58%','margin-bottom':'2%'}" 
                         (input)=" adjustTextareaHeight($event)">
-                        </textarea>
+                        </textarea> -->
+
+                        <div #textBoxContainer></div>
+
+
+                        <app-text-box 
+                        *ngFor="let textBox of fontProperties; let index = index"
+                        [id]="'textBox_'+index"
+                        [fontControls]="textBox.controls"
+                        [imgContainerHeight]="imgContainerHeight"
+                        (click)="changeTextBox(index)"
+                        (onBlur)="clearFontProperties()"
+                        >
+                        </app-text-box>
                     </div>
                 }
             </div>

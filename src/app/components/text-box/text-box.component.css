@@ -1,0 +1,28 @@
+textarea{
+    background-color: transparent;
+    resize:horizontal;
+    max-width: 100%;
+    overflow-y: hidden;
+    border: none;
+    width: 100%;
+    position: relative;
+    padding: 0px;
+}
+
+/* holder */
+.texboxHolder {
+    width:fit-content;
+    height: fit-content;
+    text-align: center;
+    background: transparent;
+    border-radius: 5px;
+    padding: 3px;
+    position: relative;
+  }
+
+.dragHandle{
+    position: absolute;
+    top:-30px;
+    right: 2px;
+    cursor: move;
+}

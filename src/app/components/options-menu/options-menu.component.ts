@@ -1,4 +1,4 @@
-import { Component, ViewChild, TemplateRef, Input, Output } from '@angular/core';
+import { Component, ViewChild, TemplateRef, Input, Output, EventEmitter, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FormGroup, ReactiveFormsModule, FormControl } from '@angular/forms';
@@ -14,9 +14,13 @@ import { DynamicTextInputComponent } from '../dynamic-text-input/dynamic-text-in
   styleUrls: ['./options-menu.component.css'],
 })
 
-export class OptionsMenuComponent {
+export class OptionsMenuComponent implements AfterViewInit {
   @Input() options!:any;
   @Input() headerInputRef!:DynamicTextInputComponent;
+  @Output() onOpacityChange:EventEmitter<number> = new EventEmitter;
+  @Output() onAddTextBox:EventEmitter<void> = new EventEmitter;
+
+  imageOpacity:number = 1;
 
   fonts = [
     "Times New Roman",
@@ -30,8 +34,12 @@ export class OptionsMenuComponent {
     "Papyrus",
   ];
 
-  constructor(){}
+  constructor(){
+  
+  }
 
-  onSubmit() {}
+  ngAfterViewInit(): void {
+    console.log('options:',this.options);
+  }
 
 }

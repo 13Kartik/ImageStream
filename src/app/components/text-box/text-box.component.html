@@ -1,1 +1,22 @@
-<p>text-box works!</p>
+<div class="texboxHolder"
+cdkDrag 
+cdkDragBoundary=".img-container"
+>
+<div class="text-end dragHandle" [style.display]="isActive?'block':'none'">
+    <fa-icon [icon]="handleIcon"class="text-primary fs-4 me-1" cdkDragHandle></fa-icon>
+</div>
+    <textarea 
+    rows="1"
+    class="text-box text-center"
+    [formControl]="fontControls['text']" 
+    [ngStyle]="{
+        'color':fontColor,
+        'font-family':fontFamily,
+        'font-size':fontSize+'px',
+        }"
+    (input)="adjustTextareaHeight($event)"
+    (focus)="isActive = true"
+    (blur)="disableOptions()"
+    >
+    </textarea>
+</div>

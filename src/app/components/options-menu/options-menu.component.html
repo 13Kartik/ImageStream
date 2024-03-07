@@ -67,6 +67,19 @@
             </option>
           </select>
         </div>
+        <div class="input-group mb-3">
+          <span id="textAlignment" class="input-group-text">Text Alignment</span>
+          <select
+            class="form-select form-select"
+            aria-label="Text Alignment"
+            aria-describedby="textAlignment"
+            [formControl]="options['textAlignment']"
+          >
+            <option *ngFor="let alignment of ['left','center','right']" [value]="alignment">
+              {{ alignment }}
+            </option>
+          </select>
+        </div>
       </div>
     </li>
 

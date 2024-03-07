@@ -7,12 +7,13 @@ cdkDragBoundary=".img-container"
 </div>
     <textarea 
     rows="1"
-    class="text-box text-center"
+    class="text-box"
     [formControl]="fontControls['text']" 
     [ngStyle]="{
         'color':fontColor,
         'font-family':fontFamily,
         'font-size':fontSize+'px',
+        'text-align':textAlignment,
         }"
     (input)="adjustTextareaHeight($event)"
     (focus)="isActive = true"

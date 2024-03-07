@@ -87,8 +87,6 @@ export class ImageGeneratorComponent {
   img_src!: string;
   img_file: File | null = null;
   imageId!:string;
-
-  imgContainerReact!:any;
   imgContainerHeight!:number;
   real_height!:number;
   real_width!:number;
@@ -114,6 +112,7 @@ export class ImageGeneratorComponent {
       fontSize: new FormControl(5),
       fontColor: new FormControl('#3B71CA'),
       fontFamily: new FormControl('Courier New'),
+      textAlignment: new FormControl('left'),
     });
     
     // Push a new object into the array
@@ -132,15 +131,22 @@ export class ImageGeneratorComponent {
 
   convertProperties(x:number,y:number,height:number,width:number){
 
-    const scaleHeight = this.real_height/this.imgContainerReact.height;
-    const scaleWidth = this.real_width/this.imgContainerReact.width;
+    const imgContainerReact=this.el.nativeElement.querySelector('.img-container').getBoundingClientRect();
 
-    const newX = (x-this.imgContainerReact.x)*scaleWidth;
-    const newY = (y-this.imgContainerReact.y)*scaleHeight;
+    console.log('height:',height);
+
+    const scaleHeight = this.real_height/imgContainerReact.height;
+    const scaleWidth = this.real_width/imgContainerReact.width;
+    const scale = this.real_width/window.innerWidth;
+
+    console.log(scaleHeight,scaleWidth);
+
+    const newX = (x-imgContainerReact.x)*scaleWidth;
+    const newY = (y-imgContainerReact.y)*scaleHeight;
     const newHeight = height*scaleHeight;
     const newWidth = width*scaleWidth;
 
-    return [newX,newY,newHeight,newWidth];
+    return [newX,newY,newHeight,newWidth,scale];
   }
 
   async generateLink() {
@@ -161,7 +167,7 @@ export class ImageGeneratorComponent {
     const textBoxes=[];
     for(const [i, properties] of this.fontProperties.entries()){
       const textBox = this.el.nativeElement.querySelector(`#textBox_${i} textarea`)?.getBoundingClientRect();
-      const [x,y,height,width]=this.convertProperties(textBox.x,textBox.y,textBox.height,textBox.width);
+      const [x,y,height,width,scale]=this.convertProperties(textBox.x,textBox.y,textBox.height,textBox.width);
       textBoxes.push({
         x,
         y,
@@ -170,17 +176,17 @@ export class ImageGeneratorComponent {
         ...properties.value
       });
 
-      const scaleHeight = this.real_height/this.imgContainerReact.height;
-      const scaleWidth = this.real_width/this.imgContainerReact.width;
       //converting fontSize to px for all boxes
       for(const textBox of textBoxes){
-        textBox.fontSize = (textBox.fontSize-2)*this.real_height/100;
+        console.log('font Size:',textBox.fontSize*this.imgContainerHeight/100);
+        textBox.fontSize = textBox.fontSize*scale;
+        // textBox.fontSize = (textBox.fontSize-0)*this.real_width/100;
       }
 
     }
 
     const blockData = {
-      userId:'9e051ee3-4858-428d-a98b-d5baad632110',
+      createdBy:'bd2dba6f-c8b8-48c9-bdf0-d793c128e338',
       imageId:this.imageId,
       generationName:'testGenerations',
       imageProperty:{
@@ -190,18 +196,6 @@ export class ImageGeneratorComponent {
     }
 
     console.log(blockData);
-
-    // //upload Block
-    // // this.blockData.append('Header', this.header);
-    // // this.blockData.append('Description', this.description);
-
-    // const blockData = {
-    //   userId:'9e051ee3-4858-428d-a98b-d5baad632110',
-    //   imageId:this.imageId,
-    //   'generationName':'testGenerations',
-    //   'imageProperty':{...this.fontProperties.value,backgroundImageOpacity: this.img_opacity*100}
-    // }
-    // delete blockData.imageProperty.img_opacity
 
     const uploadImageBlockResponse = await firstValueFrom(this.db.uploadImageBlock(blockData));
     console.log(uploadImageBlockResponse);
@@ -247,8 +241,7 @@ export class ImageGeneratorComponent {
         this.real_width = img.width;
         this.portrait = img.height > img.width;
         this.aspectRatio = img.width / img.height;
-        this.imgContainerReact=this.el.nativeElement.querySelector('.img-container').getBoundingClientRect();
-        this.imgContainerHeight=this.el.nativeElement.querySelector('.img-container').getBoundingClientRect().height;
+        this.imgContainerHeight=this.el.nativeElement.querySelector('.img-container').getBoundingClientRect().width;
     };
   }
 
@@ -287,7 +280,6 @@ export class ImageGeneratorComponent {
   }
 
   clearFontProperties(){
-    console.log('Hi');
     this.activeFontProperties=new FormGroup({});
   }
 

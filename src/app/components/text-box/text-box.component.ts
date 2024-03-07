@@ -21,6 +21,7 @@ export class TextBoxComponent {
 
   @Input() fontControls!: any;
   @Input() imgContainerHeight!: number;
+  @Input() aspectRatio!: number;
   @Output() onBlur:EventEmitter<void>=new EventEmitter;
 
   someNativeElement: any;
@@ -33,7 +34,8 @@ export class TextBoxComponent {
   }
 
   get fontSize() {
-    return (this.fontControls['fontSize']?.value ?? 7)*this.imgContainerHeight/100;
+    // return (this.fontControls['fontSize']?.value ?? 2)*this.imgContainerHeight/100;
+    return (this.fontControls['fontSize']?.value ?? 2);
   }
 
   get fontFamily() {
@@ -42,6 +44,9 @@ export class TextBoxComponent {
 
   get fontColor() {
     return this.fontControls['fontColor']?.value ?? '#3B71CA';
+  }
+  get textAlignment() {
+    return this.fontControls['textAlignment']?.value ?? 'left';
   }
 
   adjustTextareaHeight(event: any): void {

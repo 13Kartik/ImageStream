@@ -29,7 +29,7 @@ export class SelectImageComponent {
   imgIcon = faImage;
   page=1;
 
-  storagePath = 'http://192.168.1.5:8033/images/';
+  storagePath = 'http://192.168.1.17:8056/images/';
 
   imgLinkList:any[]=[];
   img_row_1:any[]=[];

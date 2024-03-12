@@ -1,10 +1,8 @@
 textarea{
     background-color: transparent;
     resize:horizontal;
-    max-width: 100%;
     overflow-y: hidden;
     border: none;
-    width: 100%;
     position: relative;
     padding: 0px;
     line-height: 1;
@@ -15,12 +13,13 @@ textarea{
 /* holder */
 .texboxHolder {
     width:fit-content;
-    height: fit-content;
+
     text-align: center;
     background: transparent;
     border-radius: 5px;
+    /* position: relative; */
     padding: 3px;
-    position: relative;
+    position: absolute;
   }
 
 .dragHandle{

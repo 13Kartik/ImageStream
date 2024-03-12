@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild, OnChanges, SimpleChanges, AfterViewInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FormGroup, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -17,25 +17,70 @@ import { faArrowsUpDownLeftRight } from '@fortawesome/free-solid-svg-icons';
   templateUrl: './text-box.component.html',
   styleUrl: './text-box.component.css'
 })
-export class TextBoxComponent {
+export class TextBoxComponent implements AfterViewInit {
 
   @Input() fontControls!: any;
-  @Input() imgContainerHeight!: number;
   @Input() aspectRatio!: number;
-  @Output() onBlur:EventEmitter<void>=new EventEmitter;
+  @Output() onDelete:EventEmitter<void>=new EventEmitter;
+
+  @ViewChild('textBox') textBox!: ElementRef;
 
   someNativeElement: any;
   isActive:boolean = false;
 
   handleIcon = faArrowsUpDownLeftRight;
 
+  constructor(
+    private el: ElementRef
+  ) {
+  }
+
+  ngAfterViewInit(): void {
+    this.fontControls['fontSize'].valueChanges.subscribe(() => {
+      this.resizeTextarea();
+    });
+  }
+
+  //width
+  maxWidth:string='100%';
+  getMaxWidth(){
+    const textBox_left = this.el.nativeElement.
+    querySelector(`textarea`)
+    ?.getBoundingClientRect().left;
+
+    const imgContainer_right = document
+    .querySelector('.img-container')
+    ?.getBoundingClientRect().right ?? 1200;
+
+    this.maxWidth= (imgContainer_right - textBox_left)+'px';
+  }
+
+  //height
+  maxHeight:string='100%';
+  getMaxHeight(){
+    const textBox_top = this.el.nativeElement.
+    querySelector(`textarea`)
+    ?.getBoundingClientRect().top;
+
+    const imgContainer_bottom = document
+    .querySelector('.img-container')
+    ?.getBoundingClientRect().bottom ?? 1200;
+
+    this.maxHeight = (imgContainer_bottom - textBox_top)+'px';
+  }
+
   get text() {
     return this.fontControls['text']?.value ?? '';
   }
 
   get fontSize() {
-    // return (this.fontControls['fontSize']?.value ?? 2)*this.imgContainerHeight/100;
-    return (this.fontControls['fontSize']?.value ?? 2);
+    // //resize textarea
+    // const textarea = this.textBox?.nativeElement;
+    // if(textarea){
+    //   textarea.style.height = 'auto';
+    //   textarea.style.height = textarea.scrollHeight + 'px';
+    // }
+    return (this.fontControls['fontSize']?.value ?? 36);
   }
 
   get fontFamily() {
@@ -50,14 +95,24 @@ export class TextBoxComponent {
   }
 
   adjustTextareaHeight(event: any): void {
+    this.getMaxHeight();
     const textarea = event.target as HTMLTextAreaElement;
     textarea.style.height = 'auto';
     textarea.style.height = textarea.scrollHeight + 'px';
   }
 
-  disableOptions(){
-    this.isActive=false;
-    // this.onBlur.emit();
+  handleKeyDown(event: KeyboardEvent): void {
+    if (event.key === 'Delete' && this.isActive) {
+      this.onDelete.emit();
+    }
   }
+
+  resizeTextarea(): void {
+    this.getMaxHeight();
+    const textarea = this.textBox?.nativeElement;
+    textarea.style.height = 'auto';
+    textarea.style.height = textarea.scrollHeight + 'px';
+  }
+
 
 }

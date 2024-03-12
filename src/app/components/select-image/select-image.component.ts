@@ -43,11 +43,11 @@ export class SelectImageComponent {
   }
 
   async getImageList(){
-    this.imgLinkList.push({
-        imageId:'testImage',
-        imagePath:'https://images.pexels.com/photos/3137052/pexels-photo-3137052.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
-    })
-    // this.imgLinkList = await firstValueFrom(this.db.getUploadedImages());
+    // this.imgLinkList.push({
+    //     imageId:'testImage',
+    //     imagePath:'https://images.pexels.com/photos/3137052/pexels-photo-3137052.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
+    // })
+    this.imgLinkList = await firstValueFrom(this.db.getUploadedImages());
     this.img_row_1=this.imgLinkList.splice(0,4);
     this.imgLinkList_2d = this.convert_to_2d(this.imgLinkList);
   }

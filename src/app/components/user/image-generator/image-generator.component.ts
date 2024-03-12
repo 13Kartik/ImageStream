@@ -1,4 +1,12 @@
-import { Component, ViewChild, TemplateRef, ElementRef, Renderer2, ViewContainerRef, EventEmitter } from '@angular/core';
+import {
+  Component,
+  ViewChild,
+  TemplateRef,
+  ElementRef,
+  Renderer2,
+  ViewContainerRef,
+  EventEmitter,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FormGroup, ReactiveFormsModule, FormControl } from '@angular/forms';
@@ -10,7 +18,7 @@ import { OptionsMenuComponent } from '../../options-menu/options-menu.component'
 
 //modal
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { Clipboard,ClipboardModule } from '@angular/cdk/clipboard';
+import { Clipboard, ClipboardModule } from '@angular/cdk/clipboard';
 
 //icons
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -31,7 +39,7 @@ import { firstValueFrom } from 'rxjs';
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 
 //drag and drop
-import {CdkDrag} from '@angular/cdk/drag-drop';
+import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop';
 import { TextBoxComponent } from '../../text-box/text-box.component';
 
 @Component({
@@ -50,8 +58,7 @@ import { TextBoxComponent } from '../../text-box/text-box.component';
     NgbTooltipModule,
     SelectImageComponent,
     OptionsMenuComponent,
-    CdkDrag,
-    TextBoxComponent
+    TextBoxComponent,
   ],
   templateUrl: './image-generator.component.html',
   styleUrls: ['./image-generator.component.css'],
@@ -63,18 +70,18 @@ export class ImageGeneratorComponent {
   @ViewChild('appSelectImageRef') appSelectImageRef!: SelectImageComponent;
   @ViewChild('generatedLinkModal') generatedLinkModal!: TemplateRef<any>;
 
-  @ViewChild('textBoxContainer', { read: ViewContainerRef }) textBoxContainer!: ViewContainerRef;
+  @ViewChild('textBoxContainer', { read: ViewContainerRef })
+  textBoxContainer!: ViewContainerRef;
 
   @ViewChild('imgContainer') imgContainer!: ElementRef;
   @ViewChild('headerTextarea') headerTextarea!: ElementRef;
- 
+
   constructor(
     private clipboard: Clipboard,
     private modalService: NgbModal,
     private db: DbServiceService,
-    private el: ElementRef,
+    private el: ElementRef
   ) {
-
     this.addTextBox();
   }
 
@@ -82,14 +89,12 @@ export class ImageGeneratorComponent {
   copyIcon = faCopy;
   changeImgIcon = faRotate;
   uploadIcon = faCloudArrowUp;
-  
-  
+
   img_src!: string;
   img_file: File | null = null;
-  imageId!:string;
-  imgContainerHeight!:number;
-  real_height!:number;
-  real_width!:number;
+  imageId!: string;
+  real_height!: number;
+  real_width!: number;
 
   generatedLink: string = 'http://192.168.1.94:8032/api/DynamicImage';
   showAlert = false;
@@ -102,108 +107,117 @@ export class ImageGeneratorComponent {
   private setImageModalRef!: NgbModalRef;
 
   //dynamic Form Group
-  activeFontProperties:FormGroup=new FormGroup({});
-  imageOpacity: number=1;
-  fontProperties:FormGroup[]=[]; 
+  activeFontProperties: FormGroup = new FormGroup({});
+  imageOpacity: number = 1;
+  fontProperties: FormGroup[] = [];
 
-  addTextBox(){
+  addTextBox() {
     const textBox = new FormGroup({
       text: new FormControl('Enter text'),
-      fontSize: new FormControl(5),
+      fontSize: new FormControl(36),
       fontColor: new FormControl('#3B71CA'),
       fontFamily: new FormControl('Courier New'),
       textAlignment: new FormControl('left'),
     });
-    
+
     // Push a new object into the array
     this.fontProperties.push(textBox);
   }
 
   blockData = new FormData();
 
-  changeTextBox(i:number){
-    this.activeFontProperties=this.fontProperties[i];
+  changeTextBox(i: number) {
+    this.activeFontProperties = this.fontProperties[i];
   }
 
   onSubmit() {
     this.generateLink();
   }
 
-  convertProperties(x:number,y:number,height:number,width:number){
+  convertProperties(x: number, y: number, height: number, width: number) {
+    const imgContainerReact = this.el.nativeElement
+      .querySelector('.img-container')
+      .getBoundingClientRect();
 
-    const imgContainerReact=this.el.nativeElement.querySelector('.img-container').getBoundingClientRect();
+    const scaleHeight = this.real_height / imgContainerReact.height;
+    const scaleWidth = this.real_width / imgContainerReact.width;
 
-    console.log('height:',height);
+    const newX = (x - imgContainerReact.x) * scaleWidth;
+    const newY = (y - imgContainerReact.y) * scaleHeight;
+    const newHeight = height * scaleHeight;
+    const newWidth = width * scaleWidth;
 
-    const scaleHeight = this.real_height/imgContainerReact.height;
-    const scaleWidth = this.real_width/imgContainerReact.width;
-    const scale = this.real_width/window.innerWidth;
-
-    console.log(scaleHeight,scaleWidth);
-
-    const newX = (x-imgContainerReact.x)*scaleWidth;
-    const newY = (y-imgContainerReact.y)*scaleHeight;
-    const newHeight = height*scaleHeight;
-    const newWidth = width*scaleWidth;
-
-    return [newX,newY,newHeight,newWidth,scale];
+    return [newX, newY, newHeight, newWidth];
   }
 
   async generateLink() {
-    if(this.img_file!==null){
+    if (this.img_file !== null) {
       console.log('uploading file');
 
       const fileData = new FormData();
-      fileData.append('file',this.img_file);
+      fileData.append('file', this.img_file);
 
-      const uploadImageResponse: any = await firstValueFrom(this.db.uploadImage(fileData));
+      const uploadImageResponse: any = await firstValueFrom(
+        this.db.uploadImage(fileData)
+      );
       this.imageId = uploadImageResponse.imageId;
     }
 
-    this.generatedLink = 'http://192.168.1.5:8033/api/SPStaticImage/fetch/';
+    this.generatedLink = this.db.api;
+    this.generatedLink += 'SPStaticImage/fetch/';
 
     //create req Data:
-
-    const textBoxes=[];
-    for(const [i, properties] of this.fontProperties.entries()){
-      const textBox = this.el.nativeElement.querySelector(`#textBox_${i} textarea`)?.getBoundingClientRect();
-      const [x,y,height,width,scale]=this.convertProperties(textBox.x,textBox.y,textBox.height,textBox.width);
+    const textBoxes = [];
+    for (const [i, properties] of this.fontProperties.entries()) {
+      const textBox = this.el.nativeElement
+        .querySelector(`#textBox_${i} textarea`)
+        ?.getBoundingClientRect();
+      const [x, y, height, width] = this.convertProperties(
+        textBox.x,
+        textBox.y,
+        textBox.height,
+        textBox.width
+      );
       textBoxes.push({
         x,
         y,
         height,
         width,
-        ...properties.value
+        ...properties.value,
       });
+    }
 
-      //converting fontSize to px for all boxes
-      for(const textBox of textBoxes){
-        console.log('font Size:',textBox.fontSize*this.imgContainerHeight/100);
-        textBox.fontSize = textBox.fontSize*scale;
-        // textBox.fontSize = (textBox.fontSize-0)*this.real_width/100;
-      }
+    //converting fontSize to px for all boxes
+    let scale:number=this.real_width / window.innerWidth;
 
+    // if(this.portrait) scale = (this.real_height+this.real_width) / (window.innerHeight+window.innerWidth);
+
+    for (let box of textBoxes) {
+      box.fontSize = box.fontSize * scale;
     }
 
     const blockData = {
-      createdBy:'bd2dba6f-c8b8-48c9-bdf0-d793c128e338',
-      imageId:this.imageId,
-      generationName:'testGenerations',
-      imageProperty:{
-        backgroundImageOpacity:this.imageOpacity*100,
-        textBoxes:textBoxes
-      }
-    }
+      createdBy: 'bd2dba6f-c8b8-48c9-bdf0-d793c128e338',
+      imageId: this.imageId,
+      generationName: 'testGenerations',
+      imageProperty: {
+        backgroundImageOpacity: this.imageOpacity * 100,
+        textBoxes: textBoxes,
+      },
+    };
 
     console.log(blockData);
 
-    const uploadImageBlockResponse = await firstValueFrom(this.db.uploadImageBlock(blockData));
+    const uploadImageBlockResponse = await firstValueFrom(
+      this.db.uploadImageBlock(blockData)
+    );
     console.log(uploadImageBlockResponse);
     this.generatedLink += uploadImageBlockResponse.generationId;
 
     // open modal
     this.modalService.open(this.generatedLinkModal, { centered: true });
   }
+
   copyLink() {
     this.clipboard.copy(this.generatedLink);
 
@@ -214,20 +228,17 @@ export class ImageGeneratorComponent {
     }, 3000);
   }
 
-  adjustTextareaHeight(event: any): void {
-    const textarea = event.target as HTMLTextAreaElement;
-    textarea.style.height = 'auto';
-    textarea.style.height = textarea.scrollHeight + 'px';
-  }
-
   openSetImageModal() {
     //open modal
-    this.setImageModalRef=this.modalService.open(this.appSelectImageRef.setImageModal, { centered: true, size: 'xl' });
+    this.setImageModalRef = this.modalService.open(
+      this.appSelectImageRef.setImageModal,
+      { centered: true, size: 'xl' }
+    );
   }
 
-  handleImageUrl(image: {imageId?:string,url:string,file?:File}) {
-    if(image.file) this.img_file = image.file;
-    else if(image.imageId) this.imageId=image.imageId;
+  handleImageUrl(image: { imageId?: string; url: string; file?: File }) {
+    if (image.file) this.img_file = image.file;
+    else if (image.imageId) this.imageId = image.imageId;
 
     // Get the dimensions using an Image element
     const img = new Image();
@@ -237,50 +248,20 @@ export class ImageGeneratorComponent {
 
     // After the image has loaded, you can access its width and height
     img.onload = () => {
-        this.real_height = img.height;
-        this.real_width = img.width;
-        this.portrait = img.height > img.width;
-        this.aspectRatio = img.width / img.height;
-        this.imgContainerHeight=this.el.nativeElement.querySelector('.img-container').getBoundingClientRect().width;
+      this.real_height = img.height;
+      this.real_width = img.width;
+      this.portrait = img.height > img.width;
+      this.aspectRatio = img.width / img.height;
     };
   }
 
-  // //drag and drop
-  // headerX:number=0;
-  // headerY:number=44;
-
-  // initialMouseX!:number;
-  // initialMouseY!:number;
-
-  // ondragStart(event:any){
-  //   this.initialMouseX=event.pageX;
-  //   this.initialMouseY=event.pageY;
-  // }
-
-  // onDragover(event:any){
-  //   event.preventDefault(true);
-  // }
-
-  // onDrop(event:any){
-  //   event.preventDefault(true);
-  // }
-
-  // onDragend(event:any){
-  //   // Set the new position of the element
-  //   console.log(event);
-
-  //   const deltaX = (event.pageX-this.initialMouseX);
-  //   const deltaY = (event.pageY-this.initialMouseY);
-  //   this.headerX+=deltaX;
-  //   this.headerY+=deltaY;
-  // }
-
-  setOpacity(opacity:number){
-    this.imageOpacity=opacity;
+  setOpacity(opacity: number) {
+    this.imageOpacity = opacity;
   }
 
-  clearFontProperties(){
-    this.activeFontProperties=new FormGroup({});
+  deleteTextBox(i:number){
+    console.log('I am working');
+    this.activeFontProperties = new FormGroup({});
+    this.fontProperties.splice(i,1);
   }
-
 }

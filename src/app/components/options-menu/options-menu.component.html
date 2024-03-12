@@ -3,137 +3,86 @@
   <ul class="list-group list-group-flush">
     <li class="list-group-item">
       <div class="card p-2">
-        <h6 class="text-center mb-2">Image Opacity</h6>
+        <h6 class="text-center mb-3">Image Options</h6>
+
+        <label for="opacityInput" class="form-label fs-6 ms-2">Image Opacity</label>
         <input
           type="range"
-          class="form-range"
+          class="form-range mb-3"
           min="0"
           max="1"
           step="0.1"
           id="opacityInput"
-          [formControl]="options['img_opacity']"
+          [(ngModel)]="imageOpacity"
+          (ngModelChange)="this.onOpacityChange.emit(imageOpacity)"
         />
+
+        <div class="d-flex justify-content-center p-2 w-100">
+          <button class="btn btn-success" 
+            type="button"
+            [style.width]="'fit-content'"
+            (click)="this.onAddTextBox.emit()"
+          >
+            Add Text Box
+          </button>
+        </div>
+
       </div>
     </li>
-    <li class="list-group-item">
+
+    <li class="list-group-item" *ngIf="options['fontSize']!==undefined">
       <div class="card p-2">
-        <h6 class="text-center mb-2">Font Size</h6>
-        <div class="d-flex justify-content-between">
+        <h6 class="text-center mb-3">Font Properties</h6>
+        <div class="d-flex justify-content-between mb-3">
           <div class="form-floating w-45">
             <input
               type="number"
               class="form-control"
-              id="HeaderFontSize"
-              [formControl]="options['headerFontSize']"
+              id="fontSize"
+              [formControl]="options['fontSize']"
               placeholder="44"
             />
-            <label for="HeaderFontSize">Header</label>
+            <label for="fontSize">Font Size</label>
           </div>
-          <div class="form-floating w-45">
-            <input
-              type="number"
-              class="form-control"
-              id="HeaderFontSize"
-              [formControl]="options['descriptionFontSize']"
-              placeholder="32"
-            />
-            <label for="HeaderFontSize">Description</label>
-          </div>
-        </div>
-      </div>
-    </li>
-    <li class="list-group-item">
-      <div class="card p-2">
-        <h6 class="text-center mb-2">Font Weight</h6>
-        <div class="d-flex justify-content-between">
-          <div class="form-floating w-45">
-            <input
-              type="number"
-              class="form-control"
-              id="HeaderFontSize"
-              [formControl]="options['headerFontWeight']"
-              placeholder="700"
-              min="100"
-              max="900"
-              step="100"
-            />
-            <label for="HeaderFontSize">Header</label>
-          </div>
-          <div class="form-floating w-45">
-            <input
-              type="number"
-              class="form-control"
-              id="HeaderFontSize"
-              [formControl]="options['descriptionFontWeight']"
-              placeholder="700"
-              min="100"
-              max="900"
-              step="100"
-            />
-            <label for="HeaderFontSize">Description</label>
-          </div>
-        </div>
-      </div>
-    </li>
-    <li class="list-group-item">
-      <div class="card p-2">
-        <h6 class="text-center mb-2">Font Color</h6>
-        <div class="d-flex justify-content-between">
-          <div class="w-45">
-            <label for="HeaderColor" class="form-label">Header</label>
+          <div class="card p-2 w-45">
+            <label for="fontColor" class="form-label">Font Color</label>
             <input
               type="color"
               class="form-control form-control-color"
-              id="HeaderColor"
-              [formControl]="options['headerFontColor']"
-            />
-          </div>
-
-          <div class="w-45">
-            <label for="DescriptionColor" class="form-label">Description</label>
-            <input
-              type="color"
-              class="form-control form-control-color"
-              id="DescriptionColor"
-              [formControl]="options['descriptionFontColor']"
+              id="fontColor"
+              [formControl]="options['fontColor']"
             />
           </div>
         </div>
-      </div>
-    </li>
-    <li class="list-group-item">
-      <div class="card option-container">
-        <h6>Font Family</h6>
         <div class="input-group mb-3">
-          <span id="headerFontFamily" class="input-group-text">Header</span>
+          <span id="fontFamily" class="input-group-text">Font Family</span>
           <select
             class="form-select form-select"
             aria-label="Header"
-            aria-describedby="headerFontFamily"
-            [formControl]="options['headerFontFamily']"
+            aria-describedby="fontFamily"
+            [formControl]="options['fontFamily']"
           >
             <option *ngFor="let font of fonts" [value]="font">
               {{ font }}
             </option>
           </select>
         </div>
-        <div class="input-group">
-          <span id="descriptionFontFamily" class="input-group-text"
-            >Description</span
-          >
+        <div class="input-group mb-3">
+          <span id="textAlignment" class="input-group-text">Text Alignment</span>
           <select
             class="form-select form-select"
-            aria-label="Description"
-            aria-describedby="descriptionFontFamily"
-            [formControl]="options['descriptionFontFamily']"
+            aria-label="Text Alignment"
+            aria-describedby="textAlignment"
+            [formControl]="options['textAlignment']"
           >
-            <option *ngFor="let font of fonts" [value]="font">
-              {{ font }}
+            <option *ngFor="let alignment of ['left','center','right']" [value]="alignment">
+              {{ alignment }}
             </option>
           </select>
         </div>
       </div>
     </li>
+
   </ul>
   <div class="card-footer text-center">
     <button class="btn btn-primary" type="submit">Generate</button>

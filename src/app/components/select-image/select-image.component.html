@@ -12,26 +12,29 @@
                         <fa-icon class="text-primary fs-1" [icon]="imgIcon"></fa-icon>
                         <p class="text-secondary">Upload New Image</p>
                     </div>
-                    <div *ngFor="let link of img_row_1" class="image-item card" (click)="setImage(link)">
-                        <img class="rounded" height="100%" width="auto" [src]="link">
+                    <!-- <div *ngFor="let img of img_row_1" class="image-item card" (click)="setImage(img.imageId,img.imagePath)">
+                        <img class="rounded" height="100%" width="auto" [src]="img.imagePath">
+                    </div> -->
+                    <div *ngFor="let img of img_row_1" class="image-item card" (click)="setImage(img.imageId,storagePath+img.imagePath)">
+                        <img class="rounded" height="100%" width="auto" [src]="storagePath+img.imagePath">
                     </div>
                 </div>
                 <div *ngFor="let row of imgLinkList_2d.slice(page-1,page+1)" class="image-row">
-                    <div *ngFor="let link of row" class="image-item" (click)="setImage(link)">
-                        <img class="rounded" height="100%" width="100%" [src]="link">
+                    <div *ngFor="let img of row" class="image-item" (click)="setImage(img.imageId,storagePath+img.imagePath)">
+                        <img class="rounded" height="100%" width="100%" [src]="storagePath+img.imagePath">
                     </div>
                 </div>
             }
             @else {
                 <div *ngFor="let row of imgLinkList_2d.slice(page-1,page+2)" class="image-row">
-                    <div *ngFor="let link of row" class="image-item" (click)="setImage(link)">
-                        <img class="rounded" height="100%" width="100%" [src]="link">
+                    <div *ngFor="let img of row" class="image-item" (click)="setImage(img.imageId,storagePath+img.imagePath)">
+                        <img class="rounded" height="100%" width="100%" [src]="storagePath+img.imagePath">
                     </div>
                 </div>
             }
         </div>
         <div class="modal-footer">
-            <ngb-pagination [collectionSize]="100" [(page)]="page" [maxSize]="3" size="3" [rotate]="true" [boundaryLinks]="true" />
+            <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [maxSize]="3" size="3" [rotate]="true" [boundaryLinks]="true"/>
         </div>
     </div>
 </ng-template>

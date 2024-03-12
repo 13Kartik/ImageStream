@@ -1,6 +1,12 @@
-<form [formGroup]="options" (submit)="onSubmit()">
+<form [formGroup]="activeFontProperties" (submit)="onSubmit()">
     <div class="row">
-        <app-options-menu #imgContainer class="col-3" [options]="options.controls"></app-options-menu>
+        <app-options-menu 
+        class="col-3" 
+        [options]="activeFontProperties.controls"
+        (onOpacityChange)="setOpacity($event)"
+        (onAddTextBox)="this.addTextBox()"
+        >
+        </app-options-menu>
 
             <div id="img-preview" class="col-9 d-flex justify-content-center align-items-center">
                 @if(img_src===undefined){
@@ -23,42 +29,24 @@
                         </div>
                     </div>
                     <div
+                    #imgContainer
                     class="img-container" 
                     [ngStyle]="{
-                                'height':portrait?'95%':'auto',
-                                'width':portrait?'auto':'90%',
-                                'aspect-ratio':aspectRatio,
-                                'background-image': 'linear-gradient(rgba(255, 255, 255,'+(1-img_opacity)+'), rgba(255, 255, 255, '+(1-img_opacity)+')), url(' + img_src + ')',
+                                'width':'auto',
+                                'height':'100%',
+                                'aspect-ratio':this.aspectRatio,
+                                'background-image': 'linear-gradient(rgba(255, 255, 255,'+(1-imageOpacity)+'), rgba(255, 255, 255, '+(1-imageOpacity)+')), url(' + img_src + ')',
                                 'margin-right':'5%',
                                 }"
                     >
-                        <div class="header">
-                            <app-dynamic-text-input 
-                            #headerInputRef 
-                            [text]="options.controls['header']" 
-                            [fontSize]="headerFontSize"  
-                            [fontWeight]="headerFontWeight"
-                            [fontFamily]="headerFontFamily"
-                            [fontColor]="headerFontColor"
-                            >
-                            </app-dynamic-text-input>
-                        </div>
-
-                        <!-- <textarea
-                        class="text-center"
-                        [formControl]="options.controls['header']" 
-                        [ngStyle]="{'color':headerFontColor,'font-family':headerFontFamily,'font-size':headerFontSize+'px','font-weight':headerFontWeight}" 
-                        (input)=" adjustTextareaHeight($event)">
-                        </textarea> -->
-
-                        <div class="d-flex flex-column" style="height: 60%;">
-                            <textarea
-                            class="text-center"
-                            [formControl]="options.controls['description']" 
-                            [ngStyle]="{'color':descriptionFontColor,'font-family':descriptionFontFamily,'font-size':descriptionFontSize+'px','font-weight':descriptionFontWeight}" 
-                            (input)=" adjustTextareaHeight($event)">
-                            </textarea>
-                        </div>
+                        <app-text-box 
+                        *ngFor="let textBox of fontProperties; let index = index"
+                        [id]="'textBox_'+index"
+                        [fontControls]="textBox.controls" 
+                        (click)="changeTextBox(index)"
+                        (onDelete)="deleteTextBox(index)"
+                        >
+                        </app-text-box>
                     </div>
                 }
             </div>

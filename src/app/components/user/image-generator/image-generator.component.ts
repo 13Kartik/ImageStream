@@ -1,4 +1,12 @@
-import { Component, ViewChild, TemplateRef, ElementRef, AfterViewChecked } from '@angular/core';
+import {
+  Component,
+  ViewChild,
+  TemplateRef,
+  ElementRef,
+  Renderer2,
+  ViewContainerRef,
+  EventEmitter,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FormGroup, ReactiveFormsModule, FormControl } from '@angular/forms';
@@ -10,7 +18,7 @@ import { OptionsMenuComponent } from '../../options-menu/options-menu.component'
 
 //modal
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { Clipboard,ClipboardModule } from '@angular/cdk/clipboard';
+import { Clipboard, ClipboardModule } from '@angular/cdk/clipboard';
 
 //icons
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -30,6 +38,10 @@ import { firstValueFrom } from 'rxjs';
 //tooltip
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 
+//drag and drop
+import { CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop';
+import { TextBoxComponent } from '../../text-box/text-box.component';
+
 @Component({
   selector: 'app-image-generator',
   standalone: true,
@@ -45,7 +57,8 @@ import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
     HttpClientModule,
     NgbTooltipModule,
     SelectImageComponent,
-    OptionsMenuComponent
+    OptionsMenuComponent,
+    TextBoxComponent,
   ],
   templateUrl: './image-generator.component.html',
   styleUrls: ['./image-generator.component.css'],
@@ -56,139 +69,153 @@ export class ImageGeneratorComponent {
   @ViewChild('nameInputRef') nameInputRef!: DynamicTextInputComponent;
   @ViewChild('appSelectImageRef') appSelectImageRef!: SelectImageComponent;
   @ViewChild('generatedLinkModal') generatedLinkModal!: TemplateRef<any>;
+
+  @ViewChild('textBoxContainer', { read: ViewContainerRef })
+  textBoxContainer!: ViewContainerRef;
+
   @ViewChild('imgContainer') imgContainer!: ElementRef;
- 
+  @ViewChild('headerTextarea') headerTextarea!: ElementRef;
+
   constructor(
     private clipboard: Clipboard,
     private modalService: NgbModal,
     private db: DbServiceService,
     private el: ElementRef
-  ) {}
+  ) {
+    this.addTextBox();
+  }
 
-  img_src!: string;
-  img_file: File | null = null;
-  imageId!:string;
-
-  generatedLink: string = 'http://192.168.1.94:8032/api/DynamicImage';
-  showAlert = false;
+  //icons
   copyIcon = faCopy;
   changeImgIcon = faRotate;
   uploadIcon = faCloudArrowUp;
-  portrait = false;
-  aspectRatio = 4 / 3;
+
+  img_src!: string;
+  img_file: File | null = null;
+  imageId!: string;
+  real_height!: number;
+  real_width!: number;
+
+  generatedLink: string = 'http://192.168.1.94:8032/api/DynamicImage';
+  showAlert = false;
+  aspectRatio = 4/3;
+
+  //coordinates
 
   //modal
   private setImageModalRef!: NgbModalRef;
 
-  fonts = [
-    'Times New Roman',
-    'Georgia',
-    'Garamond',
-    'Arial',
-    'Verdana',
-    'Helvetica',
-    'Courier New',
-    'Lucida Console',
-    'Monaco',
-    'Brush Script MT',
-    'Lucida Handwriting',
-    'Copperplate',
-    'Papyrus',
-  ];
+  //dynamic Form Group
+  activeFontProperties: FormGroup = new FormGroup({});
+  imageOpacity: number = 1;
+  fontProperties: FormGroup[] = [];
 
-  options = new FormGroup({
-    header: new FormControl('Hey'),
-    name: new FormControl('Kartik'),
-    description: new FormControl('Hello, I am Here!!!!'),
-    img_opacity: new FormControl(1),
-    headerFontSize: new FormControl(10),
-    descriptionFontSize: new FormControl(7),
-    headerFontWeight: new FormControl(700),
-    descriptionFontWeight: new FormControl(700),
-    headerFontColor: new FormControl('#3B71CA'),
-    descriptionFontColor: new FormControl('#000000'),
-    headerFontFamily: new FormControl('Courier New'),
-    descriptionFontFamily: new FormControl('Courier New'),
-  });
+  addTextBox() {
+    const textBox = new FormGroup({
+      text: new FormControl('Enter text'),
+      fontSize: new FormControl(34),
+      fontColor: new FormControl('#3B71CA'),
+      fontFamily: new FormControl('Courier New'),
+      textAlignment: new FormControl('left'),
+    });
+
+    // Push a new object into the array
+    this.fontProperties.push(textBox);
+  }
 
   blockData = new FormData();
 
-  get img_opacity() {
-    return this.options.get('img_opacity')?.value ?? 1;
-  }
-  get descriptionFontSize() {
-    const height = this.el.nativeElement.querySelector('.img-container').getBoundingClientRect().height;
-    return (this.options.get('descriptionFontSize')?.value ?? 7)*height/100;
-  }
-  get header() {
-    return this.options.get('header')?.value ?? '';
-  }
-  get name() {
-    return this.options.get('name')?.value;
-  }
-  get description() {
-    return this.options.get('description')?.value ?? '';
-  }
-  get headerFontFamily() {
-    return this.options.get('headerFontFamily')?.value ?? 'Courier New';
-  }
-  get descriptionFontFamily() {
-    return this.options.get('descriptionFontFamily')?.value ?? 'Courier New';
-  }
-  get headerFontSize() {
-    const height = this.el.nativeElement.querySelector('.img-container').getBoundingClientRect().height;
-    return (this.options.get('headerFontSize')?.value ?? 10)*height/100;
-  }
-  get headerFontColor() {
-    return this.options.get('headerFontColor')?.value ?? '#3B71CA';
-  }
-  get descriptionFontColor() {
-    return this.options.get('descriptionFontColor')?.value;
-  }
-  get headerFontWeight() {
-    return this.options.get('headerFontWeight')?.value ?? 700;
-  }
-  get descriptionFontWeight() {
-    return this.options.get('descriptionFontWeight')?.value ?? 700;
+  changeTextBox(i: number) {
+    this.activeFontProperties = this.fontProperties[i];
   }
 
   onSubmit() {
     this.generateLink();
   }
 
+  convertProperties(x: number, y: number, height: number, width: number) {
+    const imgContainerReact = this.el.nativeElement
+      .querySelector('.img-container')
+      .getBoundingClientRect();
+
+    const scaleHeight = this.real_height / imgContainerReact.height;
+    const scaleWidth = this.real_width / imgContainerReact.width;
+
+    const newX = (x - imgContainerReact.x) * scaleWidth;
+    const newY = (y - imgContainerReact.y) * scaleHeight;
+    const newHeight = height * scaleHeight;
+    const newWidth = width * scaleWidth;
+
+    return [newX, newY, newHeight, newWidth];
+  }
+
   async generateLink() {
-    if(this.img_file!==null){
+    if (this.img_file !== null) {
       console.log('uploading file');
 
       const fileData = new FormData();
-      fileData.append('file',this.img_file);
+      fileData.append('file', this.img_file);
 
-      const uploadImageResponse: any = await firstValueFrom(this.db.uploadImage(fileData));
+      const uploadImageResponse: any = await firstValueFrom(
+        this.db.uploadImage(fileData)
+      );
       this.imageId = uploadImageResponse.imageId;
-      console.log(this.imageId);
     }
 
-    this.generatedLink = 'http://192.168.1.5:8033/api/SPStaticImage/fetch/';
+    this.generatedLink = this.db.api;
+    this.generatedLink += 'SPStaticImage/fetch/';
 
-    //upload Block
-    // this.blockData.append('Header', this.header);
-    // this.blockData.append('Description', this.description);
+    //create req Data:
+    const textBoxes = [];
+    for (const [i, properties] of this.fontProperties.entries()) {
+      const textBox = this.el.nativeElement
+        .querySelector(`#textBox_${i} textarea`)
+        ?.getBoundingClientRect();
+      const [x, y, height, width] = this.convertProperties(
+        textBox.x,
+        textBox.y,
+        textBox.height,
+        textBox.width
+      );
+      textBoxes.push({
+        x,
+        y,
+        height,
+        width,
+        ...properties.value,
+      });
+    }
+
+    //converting fontSize to px for all boxes
+    let containerWidth = this.imgContainer.nativeElement.getBoundingClientRect().width;
+    let scale:number=this.real_width / containerWidth;
+
+    for (let box of textBoxes) {
+      box.fontSize = box.fontSize * scale * 3/4.15;
+    }
 
     const blockData = {
-      userId:'9e051ee3-4858-428d-a98b-d5baad632110',
-      imageId:this.imageId,
-      'generationName':'testGenerations',
-      'imageProperty':{...this.options.value,backgroundImageOpacity: this.img_opacity*100}
-    }
-    delete blockData.imageProperty.img_opacity
+      createdBy: 'bd2dba6f-c8b8-48c9-bdf0-d793c128e338',
+      imageId: this.imageId,
+      generationName: 'testGenerations',
+      imageProperty: {
+        backgroundImageOpacity: this.imageOpacity * 100,
+        textBoxes: textBoxes,
+      },
+    };
 
-    const uploadImageBlockResponse = await firstValueFrom(this.db.uploadImageBlock(blockData));
+    console.log(blockData);
+
+    const uploadImageBlockResponse = await firstValueFrom(
+      this.db.uploadImageBlock(blockData)
+    );
     console.log(uploadImageBlockResponse);
     this.generatedLink += uploadImageBlockResponse.generationId;
 
-    //open modal
+    // open modal
     this.modalService.open(this.generatedLinkModal, { centered: true });
   }
+
   copyLink() {
     this.clipboard.copy(this.generatedLink);
 
@@ -199,19 +226,17 @@ export class ImageGeneratorComponent {
     }, 3000);
   }
 
-  adjustTextareaHeight(event: any): void {
-    const textarea = event.target as HTMLTextAreaElement;
-    textarea.style.height = 'auto';
-    textarea.style.height = textarea.scrollHeight + 'px';
-  }
-
   openSetImageModal() {
     //open modal
-    this.setImageModalRef=this.modalService.open(this.appSelectImageRef.setImageModal, { centered: true, size: 'xl' });
+    this.setImageModalRef = this.modalService.open(
+      this.appSelectImageRef.setImageModal,
+      { centered: true, size: 'xl' }
+    );
   }
 
-  handleImageUrl(image: {url:string,file?:File}) {
-    if(image.file) this.img_file = image.file;
+  handleImageUrl(image: { imageId?: string; url: string; file?: File }) {
+    if (image.file) this.img_file = image.file;
+    else if (image.imageId) this.imageId = image.imageId;
 
     // Get the dimensions using an Image element
     const img = new Image();
@@ -221,8 +246,19 @@ export class ImageGeneratorComponent {
 
     // After the image has loaded, you can access its width and height
     img.onload = () => {
-        this.portrait = img.height > img.width;
-        this.aspectRatio = img.width / img.height;
+      this.real_height = img.height;
+      this.real_width = img.width;
+      this.aspectRatio = img.width / img.height;
     };
+  }
+
+  setOpacity(opacity: number) {
+    this.imageOpacity = opacity;
+  }
+
+  deleteTextBox(i:number){
+    console.log('I am working');
+    this.activeFontProperties = new FormGroup({});
+    this.fontProperties.splice(i,1);
   }
 }

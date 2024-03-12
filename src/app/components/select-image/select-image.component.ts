@@ -8,6 +8,10 @@ import { faImage } from '@fortawesome/free-solid-svg-icons';
 //pagination
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 
+//database
+import { DbServiceService } from '../../services/db-service.service';
+import { firstValueFrom } from 'rxjs';
+
 
 @Component({
   selector: 'app-select-image',
@@ -19,21 +23,35 @@ import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 export class SelectImageComponent {
 
   //events
-  @Output() onSetImage:EventEmitter<{url:string,file?:File}> = new EventEmitter();
+  @Output() onSetImage:EventEmitter<{imageId?:string,url:string,file?:File}> = new EventEmitter();
   @ViewChild('setImageModal') setImageModal!: TemplateRef<any>;
 
   imgIcon = faImage;
   page=1;
 
-  imgLinkList:string[]=['https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg',
-    'https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aHVtYW58ZW58MHx8MHx8fDA%3D'];
-  img_row_1:string[]=[];
-  imgLinkList_2d:string[][]=[]
+  storagePath = 'http://192.168.1.17:8056/images/';
 
-  constructor(){
-    for(let i=0;i<99;i++){
-      this.imgLinkList.push('https://images.pexels.com/photos/19845798/pexels-photo-19845798/free-photo-of-cube-of-ice-beside-ocean.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
-    }
+  imgLinkList:any[]=[];
+  collectionSize:number=1;
+
+  img_row_1:any[]=[];
+  imgLinkList_2d:any[][]=[];
+
+  constructor(private db: DbServiceService) {
+    // for(let i=0;i<99;i++){
+    //   this.imgLinkList.push('https://images.pexels.com/photos/19845798/pexels-photo-19845798/free-photo-of-cube-of-ice-beside-ocean.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
+    // }
+    this.getImageList();
+  }
+
+  async getImageList(){
+    // this.imgLinkList.push({
+    //     imageId:'testImage',
+    //     imagePath:'https://images.pexels.com/photos/3137052/pexels-photo-3137052.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
+    // })
+    this.imgLinkList = await firstValueFrom(this.db.getUploadedImages());
+    this.collectionSize = this.imgLinkList.length+1;
+
     this.img_row_1=this.imgLinkList.splice(0,4);
     this.imgLinkList_2d = this.convert_to_2d(this.imgLinkList);
   }
@@ -61,8 +79,9 @@ export class SelectImageComponent {
     }
   }
 
-  setImage(link:string){
+  setImage(id:string,link:string){
     this.onSetImage.emit({
+      imageId:id,
       url:link
     });
   }

@@ -5,28 +5,35 @@
     background-position: center center;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     max-width: 90%;
     max-height: 95%;
 }
 
-.header{
+/* .header{
     margin-top: 5%;
     height: 20%;
     display: flex;
     justify-content: center;
     overflow:hidden;
+} */
+
+
+.headerTextarea{
+    background-color: transparent;
+    resize:horizontal;
+    max-width: 100%;
+    overflow-y: hidden;
+    border: none;
+    width: 100%;
+    position: relative;
+    padding: 0px;
 }
 
-.img-container textarea {
-    /* height: 60%; */
-    font-size: 32px;
-    padding: 2%;
-    color: black;
-    font-family: monospace;
-    margin-bottom: 5%;
+.descriptionTextarea{
+    padding: 0% 5%;
     background-color: transparent;
-    resize: none;
+    resize:horizontal;
+    max-width: 100%;
     overflow-y: hidden;
     border: none;
     width: 100%;

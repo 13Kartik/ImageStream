@@ -1,0 +1,29 @@
+<div class="texboxHolder"
+cdkDrag 
+cdkDragBoundary=".img-container"
+>
+<div class="text-end dragHandle" [style.display]="isActive?'block':'none'">
+    <fa-icon [icon]="handleIcon"class="text-primary fs-4 me-1" cdkDragHandle></fa-icon>
+</div>
+    <textarea 
+    #textBox
+    rows="1"
+    class="text-box"
+    [formControl]="fontControls['text']"
+    [ngStyle]="{
+        'color':fontColor,
+        'font-family':fontFamily,
+        'font-size':fontSize+'px',
+        'text-align':textAlignment,
+        'max-height':maxHeight,
+        'max-width':maxWidth
+        }"
+    (input)="adjustTextareaHeight($event)"
+    (focus)="isActive = true"
+    (blur)="isActive = false"
+    (keydown)="handleKeyDown($event)"
+    (mousedown)="getMaxWidth()"
+    (mouseup)="adjustTextareaHeight($event)"
+    >
+    </textarea>
+</div>

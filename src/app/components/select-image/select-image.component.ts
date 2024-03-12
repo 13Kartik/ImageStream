@@ -32,8 +32,10 @@ export class SelectImageComponent {
   storagePath = 'http://192.168.1.17:8056/images/';
 
   imgLinkList:any[]=[];
+  collectionSize:number=1;
+
   img_row_1:any[]=[];
-  imgLinkList_2d:any[][]=[]
+  imgLinkList_2d:any[][]=[];
 
   constructor(private db: DbServiceService) {
     // for(let i=0;i<99;i++){
@@ -48,6 +50,8 @@ export class SelectImageComponent {
     //     imagePath:'https://images.pexels.com/photos/3137052/pexels-photo-3137052.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
     // })
     this.imgLinkList = await firstValueFrom(this.db.getUploadedImages());
+    this.collectionSize = this.imgLinkList.length+1;
+
     this.img_row_1=this.imgLinkList.splice(0,4);
     this.imgLinkList_2d = this.convert_to_2d(this.imgLinkList);
   }

@@ -32,9 +32,9 @@
                     #imgContainer
                     class="img-container" 
                     [ngStyle]="{
-                                'height':portrait?'95%':'auto',
-                                'width':portrait?'auto':'90%',
-                                'aspect-ratio':aspectRatio,
+                                'width':'auto',
+                                'height':'100%',
+                                'aspect-ratio':this.aspectRatio,
                                 'background-image': 'linear-gradient(rgba(255, 255, 255,'+(1-imageOpacity)+'), rgba(255, 255, 255, '+(1-imageOpacity)+')), url(' + img_src + ')',
                                 'margin-right':'5%',
                                 }"
@@ -43,7 +43,6 @@
                         *ngFor="let textBox of fontProperties; let index = index"
                         [id]="'textBox_'+index"
                         [fontControls]="textBox.controls" 
-                        [aspectRatio]="aspectRatio"
                         (click)="changeTextBox(index)"
                         (onDelete)="deleteTextBox(index)"
                         >

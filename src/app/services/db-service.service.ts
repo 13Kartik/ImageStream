@@ -28,7 +28,7 @@ export class DbServiceService {
   }
 
   uploadImage(file:any):Observable<any>{
-    return this.http.post<any>(this.api+'SPStaticImage/upload',file);
+    return this.http.post<any>(this.api+'SPStaticImage/upload?userId='+this.user_id,file);
   }
 
   uploadImageBlock(blockData:object){

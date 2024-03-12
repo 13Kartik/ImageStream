@@ -39,7 +39,6 @@ export class OptionsMenuComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    console.log('options:',this.options);
   }
 
 }

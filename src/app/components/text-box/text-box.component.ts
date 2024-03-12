@@ -20,7 +20,6 @@ import { faArrowsUpDownLeftRight } from '@fortawesome/free-solid-svg-icons';
 export class TextBoxComponent implements AfterViewInit {
 
   @Input() fontControls!: any;
-  @Input() aspectRatio!: number;
   @Output() onDelete:EventEmitter<void>=new EventEmitter;
 
   @ViewChild('textBox') textBox!: ElementRef;
@@ -74,12 +73,6 @@ export class TextBoxComponent implements AfterViewInit {
   }
 
   get fontSize() {
-    // //resize textarea
-    // const textarea = this.textBox?.nativeElement;
-    // if(textarea){
-    //   textarea.style.height = 'auto';
-    //   textarea.style.height = textarea.scrollHeight + 'px';
-    // }
     return (this.fontControls['fontSize']?.value ?? 36);
   }
 

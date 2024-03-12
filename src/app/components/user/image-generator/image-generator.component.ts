@@ -98,8 +98,7 @@ export class ImageGeneratorComponent {
 
   generatedLink: string = 'http://192.168.1.94:8032/api/DynamicImage';
   showAlert = false;
-  portrait = false;
-  aspectRatio = 4 / 3;
+  aspectRatio = 4/3;
 
   //coordinates
 
@@ -114,7 +113,7 @@ export class ImageGeneratorComponent {
   addTextBox() {
     const textBox = new FormGroup({
       text: new FormControl('Enter text'),
-      fontSize: new FormControl(36),
+      fontSize: new FormControl(34),
       fontColor: new FormControl('#3B71CA'),
       fontFamily: new FormControl('Courier New'),
       textAlignment: new FormControl('left'),
@@ -188,12 +187,11 @@ export class ImageGeneratorComponent {
     }
 
     //converting fontSize to px for all boxes
-    let scale:number=this.real_width / window.innerWidth;
-
-    // if(this.portrait) scale = (this.real_height+this.real_width) / (window.innerHeight+window.innerWidth);
+    let containerWidth = this.imgContainer.nativeElement.getBoundingClientRect().width;
+    let scale:number=this.real_width / containerWidth;
 
     for (let box of textBoxes) {
-      box.fontSize = box.fontSize * scale;
+      box.fontSize = box.fontSize * scale * 3/4.15;
     }
 
     const blockData = {
@@ -250,7 +248,6 @@ export class ImageGeneratorComponent {
     img.onload = () => {
       this.real_height = img.height;
       this.real_width = img.width;
-      this.portrait = img.height > img.width;
       this.aspectRatio = img.width / img.height;
     };
   }

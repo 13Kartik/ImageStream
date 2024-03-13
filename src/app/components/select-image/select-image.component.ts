@@ -38,9 +38,6 @@ export class SelectImageComponent {
   imgLinkList_2d:any[][]=[];
 
   constructor(private db: DbServiceService) {
-    // for(let i=0;i<99;i++){
-    //   this.imgLinkList.push('https://images.pexels.com/photos/19845798/pexels-photo-19845798/free-photo-of-cube-of-ice-beside-ocean.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
-    // }
     this.getImageList();
   }
 

@@ -38,6 +38,9 @@ import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 //drag and drop
 import { TextBoxComponent } from '../../text-box/text-box.component';
 
+//test
+import { GeneratedLinkModalComponent } from '../../generated-link-modal/generated-link-modal.component';
+
 @Component({
   selector: 'app-image-generator',
   standalone: true,
@@ -55,6 +58,7 @@ import { TextBoxComponent } from '../../text-box/text-box.component';
     SelectImageComponent,
     OptionsMenuComponent,
     TextBoxComponent,
+    GeneratedLinkModalComponent
   ],
   templateUrl: './image-generator.component.html',
   styleUrls: ['./image-generator.component.css'],
@@ -65,6 +69,7 @@ export class ImageGeneratorComponent {
   @ViewChild('nameInputRef') nameInputRef!: DynamicTextInputComponent;
   @ViewChild('appSelectImageRef') appSelectImageRef!: SelectImageComponent;
   @ViewChild('generatedLinkModal') generatedLinkModal!: TemplateRef<any>;
+  @ViewChild('generatedLinkModalRef') generatedLinkModalRef!: GeneratedLinkModalComponent;
   @ViewChild('imgContainer') imgContainer!: ElementRef;
   @ViewChild('headerTextarea') headerTextarea!: ElementRef;
 
@@ -198,22 +203,11 @@ export class ImageGeneratorComponent {
       this.db.uploadImageBlock(blockData)
     );
 
-    console.log(uploadImageBlockResponse.generationId);
-
-    this.generatedLink += uploadImageBlockResponse.generationId;
+    console.log(uploadImageBlockResponse);
 
     // open modal to Display and access generated Link
-    this.modalService.open(this.generatedLinkModal, { centered: true });
-  }
-
-  copyLink() {
-    this.clipboard.copy(this.generatedLink);
-
-    //show Alert
-    this.showAlert = true;
-    setTimeout(() => {
-      this.showAlert = false; // Clear the message to hide the alert
-    }, 3000);
+    this.generatedLinkModalRef.generatedLink = uploadImageBlockResponse.path;
+    this.modalService.open(this.generatedLinkModalRef.modal, { centered: true });
   }
 
   openSelectImageModal() {

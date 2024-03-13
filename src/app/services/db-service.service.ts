@@ -28,15 +28,15 @@ export class DbServiceService {
   }
 
   uploadImage(file:any):Observable<any>{
-    return this.http.post<any>(this.api+'SPStaticImage/upload?userId='+this.user_id,file);
+    return this.http.post<any>(this.api+'ImageBlockGeneration/UploadImage?userId='+this.user_id,file);
   }
 
   uploadImageBlock(blockData:object){
-    return this.http.post<any>(`${this.api}SPStaticImage/generate`,blockData);
+    return this.http.post<any>(`${this.api}ImageBlockGeneration/generateImage`,blockData);
   }
 
   getUploadedImages(){
-    return this.http.get<any>(`${this.api}SPStaticImage/${this.user_id}/images`);
+    return this.http.get<any>(`${this.api}ImageBlockGeneration/GetAllImage/${this.user_id}`);
   }
 
 }

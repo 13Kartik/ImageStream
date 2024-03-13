@@ -24,7 +24,7 @@ export class SelectImageComponent {
 
   //events
   @Output() onSetImage:EventEmitter<{imageId?:string,url:string,file?:File}> = new EventEmitter();
-  @ViewChild('setImageModal') setImageModal!: TemplateRef<any>;
+  @ViewChild('selectImageModal') selectImageModal!: TemplateRef<any>;
 
   imgIcon = faImage;
   page=1;
@@ -51,6 +51,7 @@ export class SelectImageComponent {
     // })
     this.imgLinkList = await firstValueFrom(this.db.getUploadedImages());
     this.collectionSize = this.imgLinkList.length+1;
+    console.log(this.collectionSize);
 
     this.img_row_1=this.imgLinkList.splice(0,4);
     this.imgLinkList_2d = this.convert_to_2d(this.imgLinkList);

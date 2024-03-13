@@ -1,8 +1,8 @@
-<form [formGroup]="activeFontProperties" (submit)="onSubmit()">
+<form [formGroup]="activeTextBox" (submit)="onSubmit()">
     <div class="row">
         <app-options-menu 
         class="col-3" 
-        [options]="activeFontProperties.controls"
+        [options]="activeTextBox.controls"
         (onOpacityChange)="setOpacity($event)"
         (onAddTextBox)="this.addTextBox()"
         >
@@ -12,7 +12,7 @@
                 @if(img_src===undefined){
                     <div
                     class="card w-50 h-50 d-flex justify-content-center align-items-center border-primary"
-                    (click)="openSetImageModal()"
+                    (click)="openSelectImageModal()"
                     >
                         <fa-icon 
                         [icon]="uploadIcon"
@@ -25,7 +25,7 @@
                 @else {
                     <div class="d-flex align-items-center justify-content-end change-img-btn" style="width:5%;">     
                         <div class="btn bg-primary" placement="left" ngbTooltip="change Image">
-                            <fa-icon [icon]="changeImgIcon" class="text-white fs-3" (click)="openSetImageModal()"></fa-icon>
+                            <fa-icon [icon]="changeImgIcon" class="text-white fs-3" (click)="openSelectImageModal()"></fa-icon>
                         </div>
                     </div>
                     <div
@@ -40,7 +40,7 @@
                                 }"
                     >
                         <app-text-box 
-                        *ngFor="let textBox of fontProperties; let index = index"
+                        *ngFor="let textBox of textBoxes; let index = index"
                         [id]="'textBox_'+index"
                         [fontControls]="textBox.controls" 
                         (click)="changeTextBox(index)"

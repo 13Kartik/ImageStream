@@ -15,7 +15,6 @@ import { OptionsMenuComponent } from '../../options-menu/options-menu.component'
 
 //modal
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { Clipboard, ClipboardModule } from '@angular/cdk/clipboard';
 
 //icons
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -37,6 +36,7 @@ import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 
 //drag and drop
 import { TextBoxComponent } from '../../text-box/text-box.component';
+import { CdkDrag,CdkDropListGroup } from '@angular/cdk/drag-drop';
 
 //test
 import { GeneratedLinkModalComponent } from '../../generated-link-modal/generated-link-modal.component';
@@ -49,7 +49,6 @@ import { GeneratedLinkModalComponent } from '../../generated-link-modal/generate
     FormsModule,
     ReactiveFormsModule,
     DynamicTextInputComponent,
-    ClipboardModule,
     FontAwesomeModule,
     NgbAlertModule,
     RouterModule,
@@ -58,11 +57,13 @@ import { GeneratedLinkModalComponent } from '../../generated-link-modal/generate
     SelectImageComponent,
     OptionsMenuComponent,
     TextBoxComponent,
-    GeneratedLinkModalComponent
+    GeneratedLinkModalComponent,
+    CdkDrag,
+    CdkDropListGroup
   ],
   templateUrl: './image-generator.component.html',
   styleUrls: ['./image-generator.component.css'],
-  providers: [Clipboard, DbServiceService],
+  providers: [DbServiceService],
 })
 export class ImageGeneratorComponent {
   @ViewChild('headerInputRef') headerInputRef!: DynamicTextInputComponent;
@@ -74,7 +75,6 @@ export class ImageGeneratorComponent {
   @ViewChild('headerTextarea') headerTextarea!: ElementRef;
 
   constructor(
-    private clipboard: Clipboard,
     private modalService: NgbModal,
     private db: DbServiceService,
     private el: ElementRef
@@ -93,10 +93,6 @@ export class ImageGeneratorComponent {
   real_width!: number;
   aspectRatio:number = 4/3;
 
-  //Generated Link modal
-  generatedLink: string = 'http://192.168.1.94:8032/api/DynamicImage';
-  showAlert = false;
-
   //modal
   private selectImageModalRef!: NgbModalRef;
 
@@ -104,15 +100,20 @@ export class ImageGeneratorComponent {
   textBoxes: FormGroup[] = [];
   activeTextBox: FormGroup = new FormGroup({});
 
+  //placeHolder
+  dropCoordinates:[number,number]=[100,100];
+
   imageOpacity: number = 1;
 
-  addTextBox() {
+  addTextBox(x:number=100,y:number=100,text:string='Enter text',isPlaceHolder:boolean=false) {
     const textBox = new FormGroup({
-      text: new FormControl('Enter text'),
+      text: new FormControl(text),
       fontSize: new FormControl(34),
       fontColor: new FormControl('#3B71CA'),
       fontFamily: new FormControl('Courier New'),
       textAlignment: new FormControl('left'),
+      x: new FormControl(x),
+      y: new FormControl(y)
     });
 
     // Push a new object into the array
@@ -156,12 +157,10 @@ export class ImageGeneratorComponent {
       this.imageId = uploadImageResponse.imageId;
     }
 
-    this.generatedLink = this.db.api;
-    this.generatedLink += 'DynamicImage/fetch/';
-    
     //create req Data:
     const textBoxesData = [];
     for (const [i, properties] of this.textBoxes.entries()) {
+      console.log(properties);
       const textBoxRef = this.el.nativeElement
         .querySelector(`#textBox_${i} textarea`)
         ?.getBoundingClientRect();
@@ -254,5 +253,13 @@ export class ImageGeneratorComponent {
   deleteTextBox(i:number){
     this.activeTextBox = new FormGroup({});
     this.textBoxes.splice(i,1);
+  }
+
+  onDrop(event:any){
+    this.dropCoordinates=event.coordinates;
+    this.addTextBox(...event.coordinates,event.placeHolder);
+  }
+  onDragOver(event:any){
+    event.preventDefault();
   }
 }

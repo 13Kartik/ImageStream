@@ -26,3 +26,17 @@
 ul.list-group{
     overflow: auto;
 }
+
+.placeHolder-container{
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+}
+
+.placeHolder{
+    width: 80%;
+    text-align: center;
+    border-radius: 5px;
+    font-weight: bold;
+}

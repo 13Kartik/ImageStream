@@ -39,14 +39,6 @@
     width: 100%;
 }
 
-.alert-container{
-    width: 100%;
-    position: fixed;
-    justify-content: center;
-    left:0%;
-    bottom: 15%;
-}
-
 /* upload image */
 .change-img-btn{
     visibility:hidden;
@@ -62,4 +54,8 @@
 
 #img-preview:hover .change-img-btn{
     visibility:visible;
+}
+
+app-text-box{
+    position: relative;
 }

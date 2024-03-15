@@ -3,83 +3,92 @@
   <ul class="list-group list-group-flush">
     <li class="list-group-item">
       <div class="card p-2">
-        <h6 class="text-center mb-3">Image Options</h6>
+        <h6 class="text-center mb-3"(click)="showImageOptions=!showImageOptions">Image Options</h6>
 
-        <label for="opacityInput" class="form-label fs-6 ms-2">Image Opacity</label>
-        <input
-          type="range"
-          class="form-range mb-3"
-          min="0"
-          max="1"
-          step="0.1"
-          id="opacityInput"
-          [(ngModel)]="imageOpacity"
-          (ngModelChange)="this.onOpacityChange.emit(imageOpacity)"
-        />
-
-        <div class="d-flex justify-content-center p-2 w-100">
-          <button class="btn btn-success" 
-            type="button"
-            [style.width]="'fit-content'"
-            (click)="this.onAddTextBox.emit()"
-          >
-            Add Text Box
-          </button>
+        <div [style.display]="showImageOptions?'block':'none'">
+          <label for="opacityInput" class="form-label fs-6 ms-2">Image Opacity</label>
+          <input
+            type="range"
+            class="form-range mb-3"
+            min="0"
+            max="1"
+            step="0.1"
+            id="opacityInput"
+            [(ngModel)]="imageOpacity"
+            (ngModelChange)="this.onOpacityChange.emit(imageOpacity)"
+          />
+          <div class="d-flex justify-content-center p-2 w-100">
+            <button class="btn btn-success" 
+              type="button"
+              [style.width]="'fit-content'"
+              (click)="this.onAddTextBox.emit()"
+            >
+              Add Text Box
+            </button>
+          </div>
         </div>
-
       </div>
     </li>
 
     <li class="list-group-item" *ngIf="options['fontSize']!==undefined">
       <div class="card p-2">
-        <h6 class="text-center mb-3">Font Properties</h6>
-        <div class="d-flex justify-content-between mb-3">
-          <div class="form-floating w-45">
-            <input
-              type="number"
-              class="form-control"
-              id="fontSize"
-              [formControl]="options['fontSize']"
-              placeholder="44"
-            />
-            <label for="fontSize">Font Size</label>
+        <h6 class="text-center mb-3" (click)="showFontProperties=!showFontProperties">Font Properties</h6>
+        <div [style.display]="showFontProperties?'block':'none'">
+          <div class="d-flex justify-content-between mb-3">
+            <div class="form-floating w-45">
+              <input
+                type="number"
+                class="form-control"
+                id="fontSize"
+                [formControl]="options['fontSize']"
+                placeholder="44"
+              />
+              <label for="fontSize">Font Size</label>
+            </div>
+            <div class="card p-2 w-45">
+              <label for="fontColor" class="form-label">Font Color</label>
+              <input
+                type="color"
+                class="form-control form-control-color"
+                id="fontColor"
+                [formControl]="options['fontColor']"
+              />
+            </div>
           </div>
-          <div class="card p-2 w-45">
-            <label for="fontColor" class="form-label">Font Color</label>
-            <input
-              type="color"
-              class="form-control form-control-color"
-              id="fontColor"
-              [formControl]="options['fontColor']"
-            />
+          <div class="input-group mb-3">
+            <span id="fontFamily" class="input-group-text">Font Family</span>
+            <select
+              class="form-select form-select"
+              aria-label="Header"
+              aria-describedby="fontFamily"
+              [formControl]="options['fontFamily']"
+            >
+              <option *ngFor="let font of fonts" [value]="font">
+                {{ font }}
+              </option>
+            </select>
+          </div>
+          <div class="input-group mb-3">
+            <span id="textAlignment" class="input-group-text">Text Alignment</span>
+            <select
+              class="form-select form-select"
+              aria-label="Text Alignment"
+              aria-describedby="textAlignment"
+              [formControl]="options['textAlignment']"
+            >
+              <option *ngFor="let alignment of ['left','center','right']" [value]="alignment">
+                {{ alignment }}
+              </option>
+            </select>
           </div>
         </div>
-        <div class="input-group mb-3">
-          <span id="fontFamily" class="input-group-text">Font Family</span>
-          <select
-            class="form-select form-select"
-            aria-label="Header"
-            aria-describedby="fontFamily"
-            [formControl]="options['fontFamily']"
-          >
-            <option *ngFor="let font of fonts" [value]="font">
-              {{ font }}
-            </option>
-          </select>
-        </div>
-        <div class="input-group mb-3">
-          <span id="textAlignment" class="input-group-text">Text Alignment</span>
-          <select
-            class="form-select form-select"
-            aria-label="Text Alignment"
-            aria-describedby="textAlignment"
-            [formControl]="options['textAlignment']"
-          >
-            <option *ngFor="let alignment of ['left','center','right']" [value]="alignment">
-              {{ alignment }}
-            </option>
-          </select>
-        </div>
+      </div>
+    </li>
+
+    <li class="list-group-item">
+      <h6>Placeholders</h6>
+      <div class="placeHolder-container">
+        <div class="placeHolder fs-5 bg-info" *ngFor="let placeholder of placeHolders" draggable="true" (dragend)="onDragEnd($event,placeholder)">{{placeholder}}</div>
       </div>
     </li>
 

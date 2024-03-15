@@ -1,10 +1,6 @@
 <div class="texboxHolder"
 cdkDrag 
 cdkDragBoundary=".img-container"
-[style]="{
-    'left':x+'px',
-    'top':y+'px',
-}"
 >
 <div class="text-end dragHandle" [style.display]="isActive?'block':'none'">
     <fa-icon [icon]="handleIcon"class="text-primary fs-4 me-1" cdkDragHandle></fa-icon>
@@ -28,6 +24,7 @@ cdkDragBoundary=".img-container"
     (keydown)="handleKeyDown($event)"
     (mousedown)="getMaxWidth()"
     (mouseup)="adjustTextareaHeight($event)"
+    (drop)="onDrop()"
     >
     </textarea>
 </div>

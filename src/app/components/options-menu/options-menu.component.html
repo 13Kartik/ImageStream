@@ -3,7 +3,13 @@
   <ul class="list-group list-group-flush">
     <li class="list-group-item">
       <div class="card p-2">
-        <h6 class="text-center mb-3"(click)="showImageOptions=!showImageOptions">Image Options</h6>
+        <div 
+          class="d-flex align-items-center justify-content-center mb-3"
+          (click)="showImageOptions=!showImageOptions"
+        >
+          <div class="fs-6 fw-semibold">Image Options</div>
+          <fa-icon class="ms-2 text-primary" [icon]="showImageOptions?dropUpIcon:dropDownIcon"></fa-icon>
+        </div>
 
         <div [style.display]="showImageOptions?'block':'none'">
           <label for="opacityInput" class="form-label fs-6 ms-2">Image Opacity</label>
@@ -32,7 +38,14 @@
 
     <li class="list-group-item" *ngIf="options['fontSize']!==undefined">
       <div class="card p-2">
-        <h6 class="text-center mb-3" (click)="showFontProperties=!showFontProperties">Font Properties</h6>
+        <div 
+          class="d-flex align-items-center justify-content-center mb-3"
+          (click)="showFontProperties=!showFontProperties"
+        >
+          <div class="fs-6 fw-semibold">Font Properties</div>
+          <fa-icon class="ms-2 text-primary" [icon]="showFontProperties?dropUpIcon:dropDownIcon"></fa-icon>
+        </div>
+
         <div [style.display]="showFontProperties?'block':'none'">
           <div class="d-flex justify-content-between mb-3">
             <div class="form-floating w-45">
@@ -86,9 +99,17 @@
     </li>
 
     <li class="list-group-item">
-      <h6>Placeholders</h6>
-      <div class="placeHolder-container">
-        <div class="placeHolder fs-5 bg-info" *ngFor="let placeholder of placeHolders" draggable="true" (dragend)="onDragEnd($event,placeholder)">{{placeholder}}</div>
+      <div class="card p-2">
+        <div 
+          class="d-flex align-items-center justify-content-center mb-3"
+          (click)="showPlaceHolders=!showPlaceHolders"
+        >
+          <div class="fs-6 fw-semibold">Placeholders</div>
+          <fa-icon class="ms-2 text-primary" [icon]="showPlaceHolders?dropUpIcon:dropDownIcon"></fa-icon>
+        </div>
+        <div class="placeHolder-container" [style.display]="showPlaceHolders?'flex':'none'">
+          <div class="placeHolder fs-5 mb-2" *ngFor="let placeholder of placeHolders" draggable="true" (dragstart)="onDragStart(placeholder)">{{placeholder}}</div>
+        </div>
       </div>
     </li>
 

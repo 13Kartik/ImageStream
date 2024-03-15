@@ -1,11 +1,12 @@
-<form [formGroup]="activeTextBox" class="page" (submit)="onSubmit()" (dragover)="onDragOver($event)">
+<form [formGroup]="activeTextBox" class="page" (submit)="onSubmit()" (dragover)="onDragOver($event)" (drop)="onDrop()">
     <div class="row">
         <app-options-menu 
         class="col-3" 
         [options]="activeTextBox.controls"
+        [placeHolders]="placeHolders"
         (onOpacityChange)="setOpacity($event)"
         (onAddTextBox)="this.addTextBox()"
-        (onDrag)="onDrop($event)"
+        (onPlaceHolderDrag)="onPlaceHolderDrag($event)"
         >
         </app-options-menu>
 
@@ -39,7 +40,6 @@
                                 'background-image': 'linear-gradient(rgba(255, 255, 255,'+(1-imageOpacity)+'), rgba(255, 255, 255, '+(1-imageOpacity)+')), url(' + img_src + ')',
                                 'margin-right':'5%',
                                 }"
-
                     >
                         <app-text-box 
                         *ngFor="let textBox of textBoxes; let index = index"
@@ -47,7 +47,7 @@
                         [fontControls]="textBox.controls" 
                         (click)="changeTextBox(index)"
                         (onDelete)="deleteTextBox(index)"
-
+                        (onPlaceHolderDrop)="onPlaceHolderDrop(index)"
                         >
                         </app-text-box>
                     </div>

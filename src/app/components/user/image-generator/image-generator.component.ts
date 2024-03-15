@@ -78,7 +78,11 @@ export class ImageGeneratorComponent {
     private modalService: NgbModal,
     private db: DbServiceService,
     private el: ElementRef
-  ) {}
+  ) {
+      this.db.getPlaceHolders().subscribe(res=>{
+        this.placeHolders=res;
+      });
+  }
 
   //icons
   copyIcon = faCopy;
@@ -101,19 +105,19 @@ export class ImageGeneratorComponent {
   activeTextBox: FormGroup = new FormGroup({});
 
   //placeHolder
-  dropCoordinates:[number,number]=[100,100];
+  placeHolders:string[]=[];
+  placeHolder:string|null = null;
+
 
   imageOpacity: number = 1;
 
-  addTextBox(x:number=100,y:number=100,text:string='Enter text',isPlaceHolder:boolean=false) {
+  addTextBox(text:string='Enter text') {
     const textBox = new FormGroup({
       text: new FormControl(text),
       fontSize: new FormControl(34),
       fontColor: new FormControl('#3B71CA'),
       fontFamily: new FormControl('Courier New'),
       textAlignment: new FormControl('left'),
-      x: new FormControl(x),
-      y: new FormControl(y)
     });
 
     // Push a new object into the array
@@ -170,6 +174,7 @@ export class ImageGeneratorComponent {
         textBoxRef.height,
         textBoxRef.width
         );
+
         textBoxesData.push({
         x,
         y,
@@ -255,11 +260,23 @@ export class ImageGeneratorComponent {
     this.textBoxes.splice(i,1);
   }
 
-  onDrop(event:any){
-    this.dropCoordinates=event.coordinates;
-    this.addTextBox(...event.coordinates,event.placeHolder);
+  onPlaceHolderDrag(event:any){
+    this.placeHolder=event.placeHolder;
   }
+  
   onDragOver(event:any){
     event.preventDefault();
   }
+
+  onPlaceHolderDrop(i:number){
+    if(this.placeHolder!==null){
+      const text = this.textBoxes[i].controls['text'].value;
+      this.textBoxes[i].controls['text'].setValue(text+' {'+this.placeHolder+'}');
+    }
+  }
+
+  onDrop(){
+    this.placeHolder=null;
+  }
+
 }

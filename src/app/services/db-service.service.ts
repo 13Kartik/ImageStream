@@ -39,4 +39,8 @@ export class DbServiceService {
     return this.http.get<any>(`${this.api}ImageBlockGeneration/GetAllImage/${this.user_id}`);
   }
 
+  getPlaceHolders(){
+    return this.http.get<any>(`${this.api}ImageBlockGeneration`);
+  }
+
 }

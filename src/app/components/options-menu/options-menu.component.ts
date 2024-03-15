@@ -6,12 +6,15 @@ import { ReactiveFormsModule } from '@angular/forms';
 //component
 import { DynamicTextInputComponent } from '../dynamic-text-input/dynamic-text-input.component';
 
-//drag and drop
+//icons
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faCaretUp } from '@fortawesome/free-solid-svg-icons';
+import { faCaretDown } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-options-menu',
   standalone: true,
-  imports: [CommonModule,FormsModule,ReactiveFormsModule],
+  imports: [CommonModule,FormsModule,ReactiveFormsModule,FontAwesomeModule],
   templateUrl: './options-menu.component.html',
   styleUrls: ['./options-menu.component.css'],
 })
@@ -19,13 +22,21 @@ import { DynamicTextInputComponent } from '../dynamic-text-input/dynamic-text-in
 export class OptionsMenuComponent implements AfterViewInit {
   @Input() options!:any;
   @Input() headerInputRef!:DynamicTextInputComponent;
+  @Input() placeHolders!:string[];
   @Output() onOpacityChange:EventEmitter<number> = new EventEmitter;
   @Output() onAddTextBox:EventEmitter<void> = new EventEmitter;
-  @Output() onDrag:EventEmitter<object> = new EventEmitter;
+  @Output() onPlaceHolderDrag:EventEmitter<object> = new EventEmitter;
 
   imageOpacity:number = 1;
-  showFontProperties:boolean=false;
-  showImageOptions:boolean=false;
+
+  //dropDown
+  showImageOptions:boolean=true;
+  showFontProperties:boolean=true;
+  showPlaceHolders:boolean=false;
+
+  //icons
+  dropUpIcon = faCaretUp;
+  dropDownIcon = faCaretDown;
 
   fonts = [
     "Times New Roman",
@@ -39,36 +50,15 @@ export class OptionsMenuComponent implements AfterViewInit {
     "Papyrus",
   ];
 
-  placeHolders:string[]=['name'];
-
   constructor(){}
 
   ngAfterViewInit(): void {
   }
 
-  convertCoordinates(x:number,y:number){  
 
-    const imgContainerReact = document.querySelector('.img-container')
-    ?.getBoundingClientRect();
-
-    if(imgContainerReact){
-      if(x<imgContainerReact.x || y<imgContainerReact.y) return null;
-
-      const newX = x - imgContainerReact.x;
-      const newY = y - imgContainerReact.y;
-      return [newX,newY];
-    }
-    return null;
-  }
-
-  onDragEnd(event:any,placeHolder:string){
-    console.log(event);
-    const coordinates=this.convertCoordinates(event.pageX,event.pageY);
-    console.log(coordinates);
-    if(coordinates!==null)
-    this.onDrag.emit({
+  onDragStart(placeHolder:string){
+    this.onPlaceHolderDrag.emit({
       placeHolder,
-      coordinates
     });
   }
 

@@ -21,6 +21,7 @@ export class TextBoxComponent implements AfterViewInit {
 
   @Input() fontControls!: any;
   @Output() onDelete:EventEmitter<void>=new EventEmitter;
+  @Output() onPlaceHolderDrop:EventEmitter<void>=new EventEmitter;
 
   @ViewChild('textBox') textBox!: ElementRef;
 
@@ -87,11 +88,11 @@ export class TextBoxComponent implements AfterViewInit {
     return this.fontControls['textAlignment']?.value ?? 'left';
   }
 
-  get x() {
-    return this.fontControls['x']?.value ?? 100;
+  get initialX() {
+    return this.fontControls['initialX']?.value ?? 100;
   }
-  get y() {
-    return this.fontControls['y']?.value ?? 100;
+  get initialY() {
+    return this.fontControls['initialY']?.value ?? 100;
   }
 
   adjustTextareaHeight(event: any): void {
@@ -114,4 +115,8 @@ export class TextBoxComponent implements AfterViewInit {
     textarea.style.height = textarea.scrollHeight + 'px';
   }
 
+  onDrop(){
+    this.onPlaceHolderDrop.emit();
+    this.resizeTextarea();
+  }
 }

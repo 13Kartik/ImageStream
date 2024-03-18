@@ -1,4 +1,4 @@
-<ng-template #setImageModal let-modal>
+<ng-template #selectImageModal let-modal>
     <div class="page-container">
         <div class="modal-header">
             <h4 class="modal-title ms-3">Select Image</h4>
@@ -19,14 +19,14 @@
                         <img class="rounded" height="100%" width="auto" [src]="storagePath+img.imagePath">
                     </div>
                 </div>
-                <div *ngFor="let row of imgLinkList_2d.slice(page-1,page+1)" class="image-row">
+                <div *ngFor="let row of imgLinkList_2d.slice(0,2)" class="image-row">
                     <div *ngFor="let img of row" class="image-item" (click)="setImage(img.imageId,storagePath+img.imagePath)">
                         <img class="rounded" height="100%" width="100%" [src]="storagePath+img.imagePath">
                     </div>
                 </div>
             }
             @else {
-                <div *ngFor="let row of imgLinkList_2d.slice(page-1,page+2)" class="image-row">
+                <div *ngFor="let row of imgLinkList_2d.slice(3*page-4,3*page-1)" class="image-row">
                     <div *ngFor="let img of row" class="image-item" (click)="setImage(img.imageId,storagePath+img.imagePath)">
                         <img class="rounded" height="100%" width="100%" [src]="storagePath+img.imagePath">
                     </div>

@@ -24,6 +24,7 @@ cdkDragBoundary=".img-container"
     (keydown)="handleKeyDown($event)"
     (mousedown)="getMaxWidth()"
     (mouseup)="adjustTextareaHeight($event)"
+    (drop)="onDrop()"
     >
     </textarea>
 </div>

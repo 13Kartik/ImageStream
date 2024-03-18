@@ -1,10 +1,12 @@
-<form [formGroup]="activeFontProperties" (submit)="onSubmit()">
+<form [formGroup]="activeTextBox" class="page" (submit)="onSubmit()" (dragover)="onDragOver($event)" (drop)="onDrop()">
     <div class="row">
         <app-options-menu 
         class="col-3" 
-        [options]="activeFontProperties.controls"
+        [options]="activeTextBox.controls"
+        [placeHolders]="placeHolders"
         (onOpacityChange)="setOpacity($event)"
         (onAddTextBox)="this.addTextBox()"
+        (onPlaceHolderDrag)="onPlaceHolderDrag($event)"
         >
         </app-options-menu>
 
@@ -12,7 +14,7 @@
                 @if(img_src===undefined){
                     <div
                     class="card w-50 h-50 d-flex justify-content-center align-items-center border-primary"
-                    (click)="openSetImageModal()"
+                    (click)="openSelectImageModal()"
                     >
                         <fa-icon 
                         [icon]="uploadIcon"
@@ -25,7 +27,7 @@
                 @else {
                     <div class="d-flex align-items-center justify-content-end change-img-btn" style="width:5%;">     
                         <div class="btn bg-primary" placement="left" ngbTooltip="change Image">
-                            <fa-icon [icon]="changeImgIcon" class="text-white fs-3" (click)="openSetImageModal()"></fa-icon>
+                            <fa-icon [icon]="changeImgIcon" class="text-white fs-3" (click)="openSelectImageModal()"></fa-icon>
                         </div>
                     </div>
                     <div
@@ -40,11 +42,12 @@
                                 }"
                     >
                         <app-text-box 
-                        *ngFor="let textBox of fontProperties; let index = index"
+                        *ngFor="let textBox of textBoxes; let index = index"
                         [id]="'textBox_'+index"
                         [fontControls]="textBox.controls" 
                         (click)="changeTextBox(index)"
                         (onDelete)="deleteTextBox(index)"
+                        (onPlaceHolderDrop)="onPlaceHolderDrop(index)"
                         >
                         </app-text-box>
                     </div>
@@ -54,30 +57,5 @@
 </form>
 
 <!-- Modal -->
-<ng-template #generatedLinkModal let-modal>
-
-    <!-- Alert -->
-    <div class="alert-container" [ngStyle]="{'display':showAlert?'flex':'none'}">
-        <div class="alert alert-primary" role="alert">
-            Link has been copied to Clipboard
-        </div>
-    </div>
-
-	<div class="modal-header">
-		<h4 class="modal-title">Generated Link</h4>
-		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-	</div>
-	<div class="modal-body">
-		<div class="row">
-            <div class="col-10 d-flex align-items-center justify-content-center"><a [href]="generatedLink" target="_blank" class="pb-2" style="white-space: nowrap; overflow: auto;">{{generatedLink}}</a></div>
-            <div class="col-2" (click)="copyLink()">
-                <fa-icon class="btn btn-outline-primary" [icon]="copyIcon" placement="bottom" ngbTooltip="Copy Generated Link"></fa-icon>
-            </div>
-        </div>
-	</div>
-	<div class="modal-footer justify-content-center">
-		<button type="button" class="btn btn-success" (click)="modal.close('Close click')">Continue</button>
-	</div>
-</ng-template>
-
-<app-select-image #appSelectImageRef class="modal-body" (onSetImage)="handleImageUrl($event)"></app-select-image>
+<app-generated-link-modal #generatedLinkModalRef></app-generated-link-modal>
+<app-select-image #appSelectImageRef (onSetImage)="handleImageUrl($event)"></app-select-image>

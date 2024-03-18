@@ -1,6 +1,6 @@
-import { Component, ElementRef, EventEmitter, Input, Output, ViewChild, OnChanges, SimpleChanges, AfterViewInit } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild, AfterViewInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { FormGroup, ReactiveFormsModule, FormControl } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 //drag and drop
@@ -21,6 +21,7 @@ export class TextBoxComponent implements AfterViewInit {
 
   @Input() fontControls!: any;
   @Output() onDelete:EventEmitter<void>=new EventEmitter;
+  @Output() onPlaceHolderDrop:EventEmitter<void>=new EventEmitter;
 
   @ViewChild('textBox') textBox!: ElementRef;
 
@@ -31,8 +32,7 @@ export class TextBoxComponent implements AfterViewInit {
 
   constructor(
     private el: ElementRef
-  ) {
-  }
+  ) {}
 
   ngAfterViewInit(): void {
     this.fontControls['fontSize'].valueChanges.subscribe(() => {
@@ -83,8 +83,16 @@ export class TextBoxComponent implements AfterViewInit {
   get fontColor() {
     return this.fontControls['fontColor']?.value ?? '#3B71CA';
   }
+
   get textAlignment() {
     return this.fontControls['textAlignment']?.value ?? 'left';
+  }
+
+  get initialX() {
+    return this.fontControls['initialX']?.value ?? 100;
+  }
+  get initialY() {
+    return this.fontControls['initialY']?.value ?? 100;
   }
 
   adjustTextareaHeight(event: any): void {
@@ -107,5 +115,8 @@ export class TextBoxComponent implements AfterViewInit {
     textarea.style.height = textarea.scrollHeight + 'px';
   }
 
-
+  onDrop(){
+    this.onPlaceHolderDrop.emit();
+    this.resizeTextarea();
+  }
 }

@@ -3,6 +3,8 @@ import {
   ViewChild,
   TemplateRef,
   ElementRef,
+  ViewChildren,
+  QueryList,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -66,13 +68,10 @@ import { GeneratedLinkModalComponent } from '../../generated-link-modal/generate
   providers: [DbServiceService],
 })
 export class ImageGeneratorComponent {
-  @ViewChild('headerInputRef') headerInputRef!: DynamicTextInputComponent;
-  @ViewChild('nameInputRef') nameInputRef!: DynamicTextInputComponent;
   @ViewChild('appSelectImageRef') appSelectImageRef!: SelectImageComponent;
   @ViewChild('generatedLinkModal') generatedLinkModal!: TemplateRef<any>;
   @ViewChild('generatedLinkModalRef') generatedLinkModalRef!: GeneratedLinkModalComponent;
   @ViewChild('imgContainer') imgContainer!: ElementRef;
-  @ViewChild('headerTextarea') headerTextarea!: ElementRef;
 
   constructor(
     private modalService: NgbModal,
@@ -96,6 +95,7 @@ export class ImageGeneratorComponent {
   real_height!: number;
   real_width!: number;
   aspectRatio:number = 4/3;
+  portrait:boolean = false;
 
   //modal
   private selectImageModalRef!: NgbModalRef;
@@ -107,7 +107,6 @@ export class ImageGeneratorComponent {
   //placeHolder
   placeHolders:string[]=[];
   placeHolder:string|null = null;
-
 
   imageOpacity: number = 1;
 
@@ -245,6 +244,7 @@ export class ImageGeneratorComponent {
       this.real_height = img.height;
       this.real_width = img.width;
       this.aspectRatio = img.width / img.height;
+      if(this.aspectRatio<=1) this.portrait=true;
     };
 
     //adding defalult textBox

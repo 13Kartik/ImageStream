@@ -9,15 +9,6 @@
     max-height: 95%;
 }
 
-/* .header{
-    margin-top: 5%;
-    height: 20%;
-    display: flex;
-    justify-content: center;
-    overflow:hidden;
-} */
-
-
 .headerTextarea{
     background-color: transparent;
     resize:horizontal;

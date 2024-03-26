@@ -69,7 +69,7 @@ export class SelectImageComponent {
       const reader = new FileReader();
         reader.onload = (e: any) => {
         this.onSetImage.emit({
-          url:e.target.result,
+          url:e.target.result, 
           file:imageFile
         });
       }

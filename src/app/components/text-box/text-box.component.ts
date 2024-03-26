@@ -34,11 +34,16 @@ export class TextBoxComponent implements AfterViewInit {
     private el: ElementRef
   ) {}
 
+  private resizeObserver!: ResizeObserver;
   ngAfterViewInit(): void {
     this.fontControls['fontSize'].valueChanges.subscribe(() => {
-      this.resizeTextarea();
+      setTimeout(()=>this.resizeTextarea(), 10);
     });
+
+    this.resizeObserver = new ResizeObserver(()=>this.resizeTextarea());
+    this.resizeObserver.observe(this.textBox.nativeElement);
   }
+  
 
   //width
   maxWidth:string='100%';
@@ -73,7 +78,7 @@ export class TextBoxComponent implements AfterViewInit {
   }
 
   get fontSize() {
-    return (this.fontControls['fontSize']?.value ?? 36);
+    return (this.fontControls['fontSize']?.value ?? 0);
   }
 
   get fontFamily() {
@@ -88,15 +93,8 @@ export class TextBoxComponent implements AfterViewInit {
     return this.fontControls['textAlignment']?.value ?? 'left';
   }
 
-  get initialX() {
-    return this.fontControls['initialX']?.value ?? 100;
-  }
-  get initialY() {
-    return this.fontControls['initialY']?.value ?? 100;
-  }
-
   adjustTextareaHeight(event: any): void {
-    this.getMaxHeight();
+    // this.getMaxHeight();
     const textarea = event.target as HTMLTextAreaElement;
     textarea.style.height = 'auto';
     textarea.style.height = textarea.scrollHeight + 'px';

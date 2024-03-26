@@ -3,13 +3,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 
-//component
-import { DynamicTextInputComponent } from '../dynamic-text-input/dynamic-text-input.component';
-
 //icons
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCaretUp } from '@fortawesome/free-solid-svg-icons';
 import { faCaretDown } from '@fortawesome/free-solid-svg-icons';
+
+//components
+import { TextBoxComponent } from '../text-box/text-box.component';
 
 @Component({
   selector: 'app-options-menu',
@@ -21,7 +21,6 @@ import { faCaretDown } from '@fortawesome/free-solid-svg-icons';
 
 export class OptionsMenuComponent implements AfterViewInit {
   @Input() options!:any;
-  @Input() headerInputRef!:DynamicTextInputComponent;
   @Input() placeHolders!:string[];
   @Output() onOpacityChange:EventEmitter<number> = new EventEmitter;
   @Output() onAddTextBox:EventEmitter<void> = new EventEmitter;

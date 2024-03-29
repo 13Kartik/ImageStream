@@ -1,0 +1,61 @@
+import { Component } from '@angular/core';
+import { RouterModule } from '@angular/router';
+
+// fontawesome import
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
+
+// popOverModule import
+import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
+import { Options } from '@popperjs/core';
+
+@Component({
+  selector: 'app-navbar',
+  standalone: true,
+  imports: [RouterModule, FontAwesomeModule, NgbPopoverModule],
+  templateUrl: './navbar.component.html',
+  styleUrl: './navbar.component.css'
+})
+export class NavbarComponent {
+
+  // fontawesome icon declaration
+  userIcon = faUser;
+  
+  popperOptions = (options: Partial<Options>) => {
+		// customize placement
+		options.placement = 'left';
+
+		// customize modifiers
+		for (const modifier of options.modifiers || []) {
+			// disable flip
+			if (modifier.name === 'flip') {
+				modifier.enabled = false;
+			}
+
+			// customize offset
+			if (modifier.name === 'offset' && modifier.options) {
+				modifier.options['offset'] = () => [20, 20];
+			}
+		}
+
+		// add your own modifier
+		options.modifiers?.push({
+			name: 'custom',
+			enabled: true,
+			phase: 'main',
+			fn: ({ state }) => {
+				console.log('custom modifier');
+			},
+		});
+
+		// first update callback
+		options.onFirstUpdate = (state) => {
+			console.log('onFirstUpdate', state);
+			if (state.elements?.arrow) {
+				state.elements.arrow.style.display = 'none';
+			}
+		};
+		return options;
+	};
+
+}

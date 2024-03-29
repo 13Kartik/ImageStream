@@ -51,4 +51,8 @@ export class DbServiceService {
     return this.http.post<any>(`${this.api}ImageBlockGeneration/UpdateUserImageBlock`,blockData);
   }
 
+  getLoggedUserImageBlockes(){
+    return this.http.get<any>(`${this.api}ImageBlockGeneration/${this.userId}`);
+  }
+
 }

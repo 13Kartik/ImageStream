@@ -4,6 +4,7 @@ import { PageNotFoundComponent } from './components/page-not-found/page-not-foun
 import { ImageGeneratorComponent } from './components/user/image-generator/image-generator.component';
 import { UserComponent } from './components/user/user.component';
 import { SignUpComponent } from './components/sign-up/sign-up.component';
+import { ImageBlockListComponent } from './components/image-block-list/image-block-list.component';
 
 //test
 import { SelectImageComponent } from './components/select-image/select-image.component';
@@ -12,11 +13,16 @@ export const routes: Routes = [
     {
         path:'',
         redirectTo:'/login',
-        pathMatch:'full'
+        pathMatch:'full'    
     },
     {
         path:'login',
         component:LoginComponent
+    },
+    {
+        path: 'imageList',
+        component: ImageBlockListComponent,
+        title: 'Image List'
     },
     {
         path:'user',

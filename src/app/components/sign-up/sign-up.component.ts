@@ -6,7 +6,7 @@ import { Router, RouterModule } from '@angular/router';
 
 // fontawesome import
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faArrowRightToBracket, faEnvelope, faKey, faEye, faEyeSlash} from '@fortawesome/free-solid-svg-icons';
+  import { faArrowRightToBracket, faEnvelope, faKey, faEye, faEyeSlash} from '@fortawesome/free-solid-svg-icons';
 
 // importing custome validators
 import { passwordMatch } from '../../custome-validations/passwordMatch';
@@ -30,7 +30,7 @@ export class SignUpComponent implements OnInit{
   passwordIcon = faKey;
   eyeIconPassword = faEye;
   eyeIconConfirmPassword = faEye;
-
+  
   // variable used in this components 
   passwordType:string = 'password';
   confirmPasswordType:string = 'password';

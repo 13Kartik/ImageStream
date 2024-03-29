@@ -3,6 +3,7 @@ import {
   ViewChild,
   TemplateRef,
   ElementRef,
+  OnInit,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -26,7 +27,7 @@ import { faRotate } from '@fortawesome/free-solid-svg-icons';
 import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 
 //database
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { DbServiceService } from '../../../services/db-service.service';
 import { HttpClientModule } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
@@ -65,7 +66,7 @@ import { GeneratedLinkModalComponent } from '../../generated-link-modal/generate
   styleUrls: ['./image-generator.component.css'],
   providers: [DbServiceService],
 })
-export class ImageGeneratorComponent {
+export class ImageGeneratorComponent implements OnInit {
   @ViewChild('appSelectImageRef') appSelectImageRef!: SelectImageComponent;
   @ViewChild('generatedLinkModal') generatedLinkModal!: TemplateRef<any>;
   @ViewChild('generatedLinkModalRef') generatedLinkModalRef!: GeneratedLinkModalComponent;
@@ -74,12 +75,21 @@ export class ImageGeneratorComponent {
   constructor(
     private modalService: NgbModal,
     private db: DbServiceService,
-    private el: ElementRef
+    private el: ElementRef,
+    private route: ActivatedRoute
   ) {
       this.db.getPlaceHolders().subscribe(res=>{
         this.placeHolders=res;
       });
-      this.getImageBlock(this.imageBlockId);
+  }
+
+  ngOnInit(){
+    this.route.queryParams.subscribe(params => {
+      // Access individual query parameters
+      console.log(params);
+      this.imageBlockId=params['imageBlockId'];
+      this.getImageBlock(params['imageBlockId']);
+    });
   }
 
   //icons

@@ -72,9 +72,12 @@ export class LoginComponent {
         params,
     }).subscribe({
       next:(res: any) => {
-          this.router.navigate(['/user/ImageGenerator']);
+
+          const queryParams = {
+            imageBlockId: '0E7B8E48-8D1A-4935-9794-7D369DF58D60',
+          };
+          this.router.navigate(['/user/ImageGenerator'],{queryParams:queryParams});
           localStorage.setItem("userId", res.userId);
-          console.log(res.userId);
         },
       error:(error) => {
           if (error.status === 401) {

@@ -48,7 +48,6 @@ export class SelectImageComponent {
     // })
     this.imgLinkList = await firstValueFrom(this.db.getUploadedImages());
     this.collectionSize = this.imgLinkList.length+1;
-    console.log(this.collectionSize);
 
     this.img_row_1=this.imgLinkList.splice(0,4);
     this.imgLinkList_2d = this.convert_to_2d(this.imgLinkList);
@@ -67,7 +66,7 @@ export class SelectImageComponent {
     const imageFile = event.target.files[0];
     if (imageFile) {
       const reader = new FileReader();
-        reader.onload = (e: any) => {
+        reader.onload = (e: any) => { 
         this.onSetImage.emit({
           url:e.target.result, 
           file:imageFile

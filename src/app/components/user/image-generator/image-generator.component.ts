@@ -3,8 +3,6 @@ import {
   ViewChild,
   TemplateRef,
   ElementRef,
-  ViewChildren,
-  QueryList,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -81,6 +79,7 @@ export class ImageGeneratorComponent {
       this.db.getPlaceHolders().subscribe(res=>{
         this.placeHolders=res;
       });
+      this.getImageBlock(this.imageBlockId);
   }
 
   //icons
@@ -108,15 +107,22 @@ export class ImageGeneratorComponent {
   placeHolders:string[]=[];
   placeHolder:string|null = null;
 
+  //validation
+  previousBlockData:null|object = null;
+  isModalActive:boolean = false;
+
+  //update
+  imageBlockId:string='0E7B8E48-8D1A-4935-9794-7D369DF58D60';
+
   imageOpacity: number = 1;
 
-  addTextBox(text:string='Enter text') {
+  addTextBox(text:string='Enter text',size:number=34,color:string='#3B71CA',family:string='Courier New',alignment:string='left') {
     const textBox = new FormGroup({
       text: new FormControl(text),
-      fontSize: new FormControl(34),
-      fontColor: new FormControl('#3B71CA'),
-      fontFamily: new FormControl('Courier New'),
-      textAlignment: new FormControl('left'),
+      fontSize: new FormControl(size),
+      fontColor: new FormControl(color),
+      fontFamily: new FormControl(family),
+      textAlignment: new FormControl(alignment),
     });
 
     // Push a new object into the array
@@ -133,18 +139,29 @@ export class ImageGeneratorComponent {
   }
 
   //Converting coordinates relative to screen to coordinated relative to Image
-  convertProperties(x: number, y: number, height: number, width: number) {
+  convertProperties(x: number, y: number, height: number, width: number,incoming:boolean=false) {
     const imgContainerReact = this.el.nativeElement
       .querySelector('.img-container')
       .getBoundingClientRect();
+      console.log(imgContainerReact);
       
       const scaleHeight = this.real_height / imgContainerReact.height;
       const scaleWidth = this.real_width / imgContainerReact.width;
-      
-      const newX = (x - imgContainerReact.x) * scaleWidth;
-      const newY = (y - imgContainerReact.y) * scaleHeight;
-      const newHeight = height * scaleHeight;
-      const newWidth = width * scaleWidth*1.04;
+
+      let newX,newY,newHeight,newWidth;
+
+      if(incoming){
+        newX = x/scaleWidth+imgContainerReact.x;
+        newY = y/scaleHeight+imgContainerReact.y;
+        newHeight = height / scaleHeight;
+        newWidth = width / scaleWidth/(this.portrait?1.015:1.008);
+      }
+      else{
+        newX = (x - imgContainerReact.x) * scaleWidth;
+        newY = (y - imgContainerReact.y) * scaleHeight;
+        newHeight = height * scaleHeight;
+        newWidth = width * scaleWidth*(this.portrait?1.015:1.008);
+      }
 
     return [newX, newY, newHeight, newWidth];
   }
@@ -158,6 +175,7 @@ export class ImageGeneratorComponent {
         this.db.uploadImage(fileData)
       );
       this.imageId = uploadImageResponse.imageId;
+      this.img_file = null;
     }
 
     //create req Data:
@@ -167,6 +185,9 @@ export class ImageGeneratorComponent {
       const textBoxRef = this.el.nativeElement
         .querySelector(`#textBox_${i} textarea`)
         ?.getBoundingClientRect();
+
+      console.log(textBoxRef);
+
       const [x, y, height, width] = this.convertProperties(
         textBoxRef.x,
         textBoxRef.y,
@@ -190,27 +211,47 @@ export class ImageGeneratorComponent {
       textBox.fontSize = textBox.fontSize * scale * 3/4.15;
     }
     
+    // const blockData = {
+    //   createdBy: localStorage.getItem("userId"),
+    //   imageId: this.imageId,
+    //   generationName: 'testGenerations',
+    //   imageProperty: {
+    //     backgroundImageOpacity: this.imageOpacity * 100,
+    //     textBoxes: textBoxesData,
+    //   },
+    // };
+
     const blockData = {
-      createdBy: 'bd2dba6f-c8b8-48c9-bdf0-d793c128e338',
-      imageId: this.imageId,
+      generationId:this.imageBlockId,
+      imageID: this.imageId,
       generationName: 'testGenerations',
       imageProperty: {
         backgroundImageOpacity: this.imageOpacity * 100,
         textBoxes: textBoxesData,
       },
     };
-    
+
     console.log(blockData);
     
-    const uploadImageBlockResponse = await firstValueFrom(
-      this.db.uploadImageBlock(blockData)
-    );
-
-    console.log(uploadImageBlockResponse);
+    if(blockData!==this.previousBlockData){
+      const uploadImageBlockResponse = await firstValueFrom(
+        this.db.updateImageBlock(blockData)
+      );
+      console.log(uploadImageBlockResponse);
+      this.generatedLinkModalRef.generatedLink = uploadImageBlockResponse.imageURL;
+      this.previousBlockData=blockData;
+    }
 
     // open modal to Display and access generated Link
-    this.generatedLinkModalRef.generatedLink = uploadImageBlockResponse.path;
-    this.modalService.open(this.generatedLinkModalRef.modal, { centered: true });
+    if(!this.isModalActive){
+      this.isModalActive = true;
+      const modalRef = this.modalService.open(this.generatedLinkModalRef.modal, { centered: true });
+      modalRef.result.then(
+        () => this.isModalActive = false,
+        () => this.isModalActive = false
+      );
+    }
+    
   }
 
   openSelectImageModal() {
@@ -222,7 +263,7 @@ export class ImageGeneratorComponent {
     this.appSelectImageRef.getImageList();
   }
 
-  handleImageUrl(image: { imageId?: string; url: string; file?: File }) {
+  handleImageUrl(image: { imageId?: string; url: string; file?: File }){
 
     //clearing textBoxes of previous image
     this.textBoxes=[];
@@ -237,7 +278,8 @@ export class ImageGeneratorComponent {
     const img = new Image();
     img.src = image.url;
     this.img_src = image.url;
-    this.selectImageModalRef.close();
+    
+    if(this.selectImageModalRef) this.selectImageModalRef.close();
 
     //getting original height and width of Image
     img.onload = () => {
@@ -246,9 +288,8 @@ export class ImageGeneratorComponent {
       this.aspectRatio = img.width / img.height;
       if(this.aspectRatio<=1) this.portrait=true;
     };
-
-    //adding defalult textBox
-    this.addTextBox();
+    // //adding defalult textBox
+    // this.addTextBox();
   }
 
   setOpacity(opacity: number) {
@@ -277,6 +318,65 @@ export class ImageGeneratorComponent {
 
   onDrop(){
     this.placeHolder=null;
+  }
+
+  //update imageBlock
+  async getImageBlock(id:string){
+    const res = await firstValueFrom(
+      this.db.getImageBlock(id)
+    );
+
+    this.imageOpacity = res.imageBlock.imageProperty.backgroundImageOpacity/100;
+    this.imageId = res.imageBlock.imageID;
+
+   this.handleImageUrl({
+      url:'http://192.168.1.17:8056/images/'+res.imageBlock.imagePath
+    });
+
+    const textBoxesData = res.imageBlock.imageProperty.textBoxes;
+    for(const [i, textBox] of textBoxesData.entries()){
+      this.addTextBox(
+        textBox.text,
+        textBox.fontSize,
+        textBox.fontColor,
+        textBox.fontFamily,
+        textBox.textAlignment
+      );
+
+      // Wait for the next tick to ensure the DOM is updated
+      setTimeout(() => {
+        const textBoxRef = this.el.nativeElement.querySelector(`#textBox_${i}`);
+        const textareaRef = textBoxRef.querySelector(`textarea`);
+        if (textBoxRef) {
+          const [x, y, height, width] = this.convertProperties(
+            textBox.x,
+            textBox.y,
+            textBox.height,
+            textBox.width,
+            true
+          );
+          textBoxRef.style.left=x+'px';
+          textBoxRef.style.top=y+'px';
+          textareaRef.style.height=height+'px';
+          textareaRef.style.width=width+'px';
+        } else {
+          console.error(`Textarea with ID textBox_${i} not found.`);
+        }
+      });
+    }
+
+    //changing fontsize
+    setTimeout(()=>{
+      //scaling fontSize for Image resolution
+      let containerWidth = this.imgContainer.nativeElement.getBoundingClientRect().width;
+      let scale:number=this.real_width / containerWidth;
+      for(const textBox of this.textBoxes){
+        const fontSize = textBox.get('fontSize');
+        const newFontSize = (fontSize?.value/scale*4.15/3).toFixed(2);
+        fontSize?.setValue(newFontSize);
+      }
+    });
+
   }
 
 }

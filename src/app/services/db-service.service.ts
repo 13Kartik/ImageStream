@@ -9,8 +9,8 @@ import { Observable } from 'rxjs';
 export class DbServiceService {
 
   api:string='http://192.168.1.17:8056/api/';
-  // private user_id:string = '9e051ee3-4858-428d-a98b-d5baad632110';
-  private user_id:string = 'bd2dba6f-c8b8-48c9-bdf0-d793c128e338';
+  // private userId:string = '9e051ee3-4858-428d-a98b-d5baad632110';
+  public userId:string|null = localStorage.getItem("userId");
 
   private httpOptions = {
     headers:new HttpHeaders({
@@ -28,19 +28,27 @@ export class DbServiceService {
   }
 
   uploadImage(file:any):Observable<any>{
-    return this.http.post<any>(this.api+'ImageBlockGeneration/UploadImage?userId='+this.user_id,file);
+    return this.http.post<any>(this.api+'ImageBlockGeneration/UploadImage?userId='+this.userId,file);
   }
 
   uploadImageBlock(blockData:object){
-    return this.http.post<any>(`${this.api}ImageBlockGeneration/generateImage`,blockData);
+    return this.http.post<any>(`${this.api}ImageBlockGeneration/GenerateImage`,blockData);
   }
 
   getUploadedImages(){
-    return this.http.get<any>(`${this.api}ImageBlockGeneration/GetAllImage/${this.user_id}`);
+    return this.http.get<any>(`${this.api}ImageBlockGeneration/GetAllImage/${this.userId}`);
   }
 
   getPlaceHolders(){
     return this.http.get<any>(`${this.api}ImageBlockGeneration`);
+  }
+
+  getImageBlock(imageBlockId:string){
+    return this.http.get<any>(`${this.api}ImageBlockGeneration/GetUserImageBlock/${imageBlockId}`);
+  }
+
+  updateImageBlock(blockData:object){
+    return this.http.post<any>(`${this.api}ImageBlockGeneration/UpdateUserImageBlock`,blockData);
   }
 
 }

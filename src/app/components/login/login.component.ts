@@ -72,7 +72,9 @@ export class LoginComponent {
         params,
     }).subscribe({
       next:(res: any) => {
-          this.router.navigate(['/user']);
+          this.router.navigate(['/user/ImageGenerator']);
+          localStorage.setItem("userId", res.userId);
+          console.log(res.userId);
         },
       error:(error) => {
           if (error.status === 401) {

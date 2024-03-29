@@ -13,7 +13,6 @@ textarea{
 /* holder */
 .texboxHolder {
     width:fit-content;
-
     text-align: center;
     background: transparent;
     border-radius: 5px;

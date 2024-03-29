@@ -39,39 +39,39 @@
         id="img-preview"
         class="col-9 d-flex justify-content-center align-items-center"
         >
-        <div
-            class="d-flex align-items-center justify-content-end change-img-btn"
-            style="width: 5%"
-        >
-            <div class="btn bg-primary" placement="left" ngbTooltip="change Image">
-            <fa-icon
-                [icon]="changeImgIcon"
-                class="text-white fs-3"
-                (click)="openSelectImageModal()"
-            ></fa-icon>
-            </div>
-        </div>
-        <div
-            #imgContainer
-            class="img-container"
-            [ngStyle]="{
-                        'height':portrait?'100%':'auto',
-                        'width':portrait?'auto':'100%',
-                        'aspect-ratio':this.aspectRatio,
-                        'background-image': 'linear-gradient(rgba(255, 255, 255,'+(1-imageOpacity)+'), rgba(255, 255, 255, '+(1-imageOpacity)+')), url(' + img_src + ')',
-                        'margin-right':'5%',
-                        }"
-        >
-            <app-text-box
-            *ngFor="let textBox of textBoxes; let index = index"
-            [id]="'textBox_' + index"
-            [fontControls]="textBox.controls"
-            (click)="changeTextBox(index)"
-            (onDelete)="deleteTextBox(index)"
-            (onPlaceHolderDrop)="onPlaceHolderDrop(index)"
+            <div
+                class="d-flex align-items-center justify-content-end change-img-btn"
+                style="width: 5%"
             >
-            </app-text-box>
-        </div>
+                <div class="btn bg-primary" placement="left" ngbTooltip="change Image">
+                    <fa-icon
+                        [icon]="changeImgIcon"
+                        class="text-white fs-3"
+                        (click)="openSelectImageModal()"
+                    ></fa-icon>
+                </div>
+            </div>
+            <div
+                #imgContainer
+                class="img-container"
+                [ngStyle]="{
+                            'height':portrait?'100%':'auto',
+                            'width':portrait?'auto':'100%',
+                            'aspect-ratio':this.aspectRatio,
+                            'background-image': 'linear-gradient(rgba(255, 255, 255,'+(1-imageOpacity)+'), rgba(255, 255, 255, '+(1-imageOpacity)+')), url(' + img_src + ')',
+                            'margin-right':'5%',
+                            }"
+            >
+                <app-text-box
+                *ngFor="let textBox of textBoxes; let index = index"
+                [id]="'textBox_' + index"
+                [fontControls]="textBox.controls"
+                (click)="changeTextBox(index)"
+                (onDelete)="deleteTextBox(index)"
+                (onPlaceHolderDrop)="onPlaceHolderDrop(index)"
+                >
+                </app-text-box>
+            </div>
         </div>
     }
   </div>

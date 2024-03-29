@@ -10,7 +10,7 @@ export class DbServiceService {
 
   api:string='http://192.168.1.17:8056/api/';
   // private user_id:string = '9e051ee3-4858-428d-a98b-d5baad632110';
-  private user_id:string = 'bd2dba6f-c8b8-48c9-bdf0-d793c128e338';
+  private user_id:string = 'A762DEDC-D28F-4957-AD13-E1ADB6822F95';
 
   private httpOptions = {
     headers:new HttpHeaders({
@@ -41,6 +41,10 @@ export class DbServiceService {
 
   getPlaceHolders(){
     return this.http.get<any>(`${this.api}ImageBlockGeneration`);
+  }
+
+  getUserImageBlockes(){
+    return this.http.get<any>(`${this.api}ImageBlockGeneration/${this.user_id}`);
   }
 
 }

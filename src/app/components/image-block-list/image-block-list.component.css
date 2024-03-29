@@ -23,3 +23,16 @@
 .my-custom-header-color {
     background-color: #88d2e1 ;
 }
+
+/* Image Preview */
+.img-preview{
+    max-height: 100%;
+    max-width: 100%;
+    align-items: center;
+}
+
+.img-body{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

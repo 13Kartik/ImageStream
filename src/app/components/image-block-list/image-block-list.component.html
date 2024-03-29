@@ -3,154 +3,42 @@
     <div class="box bg-primary">
         <div class="d-flex justify-content-between align-items-center mx-3">
             <h2 class="text-center my-3">Image Block List</h2>
-            <button class="btn btn-dark" type="button" (click)="openVerticallyCentered(content)">Create</button>
+            <button class="btn btn-dark" type="button" (click)="openVerticallyCentered(createImg)">Create</button>
         </div>
         <!-- (starts) List of Images block -->
         <ul class="list-group">
             
-            <button class="btn hover-bg">
-                <li class="list-group-item d-flex justify-content-between align-items-start">
-                    <div class="ms-2 me-auto">
-                        <div class="fw-bold">UnityUplift</div>
-                        <span class="text-secondary">Category - 1</span>
-                    </div>
-                    <button class="btn" (click)="copyImageSrc()" >
-                        <fa-icon [icon]="copyImageLink" class="text-primary fs-5"  title="Copy Image Link"></fa-icon>
-                    </button>
-                </li>
-            </button>
-        
-            <button class="btn list-group-item-action hover-bg">    
-                <li class="list-group-item d-flex justify-content-between align-items-start">
-                    <div class="ms-2 me-auto">
-                        <div class="fw-bold">SparkChange Initiative</div>
-                        <span class="text-secondary">Category - 1</span>
-                    </div>
-                    <button class="btn" (click)="copyImageSrc()">
-                        <fa-icon [icon]="copyImageLink" class="text-primary fs-5"></fa-icon>
-                    </button>
-                </li>
-            </button>
-        
-            <button class="btn list-group-item-action hover-bg">    
-                <li class="list-group-item d-flex justify-content-between align-items-start">
-                    <div class="ms-2 me-auto">
-                        <div class="fw-bold">HarmonyHub Movement</div>
-                        <span class="text-secondary">Category - 1</span>
-                    </div>
-                    <button class="btn" (click)="copyImageSrc()">
-                        <fa-icon [icon]="copyImageLink" class="text-primary fs-5"></fa-icon>
-                    </button>
-                </li>
-            </button>
-        
-            <button class="btn list-group-item-action hover-bg">    
-                <li class="list-group-item d-flex justify-content-between align-items-start">
-                    <div class="ms-2 me-auto">
-                        <div class="fw-bold">RenewRipple Campaign</div>
-                        <span class="text-secondary">Category - 1</span>
-                    </div>
-                    <button class="btn" (click)="copyImageSrc()">
-                        <fa-icon [icon]="copyImageLink" class="text-primary fs-5"></fa-icon>
-                    </button>
-                </li>
-            </button>
-        
-            <button class="btn list-group-item-action hover-bg">    
-                <li class="list-group-item d-flex justify-content-between align-items-start">
-                    <div class="ms-2 me-auto">
-                        <div class="fw-bold">ImpactIgnite Project</div>
-                        <span class="text-secondary">Category - 1</span>
-                    </div>
-                    <button class="btn" (click)="copyImageSrc()">
-                        <fa-icon [icon]="copyImageLink" class="text-primary fs-5"></fa-icon>
-                    </button>
-                </li>
-            </button>
-        
-            <button class="btn list-group-item-action hover-bg">    
-                <li class="list-group-item d-flex justify-content-between align-items-start">
-                    <div class="ms-2 me-auto">
-                        <div class="fw-bold">InspireTogether Drive</div>
-                        <span class="text-secondary">Category - 1</span>
-                    </div>
-                    <button class="btn" (click)="copyImageSrc()">
-                        <fa-icon [icon]="copyImageLink" class="text-primary fs-5"></fa-icon>
-                    </button>
-                </li>
-            </button>
-        
-            <button class="btn list-group-item-action hover-bg">    
-                <li class="list-group-item d-flex justify-content-between align-items-start">
-                    <div class="ms-2 me-auto">
-                        <div class="fw-bold">EmpowerWave Movement</div>
-                        <span class="text-secondary">Category - 1</span>
-                    </div>
-                    <button class="btn" (click)="copyImageSrc()">
-                        <fa-icon [icon]="copyImageLink" class="text-primary fs-5"></fa-icon>
-                    </button>
-                </li>
-            </button>
-        
-            <button class="btn list-group-item-action hover-bg">    
-                <li class="list-group-item d-flex justify-content-between align-items-start">
-                    <div class="ms-2 me-auto">
-                        <div class="fw-bold">ReviveHope Initiative</div>
-                        <span class="text-secondary">Category - 1</span>
-                    </div>
-                    <button class="btn" (click)="copyImageSrc()">
-                        <fa-icon [icon]="copyImageLink" class="text-primary fs-5"></fa-icon>
-                    </button>
-                </li>
-            </button>
-        
-            <button class="btn list-group-item-action hover-bg">    
-                <li class="list-group-item d-flex justify-content-between align-items-start">
-                    <div class="ms-2 me-auto">
-                        <div class="fw-bold">TransformTomorrow Project</div>
-                        <span class="text-secondary">Category - 1</span>
-                    </div>
-                    <button class="btn" (click)="copyImageSrc()">
-                        <fa-icon [icon]="copyImageLink" class="text-primary fs-5"></fa-icon>
-                    </button>
-                </li>
-            </button>
-        
-            <button class="btn list-group-item-action hover-bg">    
-                <li class="list-group-item d-flex justify-content-between align-items-start">
-                    <div class="ms-2 me-auto">
-                        <div class="fw-bold">ElevateCommunity Crusade</div>
-                        <span class="text-secondary">Category - 1</span>
-                    </div>
-                    <button class="btn" (click)="copyImageSrc()">
-                        <fa-icon [icon]="copyImageLink" class="text-primary fs-5"></fa-icon>
-                    </button>
-                </li>
-            </button>
+            @for (block of imageBlocks | slice: (page-1) * pageSize : page * pageSize;; track block.createdOn; let idx = $index) {
+                <div class="btn list-group-item-action hover-bg" >
+                    <li class="list-group-item d-flex justify-content-between align-items-start">
+                        <div class="ms-2 me-auto">
+                            <div class="fw-bold" (click)="openFullscreen(content, block.generatedURL, block.generationName)">{{ block.generationName }}</div>
+                            <span class="text-secondary">Category - 1</span>
+                            <span class="text-secondary mx-2">{{ block.createdOn }}</span>
+                        </div>
+                        <button class="btn" (click)="copyImageSrc(block.generatedURL, idx)" >
+                            <fa-icon [icon]="copyImageLink" class="text-primary fs-5"  title="Copy Image Link"></fa-icon>
+                        </button>
+                    </li>
+                </div>
+            }
+            @empty {
+                <p>There are NoImage Blocks.</p>
+            }
+
         </ul>
         <!-- (ends) List of Images block -->
     </div>
 </div>
 
-<nav aria-label="Page navigation example">
-  <ul class="pagination justify-content-center">
-    <li class="page-item disabled">
-      <a class="page-link">Previous</a>
-    </li>
-    <li class="page-item"><a class="page-link" href="#">1</a></li>
-    <li class="page-item"><a class="page-link" href="#">2</a></li>
-    <li class="page-item"><a class="page-link" href="#">3</a></li>
-    <li class="page-item">
-      <a class="page-link" href="#">Next</a>
-    </li>
-  </ul>
-</nav>
+<!-- Pagination Code -->
+<ngb-pagination class="d-flex justify-content-center" [collectionSize]="totalImageBlocks" [(page)]="page" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" />
 
 
-<!-- Model Code -->
-<ng-template #content let-modal>
-	<div class="modal-header bg-primary">
-		<h4 class="modal-title">Generate Image Block</h4>
+<!-- Create Model Code -->
+<ng-template #createImg let-modal>
+    <div class="modal-header bg-primary">
+        <h4 class="modal-title">Generate Image Block</h4>
 		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
 	</div>
 	<div class="modal-body">
@@ -169,5 +57,19 @@
 	</div>
     <div class="modal-footer justify-content-center bg-primary">
         <button type="button" class="btn btn-dark ">Create</button>
+	</div>
+</ng-template>
+
+<!-- Image Show Model Code -->
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">{{ imageName }}</h4>
+		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+	</div>
+	<div class="modal-body img-body">
+        <img class="img-preview" [src]="imageUrl" alt="Generate Image">
+	</div>
+    <div class="modal-footer justify-content-center ">
+        <button type="button" class="btn btn-dark" (click)="modal.close('Close click')">Close</button>
 	</div>
 </ng-template>

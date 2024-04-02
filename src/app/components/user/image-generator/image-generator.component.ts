@@ -86,9 +86,13 @@ export class ImageGeneratorComponent implements OnInit {
   ngOnInit(){
     this.route.queryParams.subscribe(params => {
       // Access individual query parameters
-      console.log(params);
-      this.imageBlockId=params['imageBlockId'];
-      this.getImageBlock(params['imageBlockId']);
+      if(params['imageBlockId']){
+        this.imageBlockId=params['imageBlockId'];
+        this.getImageBlock(params['imageBlockId']);
+      }
+      else{
+        this.imageBlockId=null;
+      }
     });
   }
 
@@ -122,7 +126,7 @@ export class ImageGeneratorComponent implements OnInit {
   isModalActive:boolean = false;
 
   //update
-  imageBlockId:string='0E7B8E48-8D1A-4935-9794-7D369DF58D60';
+  imageBlockId:string|null = null;
 
   imageOpacity: number = 1;
 
@@ -231,27 +235,46 @@ export class ImageGeneratorComponent implements OnInit {
     //   },
     // };
 
-    const blockData = {
-      generationId:this.imageBlockId,
-      imageID: this.imageId,
-      generationName: 'testGenerations',
-      imageProperty: {
-        backgroundImageOpacity: this.imageOpacity * 100,
-        textBoxes: textBoxesData,
-      },
-    };
-
-    console.log(blockData);
-    
-    if(blockData!==this.previousBlockData){
-      const uploadImageBlockResponse = await firstValueFrom(
-        this.db.updateImageBlock(blockData)
-      );
-      console.log(uploadImageBlockResponse);
-      this.generatedLinkModalRef.generatedLink = uploadImageBlockResponse.imageURL;
-      this.previousBlockData=blockData;
+    let blockData:object;
+    if(this.imageBlockId){
+      blockData = {
+        generationId:this.imageBlockId,
+        imageID: this.imageId,
+        generationName: 'testGenerations',
+        imageProperty: {
+          backgroundImageOpacity: this.imageOpacity * 100,
+          textBoxes: textBoxesData,
+        },
+      };
+      if(blockData!==this.previousBlockData){
+        const uploadImageBlockResponse = await firstValueFrom(
+          this.db.updateImageBlock(blockData)
+          );
+          this.generatedLinkModalRef.generatedLink = uploadImageBlockResponse.imageURL;
+          this.previousBlockData=blockData;
+      }
     }
-
+    else{
+      console.log('New ImageBlock');
+      blockData = {
+        createdBy: localStorage.getItem("userId"),
+        imageId: this.imageId,
+        generationName: 'testGenerations',
+        imageProperty: {
+          backgroundImageOpacity: this.imageOpacity * 100,
+          textBoxes: textBoxesData,
+        },
+      };
+      if(blockData!==this.previousBlockData){
+        const uploadImageBlockResponse = await firstValueFrom(
+          this.db.uploadImageBlock(blockData)
+          );
+          console.log(uploadImageBlockResponse);
+          this.generatedLinkModalRef.generatedLink = uploadImageBlockResponse.path;
+          this.previousBlockData=blockData;
+      }
+    }
+  
     // open modal to Display and access generated Link
     if(!this.isModalActive){
       this.isModalActive = true;

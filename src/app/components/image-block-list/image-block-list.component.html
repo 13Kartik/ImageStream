@@ -16,8 +16,11 @@
                             <span class="text-secondary">Category - 1</span>
                             <span class="text-secondary mx-2">{{ block.createdOn }}</span>
                         </div>
+                        <button class="btn" (click)="editGeneratedImage(block.generationId)" >
+                            <fa-icon [icon]="editImageIcon" class="text-primary fs-5"  title="Edit Image"></fa-icon>
+                        </button>
                         <button class="btn" (click)="copyImageSrc(block.generatedURL, idx)" >
-                            <fa-icon [icon]="copyImageLink" class="text-primary fs-5"  title="Copy Image Link"></fa-icon>
+                            <fa-icon [icon]="copyImageLinkIcon" class="text-primary fs-5"  title="Copy Image Link"></fa-icon>
                         </button>
                     </li>
                 </div>

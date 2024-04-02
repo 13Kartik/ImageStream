@@ -1,11 +1,12 @@
 import { Component, OnInit, TemplateRef, inject } from '@angular/core';
 import { NavbarComponent } from '../navbar/navbar.component';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 // fontawesome import
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCopy } from '@fortawesome/free-solid-svg-icons';
+import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 
 import {ClipboardModule, Clipboard} from '@angular/cdk/clipboard'
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -25,7 +26,8 @@ export class ImageBlockListComponent implements OnInit {
   private modalService = inject(NgbModal);
   
   // Variable declaration
-  copyImageLink = faCopy;
+  copyImageLinkIcon = faCopy;
+  editImageIcon = faPenToSquare;
   imageBlocks: any[] = [];
   imageUrl: string = "";
   imageName: string = "";
@@ -33,7 +35,7 @@ export class ImageBlockListComponent implements OnInit {
   pageSize = 10;
   totalImageBlocks:number = 123;
 
-  constructor(private clipboard: Clipboard, private dbService: DbServiceService) {}
+  constructor(private clipboard: Clipboard, private dbService: DbServiceService, private router: Router) {}
   
   ngOnInit(): void {
     this.dbService.getLoggedUserImageBlockes().subscribe({
@@ -53,7 +55,13 @@ export class ImageBlockListComponent implements OnInit {
     this.clipboard.copy(imageUrl);
   }
 
-  // Fucntion for model opening
+  // BUG --> change the id type to string
+  editGeneratedImage(generationId: string){
+    console.log(`Edit Image: ${generationId}`);
+    this.router.navigate(['/user/ImageGenerator'],{queryParams:{imageBlockId:generationId}});
+  }
+
+  // Function for model opening
   openVerticallyCentered(content: TemplateRef<any>) {
 		this.modalService.open(content, { centered: true });
 	}

@@ -4,6 +4,7 @@ import {
   TemplateRef,
   ElementRef,
   OnInit,
+  AfterViewInit,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -66,7 +67,7 @@ import { GeneratedLinkModalComponent } from '../../generated-link-modal/generate
   styleUrls: ['./image-generator.component.css'],
   providers: [DbServiceService],
 })
-export class ImageGeneratorComponent implements OnInit {
+export class ImageGeneratorComponent implements AfterViewInit {
   @ViewChild('appSelectImageRef') appSelectImageRef!: SelectImageComponent;
   @ViewChild('generatedLinkModal') generatedLinkModal!: TemplateRef<any>;
   @ViewChild('generatedLinkModalRef') generatedLinkModalRef!: GeneratedLinkModalComponent;
@@ -83,7 +84,7 @@ export class ImageGeneratorComponent implements OnInit {
       });
   }
 
-  ngOnInit(){
+  ngAfterViewInit(){
     this.route.queryParams.subscribe(params => {
       // Access individual query parameters
       if(params['imageBlockId']){
@@ -272,6 +273,7 @@ export class ImageGeneratorComponent implements OnInit {
           console.log(uploadImageBlockResponse);
           this.generatedLinkModalRef.generatedLink = uploadImageBlockResponse.path;
           this.previousBlockData=blockData;
+          this.imageBlockId=uploadImageBlockResponse.generationId;
       }
     }
   
@@ -296,33 +298,43 @@ export class ImageGeneratorComponent implements OnInit {
     this.appSelectImageRef.getImageList();
   }
 
-  handleImageUrl(image: { imageId?: string; url: string; file?: File }){
-
-    //clearing textBoxes of previous image
-    this.textBoxes=[];
-
-    //handling 2 cases
-    //case 1: Local Image
-    //case 2: Database Image
-    if (image.file) this.img_file = image.file;             //case 1
-    else if (image.imageId) this.imageId = image.imageId;   //case 2
-
-    // Get the dimensions using an Image element
-    const img = new Image();
-    img.src = image.url;
-    this.img_src = image.url;
-    
-    if(this.selectImageModalRef) this.selectImageModalRef.close();
-
-    //getting original height and width of Image
-    img.onload = () => {
-      this.real_height = img.height;
-      this.real_width = img.width;
-      this.aspectRatio = img.width / img.height;
-      if(this.aspectRatio<=1) this.portrait=true;
-    };
-    // //adding defalult textBox
-    // this.addTextBox();
+  handleImageUrl(image: { imageId?: string; url: string; file?: File }) {
+    return new Promise<void>((resolve, reject) => {
+      // Clear textBoxes of the previous image
+      this.textBoxes = [];
+  
+      // Handling 2 cases: Local Image and Database Image
+      if (image.file) {
+        this.img_file = image.file; // Case 1: Local Image
+      } else if (image.imageId) {
+        this.imageId = image.imageId; // Case 2: Database Image
+      }
+  
+      // Get the dimensions using an Image element
+      const img = new Image();
+      img.src = image.url;
+      this.img_src = image.url;
+  
+      if (this.selectImageModalRef) {
+        this.selectImageModalRef.close();
+      }
+  
+      // Event listener for image load
+      img.onload = () => {
+        this.real_height = img.height;
+        this.real_width = img.width;
+        this.aspectRatio = img.width / img.height;
+        if (this.aspectRatio <= 1) {
+          this.portrait = true;
+        }
+        resolve(); // Resolve the Promise when the image is loaded
+      };
+  
+      // Event listener for image error
+      img.onerror = (error) => {
+        reject(error); // Reject the Promise if there's an error loading the image
+      };
+    });
   }
 
   setOpacity(opacity: number) {
@@ -362,7 +374,7 @@ export class ImageGeneratorComponent implements OnInit {
     this.imageOpacity = res.imageBlock.imageProperty.backgroundImageOpacity/100;
     this.imageId = res.imageBlock.imageID;
 
-   this.handleImageUrl({
+   await this.handleImageUrl({
       url:'http://192.168.1.17:8056/images/'+res.imageBlock.imagePath
     });
 
@@ -377,7 +389,7 @@ export class ImageGeneratorComponent implements OnInit {
       );
 
       // Wait for the next tick to ensure the DOM is updated
-      setTimeout(() => {
+      setTimeout(()=>{
         const textBoxRef = this.el.nativeElement.querySelector(`#textBox_${i}`);
         const textareaRef = textBoxRef.querySelector(`textarea`);
         if (textBoxRef) {
@@ -403,13 +415,13 @@ export class ImageGeneratorComponent implements OnInit {
       //scaling fontSize for Image resolution
       let containerWidth = this.imgContainer.nativeElement.getBoundingClientRect().width;
       let scale:number=this.real_width / containerWidth;
+      console.log(scale);
       for(const textBox of this.textBoxes){
         const fontSize = textBox.get('fontSize');
         const newFontSize = (fontSize?.value/scale*4.15/3).toFixed(2);
         fontSize?.setValue(newFontSize);
       }
     });
-
   }
 
 }

@@ -12,11 +12,13 @@ import {ClipboardModule, Clipboard} from '@angular/cdk/clipboard'
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { DbServiceService } from '../../services/db-service.service';
+import { PaginationService } from '../../services/pagination.service';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-image-block-list',
   standalone: true,
-  imports: [CommonModule, NavbarComponent, FontAwesomeModule, ClipboardModule, RouterModule, NgbPaginationModule],
+  imports: [CommonModule, NavbarComponent, FontAwesomeModule, ClipboardModule, RouterModule, NgbPaginationModule, ReactiveFormsModule],
   templateUrl: './image-block-list.component.html',
   styleUrl: './image-block-list.component.css'
 })
@@ -33,32 +35,55 @@ export class ImageBlockListComponent implements OnInit {
   imageName: string = "";
   page = 1;
   pageSize = 10;
-  totalImageBlocks:number = 123;
+  totalImageBlocks:number = 0;
 
-  constructor(private clipboard: Clipboard, private dbService: DbServiceService, private router: Router) {}
+  // create image form submission
+  createNewImgForm !: FormGroup; 
+
+  constructor(private clipboard: Clipboard, private dbService: DbServiceService, private router: Router, private paginationService: PaginationService) {}
   
   ngOnInit(): void {
+    this.page = this.paginationService.currentPage;
     this.dbService.getLoggedUserImageBlockes().subscribe({
       next: (data)=>{
         this.imageBlocks = data;
         this.totalImageBlocks = data.length;
+        console.log('Inside Subscribe: ', this.totalImageBlocks);
         console.log(this.imageBlocks);
       },
       error: (err)=>{
         console.log(err);
       }
     });
+
+    this.createNewImgForm = new FormGroup({
+      imageName: new FormControl('', [Validators.required, Validators.minLength(3)]),
+      imageCategory: new FormControl('', [Validators.required]),
+    });
+
+    this.totalImageBlocks = 123;
+    console.log('Outside subscribe',this.totalImageBlocks);
   } 
-  
+
   copyImageSrc(imageUrl: string, id: number){
     console.log(`${id},${imageUrl}`);
     this.clipboard.copy(imageUrl);
   }
 
-  // BUG --> change the id type to string
+  onPageChange(pageNumber: number) {
+    console.log("Current Page is: ",pageNumber);
+  }
+  
+  // Function to edit the image
   editGeneratedImage(generationId: string){
-    console.log(`Edit Image: ${generationId}`);
+    this.paginationService.storeCurrentPage(this.page);
     this.router.navigate(['/user/ImageGenerator'],{queryParams:{imageBlockId:generationId}});
+  }
+
+  // function for new image generation
+  createNewImage(){
+    this.router.navigate(['/user/ImageGenerator'],{queryParams:{name: this.createNewImgForm.get('imageName')?.value, category: this.createNewImgForm.get('imageCategory')?.value}});
+    console.log(this.createNewImgForm);
   }
 
   // Function for model opening

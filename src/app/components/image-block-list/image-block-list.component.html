@@ -7,14 +7,13 @@
         </div>
         <!-- (starts) List of Images block -->
         <ul class="list-group">
-            
-            @for (block of imageBlocks | slice: (page-1) * pageSize : page * pageSize;; track block.createdOn; let idx = $index) {
+            @for (block of imageBlocks | slice: (page-1) * pageSize : page * pageSize; track block.createdOn; let idx = $index) {
                 <div class="btn list-group-item-action hover-bg" >
                     <li class="list-group-item d-flex justify-content-between align-items-start">
                         <div class="ms-2 me-auto">
                             <div class="fw-bold" (click)="openFullscreen(content, block.generatedURL, block.generationName)">{{ block.generationName }}</div>
                             <span class="text-secondary">Category - 1</span>
-                            <span class="text-secondary mx-2">{{ block.createdOn }}</span>
+                            <span class="text-secondary mx-2">{{ block.createdOn | date:'MM/dd/yyyy HH:mm:ss' }}</span>
                         </div>
                         <button class="btn" (click)="editGeneratedImage(block.generationId)" >
                             <fa-icon [icon]="editImageIcon" class="text-primary fs-5"  title="Edit Image"></fa-icon>
@@ -26,7 +25,7 @@
                 </div>
             }
             @empty {
-                <p>There are NoImage Blocks.</p>
+                <p [ngStyle]="{'padding-left': '15px'}">There are No Image Blocks.</p>
             }
 
         </ul>
@@ -35,32 +34,45 @@
 </div>
 
 <!-- Pagination Code -->
-<ngb-pagination class="d-flex justify-content-center" [collectionSize]="totalImageBlocks" [(page)]="page" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" />
+<ngb-pagination class="d-flex justify-content-center" [collectionSize]="totalImageBlocks" [(page)]="page" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="onPageChange($event)"/>
 
 
 <!-- Create Model Code -->
 <ng-template #createImg let-modal>
     <div class="modal-header bg-primary">
-        <h4 class="modal-title">Generate Image Block</h4>
+        <h4 class="modal-title">Enter Image Name</h4>
 		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
 	</div>
+    <form [formGroup]="createNewImgForm" (ngSubmit)="createNewImage(); modal.dismiss('Cross click')">
 	<div class="modal-body">
-        <form>
             <div class="form-group my-4">
-                <input type="email" class="form-control" id="email" placeholder="Enter Image Name">
+                <input type="email" class="form-control" id="email" placeholder="Enter Image Name" formControlName="imageName">
+                <!-- [start] ImageName Validation error message -->
+                @if(createNewImgForm.get('imageName')?.errors?.['required'] && createNewImgForm.get('imageName')?.touched)
+                {
+                    <p class="warning-message">Image Name is required.</p>
+                }
+                <!-- [end] ImageName Validation error message -->
             </div>
             <div class="form-group my-4">
-                <select class="form-select">
-                    <option value="1">Category - 1 (default)</option>
-                    <option value="2">Category - 2</option>
-                    <option value="3">Category - 3</option>
+                <select class="form-select" formControlName="imageCategory">
+                    <option value="" disabled selected>Choose category</option>
+                    <option value="static">Static Image</option>
+                    <option value="dynamic">Dynamic Image</option>
+                    <option value="counter">Image with Counter</option>
                 </select>
+                <!-- [start] ImageCategory Validation error message -->
+                @if(createNewImgForm.get('imageCategory')?.errors?.['required'] && createNewImgForm.get('imageCategory')?.touched)
+                {
+                    <p class="warning-message">Image Category is required.</p>
+                }
+                <!-- [end] ImageCategory Validation error message -->
             </div>
-        </form>
-	</div>
-    <div class="modal-footer justify-content-center bg-primary">
-        <button type="button" class="btn btn-dark ">Create</button>
-	</div>
+        </div>
+        <div class="modal-footer justify-content-center bg-primary">
+            <button type="submit" class="btn btn-dark">Create</button>
+        </div>
+    </form>
 </ng-template>
 
 <!-- Image Show Model Code -->

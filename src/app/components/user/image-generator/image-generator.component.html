@@ -29,7 +29,10 @@
         class="col-3"
         [options]="activeTextBox.controls"
         [placeHolders]="placeHolders"
+        [imageOpacity]="imageOpacity"
+        [imageBlockName]="imageBlockName"
         (onOpacityChange)="setOpacity($event)"
+        (onNameChange)="setName($event)"
         (onAddTextBox)="this.addTextBox()"
         (onPlaceHolderDrag)="onPlaceHolderDrag($event)"
         >

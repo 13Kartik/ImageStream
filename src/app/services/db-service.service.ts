@@ -32,6 +32,8 @@ export class DbServiceService {
   }
 
   uploadImageBlock(blockData:object){
+    console.log('uploaded imageBlock');
+    console.log(blockData);
     return this.http.post<any>(`${this.api}ImageBlockGeneration/GenerateImage`,blockData);
   }
 

@@ -55,11 +55,18 @@
                 <!-- [end] ImageName Validation error message -->
             </div>
             <div class="form-group my-4">
+<<<<<<< HEAD
                 <select class="form-select" formControlName="imageCategory">
                     <option value="" disabled selected>Choose category</option>
                     <option value="static">Static Image</option>
                     <option value="dynamic">Dynamic Image</option>
                     <option value="counter">Image with Counter</option>
+=======
+                <select class="form-select">
+                    <option value="1">Category - 1 (default)</option>
+                    <option value="2">Category - 2</option>
+                    <option value="3">Counter</option>
+>>>>>>> updateImageBlock
                 </select>
                 <!-- [start] ImageCategory Validation error message -->
                 @if(createNewImgForm.get('imageCategory')?.errors?.['required'] && createNewImgForm.get('imageCategory')?.touched)

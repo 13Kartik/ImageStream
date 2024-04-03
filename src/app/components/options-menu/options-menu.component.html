@@ -1,6 +1,23 @@
 <div class="card col-12 options-container">
   <div class="card-header text-center">Options</div>
   <ul class="list-group list-group-flush">
+
+    <li class="list-group-item">
+      <div class="card p-2">
+        <div class="form-floating">
+          <input
+            type="text"
+            class="form-control"
+            id="imageBlockName"
+            [(ngModel)]="imageBlockName"
+            (ngModelChange)="this.onNameChange.emit(imageBlockName)"
+            placeholder="imageBlockName"
+          />
+          <label for="fontSize">Campaign Name</label>
+        </div>
+      </div>
+    </li>
+
     <li class="list-group-item">
       <div class="card p-2">
         <div

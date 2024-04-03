@@ -28,7 +28,7 @@ import { faRotate } from '@fortawesome/free-solid-svg-icons';
 import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 
 //database
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { DbServiceService } from '../../../services/db-service.service';
 import { HttpClientModule } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
@@ -77,7 +77,8 @@ export class ImageGeneratorComponent implements AfterViewInit {
     private modalService: NgbModal,
     private db: DbServiceService,
     private el: ElementRef,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router:Router
   ) {
       this.db.getPlaceHolders().subscribe(res=>{
         this.placeHolders=res;
@@ -93,6 +94,8 @@ export class ImageGeneratorComponent implements AfterViewInit {
       }
       else{
         this.imageBlockId=null;
+        if(this.imageBlockName)
+        this.imageBlockName = params['name'];
       }
     });
   }
@@ -128,6 +131,7 @@ export class ImageGeneratorComponent implements AfterViewInit {
 
   //update
   imageBlockId:string|null = null;
+  imageBlockName:string = 'testGenerations';
 
   imageOpacity: number = 1;
 
@@ -150,6 +154,7 @@ export class ImageGeneratorComponent implements AfterViewInit {
   }
   
   onSubmit() {
+    console.log('submitted');
     this.generateLink();
   }
 
@@ -182,6 +187,7 @@ export class ImageGeneratorComponent implements AfterViewInit {
   }
   
   async generateLink() {
+    console.log('inside generate link')
     if (this.img_file !== null) {
       const fileData = new FormData();
       fileData.append('file', this.img_file);
@@ -238,10 +244,11 @@ export class ImageGeneratorComponent implements AfterViewInit {
 
     let blockData:object;
     if(this.imageBlockId){
+      console.log(this.imageBlockName);
       blockData = {
         generationId:this.imageBlockId,
         imageID: this.imageId,
-        generationName: 'testGenerations',
+        GenerationName: this.imageBlockName,
         imageProperty: {
           backgroundImageOpacity: this.imageOpacity * 100,
           textBoxes: textBoxesData,
@@ -256,15 +263,14 @@ export class ImageGeneratorComponent implements AfterViewInit {
       }
     }
     else{
-      console.log('New ImageBlock');
       blockData = {
         createdBy: localStorage.getItem("userId"),
         imageId: this.imageId,
-        generationName: 'testGenerations',
+        GenerationName: this.imageBlockName,
         imageProperty: {
           backgroundImageOpacity: this.imageOpacity * 100,
           textBoxes: textBoxesData,
-        },
+        }
       };
       if(blockData!==this.previousBlockData){
         const uploadImageBlockResponse = await firstValueFrom(
@@ -274,6 +280,7 @@ export class ImageGeneratorComponent implements AfterViewInit {
           this.generatedLinkModalRef.generatedLink = uploadImageBlockResponse.path;
           this.previousBlockData=blockData;
           this.imageBlockId=uploadImageBlockResponse.generationId;
+          this.router.navigate([],{ queryParams: { imageBlockId: uploadImageBlockResponse.generationId } });
       }
     }
   
@@ -341,6 +348,10 @@ export class ImageGeneratorComponent implements AfterViewInit {
     this.imageOpacity = opacity;
   }
 
+  setName(name: string) {
+    this.imageBlockName = name;
+  }
+
   deleteTextBox(i:number){
     this.activeTextBox = new FormGroup({});
     this.textBoxes.splice(i,1);
@@ -373,6 +384,7 @@ export class ImageGeneratorComponent implements AfterViewInit {
 
     this.imageOpacity = res.imageBlock.imageProperty.backgroundImageOpacity/100;
     this.imageId = res.imageBlock.imageID;
+    this.imageBlockName=res.imageBlock.generationName;
 
    await this.handleImageUrl({
       url:'http://192.168.1.17:8056/images/'+res.imageBlock.imagePath
@@ -415,7 +427,6 @@ export class ImageGeneratorComponent implements AfterViewInit {
       //scaling fontSize for Image resolution
       let containerWidth = this.imgContainer.nativeElement.getBoundingClientRect().width;
       let scale:number=this.real_width / containerWidth;
-      console.log(scale);
       for(const textBox of this.textBoxes){
         const fontSize = textBox.get('fontSize');
         const newFontSize = (fontSize?.value/scale*4.15/3).toFixed(2);

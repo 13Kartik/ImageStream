@@ -277,7 +277,7 @@ export class ImageGeneratorComponent implements AfterViewInit {
           this.db.uploadImageBlock(blockData)
           );
           console.log(uploadImageBlockResponse);
-          this.generatedLinkModalRef.generatedLink = uploadImageBlockResponse.path;
+          this.generatedLinkModalRef.generatedLink = uploadImageBlockResponse.imageURL;
           this.previousBlockData=blockData;
           this.imageBlockId=uploadImageBlockResponse.generationId;
           this.router.navigate([],{ queryParams: { imageBlockId: uploadImageBlockResponse.generationId } });

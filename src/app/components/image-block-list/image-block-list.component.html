@@ -13,7 +13,7 @@
                         <div class="ms-2 me-auto">
                             <div class="fw-bold" (click)="openFullscreen(content, block.generatedURL, block.generationName)">{{ block.generationName }}</div>
                             <span class="text-secondary">Category - 1</span>
-                            <span class="text-secondary mx-2">{{ block.createdOn | date:'MM/dd/yyyy HH:mm:ss' }}</span>
+                            <span class="text-secondary mx-2">{{ block.createdOn | date:'dd/MM/yyyy HH:mm:ss' }}</span>
                         </div>
                         <button class="btn" (click)="editGeneratedImage(block.generationId)" >
                             <fa-icon [icon]="editImageIcon" class="text-primary fs-5"  title="Edit Image"></fa-icon>

@@ -87,7 +87,7 @@
                     <div>Email is required.</div>
                 }
                 @else if(EmailValidation?.errors?.['pattern']){
-                    <div>Incorrect Email formate</div>
+                    <div>Incorrect email format</div>
                 }
             </div>
             <!-- Email validation end -->
@@ -96,7 +96,8 @@
 
         <!-- user password start-->
         <div class="mb-3">
-            <div class="password-container">
+            <!-- <div class="password-container"> -->
+            <div>
                 <div class="form-floating">
                     <input type={{passwordType}} class="form-control" id="password" placeholder="Password"
                     formControlName="PasswordHash" #password>
@@ -105,9 +106,9 @@
                         Password
                     </label>
                 </div>
-                <div>
+                <!-- <div>
                     <fa-icon [icon]="eyeIconPassword" class="btn-sm text-primary" (click)="togglePassword(password.type)"></fa-icon>  
-                </div>
+                </div> -->
             </div>
 
             <!-- password validation strat -->
@@ -127,7 +128,8 @@
 
         <!-- confirm password start -->
         <div class="mb-3">
-            <div class="password-container">
+            <!-- <div class="password-container"> -->
+            <div>
                 <div class="form-floating">
                     <input type={{confirmPasswordType}} class="form-control" id="confirmPassword" placeholder="Confirm Password"
                     formControlName="confirmPassword" #confirmPassword>
@@ -137,9 +139,9 @@
                     </label>
                     
                 </div>
-                <div>
+                <!-- <div>
                     <fa-icon [icon]="eyeIconConfirmPassword" class="btn-sm text-primary" (click)="toggleConfirmPassword(confirmPassword.type)"></fa-icon> 
-                </div>
+                </div> -->
             </div>
     
             <!-- confirm validation -->

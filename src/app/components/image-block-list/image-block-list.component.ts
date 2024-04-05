@@ -156,6 +156,7 @@ export class ImageBlockListComponent implements OnInit {
       {
         next:(res: any) => {
           console.log(res);
+          this.imageBlocks=this.imageBlocks.filter(block=>block.generationId!==imageBlockId);
         },
       error:(error) => {
           console.error(error);

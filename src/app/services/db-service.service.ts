@@ -62,7 +62,7 @@ export class DbServiceService {
   }
 
   deleteImageBlock(imageBlockId:string){
-    return this.http.get<any>(`${this.api}ImageBlockGeneration/DeleteBlock?generationId=${imageBlockId}`);
+    return this.http.post<any>(`${this.api}ImageBlockGeneration/DeleteBlock?generationId=${imageBlockId}`,this.httpOptions);
   }
 
 }

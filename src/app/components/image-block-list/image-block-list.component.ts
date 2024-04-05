@@ -104,7 +104,8 @@ export class ImageBlockListComponent implements OnInit {
     console.log('Outside subscribe', this.totalImageBlocks);
   }
 
-  copyImageSrc(imageUrl: string, id: number) {
+  copyImageSrc(event: MouseEvent,imageUrl: string, id: number) {
+    event.stopPropagation();
     console.log(`${id},${imageUrl}`);
     this.clipboard.copy(imageUrl);
   }
@@ -114,7 +115,8 @@ export class ImageBlockListComponent implements OnInit {
   }
 
   // Function to edit the image
-  editGeneratedImage(generationId: string) {
+  editGeneratedImage(event: MouseEvent,generationId: string) {
+    event.stopPropagation();
     this.paginationService.storeCurrentPage(this.page);
     this.router.navigate(['/user/ImageGenerator'], {
       queryParams: { imageBlockId: generationId },
@@ -148,7 +150,8 @@ export class ImageBlockListComponent implements OnInit {
     this.imageName = imgName;
   }
 
-  deleteImageBlock(imageBlockId:string){
+  deleteImageBlock(event: MouseEvent,imageBlockId:string){
+    event.stopPropagation();
     this.db.deleteImageBlock(imageBlockId).subscribe(
       {
         next:(res: any) => {

@@ -12,9 +12,6 @@
                         <fa-icon class="primary-text-color fs-1" [icon]="imgIcon"></fa-icon>
                         <p class="text-secondary">Upload New Image</p>
                     </div>
-                    <!-- <div *ngFor="let img of img_row_1" class="image-item card" (click)="setImage(img.imageId,img.imagePath)">
-                        <img class="rounded" height="100%" width="auto" [src]="img.imagePath">
-                    </div> -->
                     <div *ngFor="let img of img_row_1" class="image-item card" (click)="setImage(img.imageId,storagePath+img.imagePath)">
                         <img class="rounded" height="100%" width="auto" [src]="storagePath+img.imagePath">
                     </div>

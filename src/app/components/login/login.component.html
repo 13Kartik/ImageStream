@@ -59,12 +59,12 @@
                 <label class="form-check-label" for="RememberInput">Remember me</label>
             </div>
             <div class="text-end col-6">
-                <a class="me-3" href="./forgotPassword" style="text-decoration: none;">Forgot Password</a>
+                <a class="me-3 primary-text-color" href="./forgotPassword" style="text-decoration: none;">Forgot Password</a>
             </div>
         </div>
 
         <div class="text-center mb-3">
-            <button type="submit" class="btn btn-primary" [disabled]="loginForm.invalid">Login <fa-icon [icon]="loginIcon" class="ms-1"></fa-icon> </button>
+            <button type="submit" class="btn primary-background"[disabled]="loginForm.invalid">Login <fa-icon [icon]="loginIcon" class="ms-1"></fa-icon> </button>
         </div>
         <div class="text-center fs-6 mb-3">
             not a member? <a routerLink="/signup" class="dotted text-secondary">Sign up now</a>

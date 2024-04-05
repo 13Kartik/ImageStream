@@ -34,17 +34,23 @@
             <ul class="list-group">
                 @for (block of imageBlocks | slice: (page-1) * pageSize : page * pageSize; track block.createdOn; let idx = $index) {
                     <div class="btn list-group-item-action hover-bg" >
-                        <li class="list-group-item d-flex justify-content-between align-items-start">
+                        <li 
+                            class="list-group-item d-flex justify-content-between align-items-start"
+                            (click)="openFullscreen(content, block.generatedURL, block.generationName)"
+                        >
                             <div class="ms-2 me-auto">
-                                <div class="fw-bold" (click)="openFullscreen(content, block.generatedURL, block.generationName)">{{ block.generationName }}</div>
+                                <div class="fw-bold">{{ block.generationName }}</div>
                                 <span class="text-secondary">Category - 1</span>
-                                <span class="text-secondary mx-2">{{ block.createdOn | date:'dd/MM/yyyy HH:mm:ss' }}</span>
+                                <span class="text-secondary mx-2">{{ block.createdOn | date:'MM/dd/yyyy HH:mm:ss' }}</span>
                             </div>
-                            <button class="btn" (click)="editGeneratedImage(block.generationId)" >
-                                <fa-icon [icon]="editImageIcon" class="show-icons-on-hover primary-text-color fs-5"  title="Edit Image"></fa-icon>
+                            <button class="btn" (click)="editGeneratedImage($event,block.generationId)" >
+                                <fa-icon [icon]="editImageIcon" class="primary-text-color fs-5 show-icons-on-hover"  title="Edit Image"></fa-icon>
                             </button>
-                            <button class="btn" (click)="copyImageSrc(block.generatedURL, idx)" >
-                                <fa-icon [icon]="copyImageLinkIcon" class="show-icons-on-hover primary-text-color fs-5"  title="Copy Image Link"></fa-icon>
+                            <button class="btn" (click)="copyImageSrc($event,block.generatedURL, idx)" >
+                                <fa-icon [icon]="copyImageLinkIcon" class="primary-text-color fs-5 show-icons-on-hover"  title="Copy Image Link"></fa-icon>
+                            </button>
+                            <button class="btn" (click)="deleteImageBlock($event,block.generationId)" >
+                                <fa-icon [icon]="deleteIcon" class="primary-text-color fs-5 show-icons-on-hover"  title="Delete Block"></fa-icon>
                             </button>
                         </li>
                     </div>
@@ -52,7 +58,7 @@
                 @empty {
                     <p [ngStyle]="{'padding-left': '15px'}">There are No Image Blocks.</p>
                 }
-
+    
             </ul>
             <!-- (ends) List of Images block -->
         </div>
@@ -62,43 +68,44 @@
     <ngb-pagination class="d-flex justify-content-center" [collectionSize]="totalImageBlocks" [(page)]="page" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="onPageChange($event)"/>
     <!-- Pagination Code -->
 
-<!-- Create Model Code -->
-<ng-template #createImg let-modal>
-    <div class="modal-header primary-background">
-        <h4 class="modal-title text-light">Enter Image Name</h4>
-		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-	</div>
-    <form [formGroup]="createNewImgForm" (ngSubmit)="createNewImage(); modal.dismiss('Cross click')">
-	<div class="modal-body">
-            <div class="form-group my-4">
-                <input type="email" class="form-control" id="email" placeholder="Enter Image Name" formControlName="imageName">
-                <!-- [start] ImageName Validation error message -->
-                @if(createNewImgForm.get('imageName')?.errors?.['required'] && createNewImgForm.get('imageName')?.touched)
-                {
-                    <p class="warning-message">Image Name is required.</p>
-                }
-                <!-- [end] ImageName Validation error message -->
-            </div>
-            <div class="form-group my-4">
-                <select class="form-select" formControlName="imageCategory">
-                    <option value="" disabled selected>Choose category</option>
-                    <option value="static">Static Image</option>
-                    <option value="dynamic">Dynamic Image</option>
-                    <option value="counter">Image with Counter</option>
-                </select>
-                <!-- [start] ImageCategory Validation error message -->
-                @if(createNewImgForm.get('imageCategory')?.errors?.['required'] && createNewImgForm.get('imageCategory')?.touched)
-                {
-                    <p class="warning-message">Image Category is required.</p>
-                }
-                <!-- [end] ImageCategory Validation error message -->
-            </div>
+    <!-- [STARTS] Create Model Code -->
+    <ng-template #createImg let-modal>
+        <div class="modal-header primary-background">
+            <h4 class="modal-title font-color">Enter Image Name</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
         </div>
-        <div class="modal-footer justify-content-center primary-background">
-            <button type="submit" class="btn btn-dark">Create</button>
-        </div>
-    </form>
-</ng-template>
+        <form [formGroup]="createNewImgForm" (ngSubmit)="createNewImage(); modal.dismiss('Cross click')">
+        <div class="modal-body">
+                <div class="form-group my-4">
+                    <input type="email" class="form-control" id="email" placeholder="Enter Image Name" formControlName="imageName">
+                    <!-- [start] ImageName Validation error message -->
+                    @if(createNewImgForm.get('imageName')?.errors?.['required'] && createNewImgForm.get('imageName')?.touched)
+                    {
+                        <p class="warning-message">Image Name is required.</p>
+                    }
+                    <!-- [end] ImageName Validation error message -->
+                </div>
+                <div class="form-group my-4">
+                    <select class="form-select" formControlName="imageCategory">
+                        <option value="" disabled selected>Choose category</option>
+                        <option value="static">Static Image</option>
+                        <option value="dynamic">Dynamic Image</option>
+                        <option value="counter">Image with Counter</option>
+                    </select>
+                    <!-- [start] ImageCategory Validation error message -->
+                    @if(createNewImgForm.get('imageCategory')?.errors?.['required'] && createNewImgForm.get('imageCategory')?.touched)
+                    {
+                        <p class="warning-message">Image Category is required.</p>
+                    }
+                    <!-- [end] ImageCategory Validation error message -->
+                </div>
+            </div>
+            <div class="modal-footer justify-content-center primary-background">
+                <button type="submit" class="btn btn-dark">Create</button>
+            </div>
+        </form>
+    </ng-template>
+    <!-- [END] Create Model Code -->
 
     <!-- Image Show Model Code -->
     <ng-template #content let-modal>
@@ -112,7 +119,7 @@
         <div class="modal-footer justify-content-center ">
             <button type="button" class="btn btn-dark" (click)="modal.close('Close click')">Close</button>
         </div>
-    </ng-template>
+    </ng-template>    
     <!-- Image Show Model Code -->
 
     <!-- Date Picker Model Code -->

@@ -7,14 +7,14 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCaretUp } from '@fortawesome/free-solid-svg-icons';
 import { faCaretDown } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
-//components
-import { TextBoxComponent } from '../text-box/text-box.component';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-options-menu',
   standalone: true,
-  imports: [CommonModule,FormsModule,ReactiveFormsModule,FontAwesomeModule],
+  imports: [CommonModule,FormsModule,ReactiveFormsModule,FontAwesomeModule,RouterModule],
   templateUrl: './options-menu.component.html',
   styleUrls: ['./options-menu.component.css'],
 })
@@ -38,6 +38,7 @@ export class OptionsMenuComponent  {
   //icons
   dropUpIcon = faCaretUp;
   dropDownIcon = faCaretDown;
+  backIcon = faArrowLeft;
 
   fonts = [
     "Times New Roman",

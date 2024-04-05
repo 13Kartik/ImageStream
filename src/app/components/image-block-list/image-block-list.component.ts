@@ -7,6 +7,7 @@ import { CommonModule,DatePipe } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCopy } from '@fortawesome/free-solid-svg-icons';
 import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 import {ClipboardModule, Clipboard} from '@angular/cdk/clipboard'
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -48,9 +49,12 @@ export class ImageBlockListComponent implements OnInit {
   // injecting NgbModel
   private modalService = inject(NgbModal);
 
-  // Variable declaration
+  //icons
+  deleteIcon = faTrash;
   copyImageLinkIcon = faCopy;
   editImageIcon = faPenToSquare;
+
+  // Variable declaration
   imageBlocks: any[] = [];
   imageUrl: string = '';
   imageName: string = '';
@@ -108,7 +112,8 @@ export class ImageBlockListComponent implements OnInit {
     console.log('Outside subscribe', this.totalImageBlocks);
   }
 
-  copyImageSrc(imageUrl: string, id: number) {
+  copyImageSrc(event: MouseEvent,imageUrl: string, id: number) {
+    event.stopPropagation();
     console.log(`${id},${imageUrl}`);
     this.clipboard.copy(imageUrl);
   }
@@ -118,7 +123,8 @@ export class ImageBlockListComponent implements OnInit {
   }
 
   // Function to edit the image
-  editGeneratedImage(generationId: string) {
+  editGeneratedImage(event: MouseEvent,generationId: string) {
+    event.stopPropagation();
     this.paginationService.storeCurrentPage(this.page);
     this.router.navigate(['/user/ImageGenerator'], {
       queryParams: { imageBlockId: generationId },
@@ -150,6 +156,21 @@ export class ImageBlockListComponent implements OnInit {
     this.modalService.open(content, { fullscreen: true });
     this.imageUrl = url;
     this.imageName = imgName;
+  }
+
+  deleteImageBlock(event: MouseEvent,imageBlockId:string){
+    event.stopPropagation();
+    this.db.deleteImageBlock(imageBlockId).subscribe(
+      {
+        next:(res: any) => {
+          console.log(res);
+          this.imageBlocks=this.imageBlocks.filter(block=>block.generationId!==imageBlockId);
+        },
+      error:(error) => {
+          console.error(error);
+        }
+      }
+    );
   }
 
   generateCounter() {

@@ -61,4 +61,8 @@ export class DbServiceService {
     return `${this.api}DynamicCounter/DynamicCounter.GIF?validity=${date}`;
   }
 
+  deleteImageBlock(imageBlockId:string){
+    return this.http.get<any>(`${this.api}ImageBlockGeneration/DeleteBlock?generationId=${imageBlockId}`);
+  }
+
 }

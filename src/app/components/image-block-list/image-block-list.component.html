@@ -21,6 +21,9 @@
                         <button class="btn" (click)="copyImageSrc(block.generatedURL, idx)" >
                             <fa-icon [icon]="copyImageLinkIcon" class="primary-text-color fs-5"  title="Copy Image Link"></fa-icon>
                         </button>
+                        <button class="btn" (click)="deleteImageBlock(block.generationId)" >
+                            <fa-icon [icon]="deleteIcon" class="primary-text-color fs-5"  title="Delete Block"></fa-icon>
+                        </button>
                     </li>
                 </div>
             }

@@ -48,3 +48,15 @@ ul.list-group::-webkit-scrollbar{
     border-radius: 5px;
     font-weight:normal;
 }
+
+.back-btn{
+    border-color:var(--primary-color) ;
+    background-color: white;
+    color: var(--primary-color);
+}
+
+.back-btn:hover{
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+}

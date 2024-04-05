@@ -7,6 +7,7 @@ import { CommonModule,DatePipe } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCopy } from '@fortawesome/free-solid-svg-icons';
 import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 import {ClipboardModule, Clipboard} from '@angular/cdk/clipboard'
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -43,9 +44,12 @@ export class ImageBlockListComponent implements OnInit {
   // injecting NgbModel
   private modalService = inject(NgbModal);
 
-  // Variable declaration
+  //icons
+  deleteIcon = faTrash;
   copyImageLinkIcon = faCopy;
   editImageIcon = faPenToSquare;
+
+  // Variable declaration
   imageBlocks: any[] = [];
   imageUrl: string = '';
   imageName: string = '';
@@ -142,6 +146,19 @@ export class ImageBlockListComponent implements OnInit {
     this.modalService.open(content, { fullscreen: true });
     this.imageUrl = url;
     this.imageName = imgName;
+  }
+
+  deleteImageBlock(imageBlockId:string){
+    this.db.deleteImageBlock(imageBlockId).subscribe(
+      {
+        next:(res: any) => {
+          console.log(res);
+        },
+      error:(error) => {
+          console.error(error);
+        }
+      }
+    );
   }
 
   generateCounter() {

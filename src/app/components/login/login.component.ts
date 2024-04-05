@@ -73,16 +73,13 @@ export class LoginComponent {
     }).subscribe({
       next:(res: any) => {
           console.log(res);
-          const queryParams = {
-            imageBlockId: '0E7B8E48-8D1A-4935-9794-7D369DF58D60',
-          };
           this.router.navigate(['/imageList']);
           localStorage.setItem("userId", res.userId);
         },
       error:(error) => {
-          if (error.status === 401) {
+          if (error.status === 400) {
             console.log(error);
-            this.err_msg = error.error.message;
+            this.err_msg = 'Incorrect Password or Email';
           } else {
             console.error(error);
           }

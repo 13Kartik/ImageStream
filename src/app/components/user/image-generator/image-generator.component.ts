@@ -3,7 +3,6 @@ import {
   ViewChild,
   TemplateRef,
   ElementRef,
-  OnInit,
   AfterViewInit,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -277,10 +276,10 @@ export class ImageGeneratorComponent implements AfterViewInit {
           this.db.uploadImageBlock(blockData)
           );
           console.log(uploadImageBlockResponse);
-          this.generatedLinkModalRef.generatedLink = uploadImageBlockResponse.imageURL;
+          this.generatedLinkModalRef.generatedLink = uploadImageBlockResponse.generatedImageDetail.imageURL;
           this.previousBlockData=blockData;
-          this.imageBlockId=uploadImageBlockResponse.generationId;
-          this.router.navigate([],{ queryParams: { imageBlockId: uploadImageBlockResponse.generationId } });
+          this.imageBlockId=uploadImageBlockResponse.generatedImageDetail.generationId;
+          this.router.navigate([],{ queryParams: { imageBlockId: uploadImageBlockResponse.generatedImageDetail.generationId } });
       }
     }
   

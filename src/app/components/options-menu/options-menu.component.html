@@ -25,7 +25,7 @@
           (click)="showImageOptions=!showImageOptions"
         >
           <div class="fs-6 fw-semibold">Image Options</div>
-          <fa-icon class="ms-2 text-primary" [icon]="showImageOptions?dropUpIcon:dropDownIcon"></fa-icon>
+          <fa-icon class="ms-2 primary-text-color" [icon]="showImageOptions?dropUpIcon:dropDownIcon"></fa-icon>
         </div>
 
         <div [style.display]="showImageOptions?'block':'none'">
@@ -60,7 +60,7 @@
           (click)="showFontProperties=!showFontProperties"
         >
           <div class="fs-6 fw-semibold">Font Properties</div>
-          <fa-icon class="ms-2 text-primary" [icon]="showFontProperties?dropUpIcon:dropDownIcon"></fa-icon>
+          <fa-icon class="ms-2 primary-text-color" [icon]="showFontProperties?dropUpIcon:dropDownIcon"></fa-icon>
         </div>
 
         <div [style.display]="showFontProperties?'block':'none'">
@@ -122,7 +122,7 @@
           (click)="showPlaceHolders=!showPlaceHolders"
         >
           <div class="fs-6 fw-semibold">Placeholders</div>
-          <fa-icon class="ms-2 text-primary" [icon]="showPlaceHolders?dropUpIcon:dropDownIcon"></fa-icon>
+          <fa-icon class="ms-2 primary-text-color" [icon]="showPlaceHolders?dropUpIcon:dropDownIcon"></fa-icon>
         </div>
         <div class="placeHolder-container" [style.display]="showPlaceHolders?'flex':'none'">
           <div class="placeHolder fs-5 mb-2" *ngFor="let placeholder of placeHolders" draggable="true" (dragstart)="onDragStart(placeholder)">{{placeholder}}</div>

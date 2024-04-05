@@ -57,4 +57,8 @@ export class DbServiceService {
     return this.http.get<any>(`${this.api}ImageBlockGeneration/${this.userId}`);
   }
 
+  getCounter(date:string){
+    return `${this.api}DynamicCounter/DynamicCounter.GIF?validity=${date}`;
+  }
+
 }

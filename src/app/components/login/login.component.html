@@ -1,4 +1,4 @@
-<div class="login-container bg-primary">
+<div class="login-container primary-background">
 
     <form class="card text-secondary p-3" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
 
@@ -7,13 +7,13 @@
         </div>
 
         <div class="text-center mb-3">
-            <h2 class="text-primary">Welcome</h2>
+            <h2 class="primary-text-color">Welcome</h2>
         </div>
 
         <div class="form-floating mb-3">
             <input type="email" class="form-control" id="emailInput" placeholder="name@example.com" formControlName="Email">
             <label for="emailInput" class="form-label">
-                <fa-icon [icon]="mailIcon" class="text-primary me-1"></fa-icon>
+                <fa-icon [icon]="mailIcon" class="primary-text-color me-1"></fa-icon>
                 Email address
             </label>
 
@@ -33,12 +33,12 @@
             <div class="form-floating">
                 <input [type]="passwordType" class="form-control" id="passwordInput" placeholder="Password" formControlName="Password" (focus)="clear_err_msg()">
                 <label for="passwordInput" class="form-label">
-                    <fa-icon [icon]="passwordIcon" class="text-primary me-1"></fa-icon>
+                    <fa-icon [icon]="passwordIcon" class="primary-text-color me-1"></fa-icon>
                     Password
                 </label>
             </div>
             <div>
-                <fa-icon [icon]="eyeIcon" class="btn text-primary" (click)="togglePassword()"></fa-icon>  
+                <fa-icon [icon]="eyeIcon" class="btn primary-text-color" (click)="togglePassword()"></fa-icon>  
             </div> 
         </div>
 

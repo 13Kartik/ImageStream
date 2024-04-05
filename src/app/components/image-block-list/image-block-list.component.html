@@ -1,6 +1,6 @@
 <app-navbar></app-navbar>
 <div class="container p-5">
-    <div class="box bg-primary">
+    <div class="box primary-background">
         <div class="d-flex justify-content-between align-items-center mx-3">
             <h2 class="text-center my-3">Image Block List</h2>
             <button class="btn btn-dark" type="button" (click)="openVerticallyCentered(createImg)">Create</button>
@@ -16,10 +16,10 @@
                             <span class="text-secondary mx-2">{{ block.createdOn | date:'MM/dd/yyyy HH:mm:ss' }}</span>
                         </div>
                         <button class="btn" (click)="editGeneratedImage(block.generationId)" >
-                            <fa-icon [icon]="editImageIcon" class="text-primary fs-5"  title="Edit Image"></fa-icon>
+                            <fa-icon [icon]="editImageIcon" class="primary-text-color fs-5"  title="Edit Image"></fa-icon>
                         </button>
                         <button class="btn" (click)="copyImageSrc(block.generatedURL, idx)" >
-                            <fa-icon [icon]="copyImageLinkIcon" class="text-primary fs-5"  title="Copy Image Link"></fa-icon>
+                            <fa-icon [icon]="copyImageLinkIcon" class="primary-text-color fs-5"  title="Copy Image Link"></fa-icon>
                         </button>
                     </li>
                 </div>
@@ -39,7 +39,7 @@
 
 <!-- Create Model Code -->
 <ng-template #createImg let-modal>
-    <div class="modal-header bg-primary">
+    <div class="modal-header primary-background">
         <h4 class="modal-title">Enter Image Name</h4>
 		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
 	</div>
@@ -69,7 +69,7 @@
                 <!-- [end] ImageCategory Validation error message -->
             </div>
         </div>
-        <div class="modal-footer justify-content-center bg-primary">
+        <div class="modal-footer justify-content-center primary-background">
             <button type="submit" class="btn btn-dark">Create</button>
         </div>
     </form>
@@ -86,5 +86,20 @@
 	</div>
     <div class="modal-footer justify-content-center ">
         <button type="button" class="btn btn-dark" (click)="modal.close('Close click')">Close</button>
+	</div>
+</ng-template>
+
+<ng-template #datePicker let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">{{ createNewImgForm.get('imageName')?.value }}</h4>
+		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+	</div>
+    <div class="modal-body d-flex justify-content-center">
+        <mat-card style="width: 350px;">
+            <mat-calendar [(selected)]="selected" [minDate]="minDate"></mat-calendar>
+        </mat-card>
+	</div>
+    <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-dark" (click)="generateCounter()">Generate</button>
 	</div>
 </ng-template>

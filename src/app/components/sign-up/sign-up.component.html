@@ -1,4 +1,4 @@
-<div class="login-container bg-primary main-bg">
+<div class="login-container primary-background main-bg">
     <form class="card text-secondary p-3" [formGroup]="signupForm" (ngSubmit)="onSubmit()">
         <div class="text-center mb-3">
             <a href="javascript:;">
@@ -6,7 +6,7 @@
             </a>    
         </div>
         <div class="text-center mb-3">
-            <h2 class="text-primary">Sign Up</h2>
+            <h2 class="primary-text-color">Sign Up</h2>
         </div>
 
         <!-- seprate div for first and last name start -->
@@ -75,7 +75,7 @@
                 <input type="Email" class="form-control" id="Email"
                 placeholder="name@example.com" formControlName="Email">
                 <label for="Email">
-                    <fa-icon [icon]="mailIcon" class="text-primary me-1"></fa-icon> 
+                    <fa-icon [icon]="mailIcon" class="primary-text-color me-1"></fa-icon> 
                     Email
                 </label>
             </div>
@@ -87,7 +87,7 @@
                     <div>Email is required.</div>
                 }
                 @else if(EmailValidation?.errors?.['pattern']){
-                    <div>Incorrect Email formate</div>
+                    <div>Incorrect Email format</div>
                 }
             </div>
             <!-- Email validation end -->
@@ -101,12 +101,12 @@
                     <input type={{passwordType}} class="form-control" id="password" placeholder="Password"
                     formControlName="PasswordHash" #password>
                     <label for="password">
-                        <fa-icon [icon]="passwordIcon" class="text-primary me-1"></fa-icon>
+                        <fa-icon [icon]="passwordIcon" class="primary-text-color me-1"></fa-icon>
                         Password
                     </label>
                 </div>
                 <div>
-                    <fa-icon [icon]="eyeIconPassword" class="btn-sm text-primary" (click)="togglePassword(password.type)"></fa-icon>  
+                    <fa-icon [icon]="eyeIconPassword" class="btn-sm primary-text-color" (click)="togglePassword(password.type)"></fa-icon>  
                 </div>
             </div>
 
@@ -132,13 +132,13 @@
                     <input type={{confirmPasswordType}} class="form-control" id="confirmPassword" placeholder="Confirm Password"
                     formControlName="confirmPassword" #confirmPassword>
                     <label for="confirmPassword">
-                        <fa-icon [icon]="passwordIcon" class="text-primary me-1"></fa-icon>
+                        <fa-icon [icon]="passwordIcon" class="primary-text-color me-1"></fa-icon>
                         Confirm Password
                     </label>
                     
                 </div>
                 <div>
-                    <fa-icon [icon]="eyeIconConfirmPassword" class="btn-sm text-primary" (click)="toggleConfirmPassword(confirmPassword.type)"></fa-icon> 
+                    <fa-icon [icon]="eyeIconConfirmPassword" class="btn-sm primary-text-color" (click)="toggleConfirmPassword(confirmPassword.type)"></fa-icon> 
                 </div>
             </div>
     

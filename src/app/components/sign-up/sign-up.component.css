@@ -7,8 +7,13 @@
     align-items: center;
 }
 
+h2{
+  font-size: 26px !important;
+}
+
 form{
     width: 500px;
+    border-radius: 15px !important;
 }
 
 fa-icon{
@@ -39,6 +44,11 @@ fa-icon{
   align-items: center;
   justify-content: center;
 } */
+
+.btn-signup{
+  background-color: #074eb3;
+  color: white;
+}
 
 a.dotted{
     text-decoration:underline dotted;

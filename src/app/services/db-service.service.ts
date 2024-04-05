@@ -32,6 +32,8 @@ export class DbServiceService {
   }
 
   uploadImageBlock(blockData:object){
+    console.log('uploaded imageBlock');
+    console.log(blockData);
     return this.http.post<any>(`${this.api}ImageBlockGeneration/GenerateImage`,blockData);
   }
 
@@ -53,6 +55,10 @@ export class DbServiceService {
 
   getLoggedUserImageBlockes(){
     return this.http.get<any>(`${this.api}ImageBlockGeneration/${this.userId}`);
+  }
+
+  getCounter(date:string){
+    return `${this.api}DynamicCounter/DynamicCounter.GIF?validity=${date}`;
   }
 
 }

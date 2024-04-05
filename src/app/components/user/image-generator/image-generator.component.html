@@ -17,7 +17,7 @@
         >
             <fa-icon
             [icon]="uploadIcon"
-            class="text-primary"
+            class="primary-text-color"
             style="font-size: 60px"
             ></fa-icon>
             <h5 class="text-secondary">Set Image</h5>
@@ -29,7 +29,10 @@
         class="col-3"
         [options]="activeTextBox.controls"
         [placeHolders]="placeHolders"
+        [imageOpacity]="imageOpacity"
+        [imageBlockName]="imageBlockName"
         (onOpacityChange)="setOpacity($event)"
+        (onNameChange)="setName($event)"
         (onAddTextBox)="this.addTextBox()"
         (onPlaceHolderDrag)="onPlaceHolderDrag($event)"
         >
@@ -43,7 +46,7 @@
                 class="d-flex align-items-center justify-content-end change-img-btn"
                 style="width: 5%"
             >
-                <div class="btn bg-primary" placement="left" ngbTooltip="change Image">
+                <div class="btn primary-background" placement="left" ngbTooltip="change Image">
                     <fa-icon
                         [icon]="changeImgIcon"
                         class="text-white fs-3"

@@ -5,11 +5,11 @@
 }
 
 /* (start) Copy icon hide/show style */
-.list-group-item .text-primary {
+.list-group-item .show-icons-on-hover {
     display: none; /* Initially hide the copy icon */
 }
 
-.list-group-item:hover .text-primary {
+.list-group-item:hover .show-icons-on-hover {
     display: inline-block; /* Display the copy icon on hover */
 }
 /* (end) Copy icon hide/show style */
@@ -39,4 +39,24 @@
 
 .warning-message{
     color: red;
+}
+
+/* Sidebar style(From ng Material UI) */
+.example-container {
+  width: 100%;
+  height: 100%;
+}
+
+.example-sidenav-content {
+  /* display: flex; */
+  height: 100%;
+  /* align-items: center; */
+  /* justify-content: center; */
+}
+
+.example-sidenav {
+  padding: 20px;
+  color: white;
+  /* border: 1px solid black; */
+  background-color: #44609c;
 }

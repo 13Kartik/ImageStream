@@ -1,5 +1,5 @@
 <app-navbar></app-navbar>
-<div class="container p-5">
+<div class="container p-5 text-light">
     <div class="box primary-background">
         <div class="d-flex justify-content-between align-items-center mx-3">
             <h2 class="text-center my-3">Image Block List</h2>
@@ -40,7 +40,7 @@
 <!-- Create Model Code -->
 <ng-template #createImg let-modal>
     <div class="modal-header primary-background">
-        <h4 class="modal-title">Enter Image Name</h4>
+        <h4 class="modal-title text-light">Enter Image Name</h4>
 		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
 	</div>
     <form [formGroup]="createNewImgForm" (ngSubmit)="createNewImage(); modal.dismiss('Cross click')">

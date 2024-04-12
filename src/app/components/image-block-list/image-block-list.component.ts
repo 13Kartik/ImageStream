@@ -132,7 +132,7 @@ export class ImageBlockListComponent implements OnInit {
   editGeneratedImage(event: MouseEvent,generationId: string) {
     event.stopPropagation();
     this.paginationService.storeCurrentPage(this.page);
-    this.router.navigate(['/user/ImageGenerator'], {
+    this.router.navigate(['/imageGenerator'], {
       queryParams: { imageBlockId: generationId },
     });
   }
@@ -143,7 +143,7 @@ export class ImageBlockListComponent implements OnInit {
     if (this.createNewImgForm.get('imageCategory')?.value === 'counter') {
       this.createNewModal = this.openVerticallyCentered(this.datePicker);
     } else {
-      this.router.navigate(['/user/ImageGenerator'], {
+      this.router.navigate(['/imageGenerator'], {
         queryParams: {
           name: this.createNewImgForm.get('imageName')?.value,
           category: this.createNewImgForm.get('imageCategory')?.value,

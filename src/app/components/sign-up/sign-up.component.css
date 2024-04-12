@@ -25,7 +25,7 @@ fa-icon{
     border: 0px;
 }
 
-/* .password-container{
+.password-container{
   width: 100%;
   display: flex;
   border: 1px solid #dee2e6;
@@ -43,7 +43,7 @@ fa-icon{
   display: flex;
   align-items: center;
   justify-content: center;
-} */
+}
 
 .btn-signup{
   background-color: #074eb3;

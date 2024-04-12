@@ -10,9 +10,9 @@ import { FormsModule } from '@angular/forms';
 import { FormGroup, ReactiveFormsModule, FormControl } from '@angular/forms';
 
 //components
-import { DynamicTextInputComponent } from '../../dynamic-text-input/dynamic-text-input.component';
-import { SelectImageComponent } from '../../select-image/select-image.component';
-import { OptionsMenuComponent } from '../../options-menu/options-menu.component';
+import { DynamicTextInputComponent } from '../dynamic-text-input/dynamic-text-input.component';
+import { SelectImageComponent } from '../select-image/select-image.component';
+import { OptionsMenuComponent } from '../options-menu/options-menu.component';
 
 //modal
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
@@ -28,7 +28,7 @@ import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 
 //database
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { DbServiceService } from '../../../services/db-service.service';
+import { DbServiceService } from '../../services/db-service.service';
 import { HttpClientModule } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 
@@ -36,11 +36,11 @@ import { firstValueFrom } from 'rxjs';
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 
 //drag and drop
-import { TextBoxComponent } from '../../text-box/text-box.component';
+import { TextBoxComponent } from '../text-box/text-box.component';
 import { CdkDrag,CdkDropListGroup } from '@angular/cdk/drag-drop';
 
 //test
-import { GeneratedLinkModalComponent } from '../../generated-link-modal/generated-link-modal.component';
+import { GeneratedLinkModalComponent } from '../generated-link-modal/generated-link-modal.component';
 
 @Component({
   selector: 'app-image-generator',

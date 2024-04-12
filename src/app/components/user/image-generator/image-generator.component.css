@@ -5,8 +5,14 @@
     background-position: center center;
     display: flex;
     flex-direction: column;
-    max-width: 90%;
-    max-height: 95%;
+    /* max-width: 90%;
+    max-height: 95%; */
+    max-width: 80%;
+    max-height: 90%;
+
+    border-width: 1px ;
+    border-color: black;
+    border-style: solid ;
 }
 
 .headerTextarea{

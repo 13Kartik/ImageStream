@@ -34,6 +34,7 @@ export class OptionsMenuComponent  {
   showImageOptions:boolean=true;
   showFontProperties:boolean=true;
   showPlaceHolders:boolean=false;
+  showTextBoxOptions:boolean=false;
 
   //icons
   dropUpIcon = faCaretUp;

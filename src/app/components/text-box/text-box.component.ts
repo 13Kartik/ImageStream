@@ -93,6 +93,19 @@ export class TextBoxComponent implements AfterViewInit {
     return this.fontControls['textAlignment']?.value ?? 'left';
   }
 
+  get background() {
+    return this.fontControls['background']?.value ?? false;
+  }
+  get backgroundColor() {
+    return this.fontControls['backgroundColor']?.value ?? '#000000';
+  }
+  get border() {
+    return this.fontControls['border']?.value ?? false;
+  }
+  get borderColor() {
+    return this.fontControls['borderColor']?.value ?? '#000000';
+  }
+
   adjustTextareaHeight(event: any): void {
     // this.getMaxHeight();
     const textarea = event.target as HTMLTextAreaElement;

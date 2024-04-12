@@ -16,7 +16,10 @@ cdkDragBoundary=".img-container"
         'font-size':fontSize+'px',
         'text-align':textAlignment,
         'max-height':maxHeight,
-        'max-width':maxWidth
+        'max-width':maxWidth,
+        'border-style':border?'solid':'none',
+        'border-color':borderColor,
+        'background-color':background?backgroundColor:'transparent',
         }"
     (input)="adjustTextareaHeight($event)"
     (focus)="isActive = true"

@@ -23,7 +23,8 @@ import {provideNativeDateAdapter} from '@angular/material/core';
 
 // Material Imports 
 import { MatButtonModule } from '@angular/material/button';
-import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatDrawer, MatSidenavModule} from '@angular/material/sidenav';
+import { SidebarService } from '../../services/sidebar.service';
 
 @Component({
   selector: 'app-image-block-list',
@@ -66,7 +67,7 @@ export class ImageBlockListComponent implements OnInit {
   createNewImgForm!: FormGroup;
 
   // Variable declaration for sidebar 
-  
+  @ViewChild('drawer') drawer!: MatDrawer;
 
   //datePicker
   @ViewChild('content') content!: TemplateRef<any>;
@@ -81,7 +82,8 @@ export class ImageBlockListComponent implements OnInit {
     private router: Router,
     private paginationService: PaginationService,
     private datePipe: DatePipe,
-    private db: DbServiceService
+    private db: DbServiceService,
+    private sidebarService: SidebarService
   ) {
     this.minDate = new Date();
   }
@@ -110,6 +112,10 @@ export class ImageBlockListComponent implements OnInit {
 
     this.totalImageBlocks = 123;
     console.log('Outside subscribe', this.totalImageBlocks);
+  }
+
+  ngAfterViewInit() {
+    this.sidebarService.setDrawer(this.drawer);
   }
 
   copyImageSrc(event: MouseEvent,imageUrl: string, id: number) {

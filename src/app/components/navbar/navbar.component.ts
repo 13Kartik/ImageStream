@@ -8,6 +8,7 @@ import { faUser } from '@fortawesome/free-solid-svg-icons';
 // popOverModule import
 import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
 import { Options } from '@popperjs/core';
+import { SidebarService } from '../../services/sidebar.service';
 
 @Component({
   selector: 'app-navbar',
@@ -20,7 +21,13 @@ export class NavbarComponent {
 
   // fontawesome icon declaration
   userIcon = faUser;
-  
+
+  constructor(private sidebarService: SidebarService) {}
+
+  toggleDrawer() {
+    this.sidebarService.toggle();
+  }
+
   popperOptions = (options: Partial<Options>) => {
 		// customize placement
 		options.placement = 'left';

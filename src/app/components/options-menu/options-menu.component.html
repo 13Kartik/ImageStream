@@ -64,6 +64,69 @@
 
     <li class="list-group-item" *ngIf="options['fontSize']!==undefined">
       <div class="card p-2">
+        <div
+          class="d-flex align-items-center justify-content-center mb-3"
+          (click)="showTextBoxOptions=!showTextBoxOptions"
+        >
+          <div class="fs-6 fw-semibold">Text Box Options</div>
+          <fa-icon class="ms-2 primary-text-color" [icon]="showTextBoxOptions?dropUpIcon:dropDownIcon"></fa-icon>
+        </div>
+
+        <!-- <label for="borderSizeInput" class="form-label fs-6 ms-2">Border Size</label>
+          <input
+            type="range"
+            class="form-range mb-3"
+            min="0"
+            max="10"
+            step="1"
+            id="borderSizeInput"
+            [formControl]="options['borderSize']"
+          /> -->
+
+        <div [style.display]="showTextBoxOptions?'block':'none'">
+
+          <div class="d-flex justify-content-between mb-3">
+            <div class="card p-2 w-45">
+
+              <div class="d-flex align-items-center">
+                <input type="checkbox" class="form-check-input me-1" id="BorderInput" [formControl]="options['border']">
+                <label class="form-check-label">Border</label>
+              </div>
+
+              <div class="card p-2 mt-3">
+                <label for="borderColor" class="form-label">Color</label>
+                <input
+                  type="color"
+                  class="form-control form-control-color"
+                  id="borderColor"
+                  [formControl]="options['borderColor']"
+                />
+              </div>
+            </div>
+
+            <div class="card p-2 w-45">
+              <div class="d-flex align-items-center">
+                <input type="checkbox" class="form-check-input me-1" id="BorderInput" [formControl]="options['background']">
+                <label class="form-check-label" >Background</label>
+              </div>
+
+              <div class="card p-2 mt-3">
+                <label for="backgroundColor" class="form-label">Color</label>
+                <input
+                  type="color"
+                  class="form-control form-control-color disabled"
+                  id="backgroundColor"
+                  [formControl]="options['backgroundColor']"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </li>
+
+    <li class="list-group-item" *ngIf="options['fontSize']!==undefined">
+      <div class="card p-2">
         <div 
           class="d-flex align-items-center justify-content-center mb-3"
           (click)="showFontProperties=!showFontProperties"

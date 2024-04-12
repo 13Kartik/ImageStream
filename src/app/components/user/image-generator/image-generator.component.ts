@@ -134,13 +134,17 @@ export class ImageGeneratorComponent implements AfterViewInit {
 
   imageOpacity: number = 1;
 
-  addTextBox(text:string='Enter text',size:number=34,color:string='#3B71CA',family:string='Courier New',alignment:string='left') {
+  addTextBox(text:string='Enter text',size:number=34,color:string='#3B71CA',family:string='Courier New',alignment:string='left',background=false,backgroundColor='#000000',border=false,borderColor='#000000') {
     const textBox = new FormGroup({
       text: new FormControl(text),
       fontSize: new FormControl(size),
       fontColor: new FormControl(color),
       fontFamily: new FormControl(family),
       textAlignment: new FormControl(alignment),
+      background:new FormControl(background),
+      backgroundColor:new FormControl(backgroundColor),
+      border:new FormControl(border),
+      borderColor:new FormControl(borderColor),
     });
 
     // Push a new object into the array
@@ -162,7 +166,6 @@ export class ImageGeneratorComponent implements AfterViewInit {
     const imgContainerReact = this.el.nativeElement
       .querySelector('.img-container')
       .getBoundingClientRect();
-      console.log(imgContainerReact);
       
       const scaleHeight = this.real_height / imgContainerReact.height;
       const scaleWidth = this.real_width / imgContainerReact.width;
@@ -172,13 +175,13 @@ export class ImageGeneratorComponent implements AfterViewInit {
       if(incoming){
         newX = x/scaleWidth+imgContainerReact.x;
         newY = y/scaleHeight+imgContainerReact.y;
-        newHeight = height / scaleHeight;
+        newHeight = height / scaleHeight/1.1;
         newWidth = width / scaleWidth/(this.portrait?1.015:1.008);
       }
       else{
         newX = (x - imgContainerReact.x) * scaleWidth;
         newY = (y - imgContainerReact.y) * scaleHeight;
-        newHeight = height * scaleHeight;
+        newHeight = height * scaleHeight * 1.1;
         newWidth = width * scaleWidth*(this.portrait?1.015:1.008);
       }
 
@@ -201,12 +204,9 @@ export class ImageGeneratorComponent implements AfterViewInit {
     //create req Data:
     const textBoxesData = [];
     for (const [i, properties] of this.textBoxes.entries()) {
-      console.log(properties);
       const textBoxRef = this.el.nativeElement
         .querySelector(`#textBox_${i} textarea`)
         ?.getBoundingClientRect();
-
-      console.log(textBoxRef);
 
       const [x, y, height, width] = this.convertProperties(
         textBoxRef.x,
@@ -214,7 +214,6 @@ export class ImageGeneratorComponent implements AfterViewInit {
         textBoxRef.height,
         textBoxRef.width
         );
-
         textBoxesData.push({
         x,
         y,
@@ -229,6 +228,18 @@ export class ImageGeneratorComponent implements AfterViewInit {
     let scale:number=this.real_width / containerWidth;
     for (const textBox of textBoxesData) {
       textBox.fontSize = textBox.fontSize * scale * 3/4.15;
+
+      if(textBox.border)textBox.borderWidth = scale * 3/4.15;
+      else{
+        textBox.borderWidth=0;
+        textBox.borderColor='transparent';
+      }
+        
+
+      if(!textBox.background) textBox.backgroundColor = 'transparent';
+
+      delete textBox.border;
+      delete textBox.background;
     }
     
     // const blockData = {
@@ -253,6 +264,7 @@ export class ImageGeneratorComponent implements AfterViewInit {
           textBoxes: textBoxesData,
         },
       };
+      console.log(blockData);
       if(blockData!==this.previousBlockData){
         const uploadImageBlockResponse = await firstValueFrom(
           this.db.updateImageBlock(blockData)
@@ -271,6 +283,7 @@ export class ImageGeneratorComponent implements AfterViewInit {
           textBoxes: textBoxesData,
         }
       };
+      console.log(blockData);
       if(blockData!==this.previousBlockData){
         const uploadImageBlockResponse = await firstValueFrom(
           this.db.uploadImageBlock(blockData)
@@ -390,13 +403,29 @@ export class ImageGeneratorComponent implements AfterViewInit {
     });
 
     const textBoxesData = res.imageBlock.imageProperty.textBoxes;
+    console.log(textBoxesData);
     for(const [i, textBox] of textBoxesData.entries()){
+      let background,backgroundColor;
+      if(textBox.backgroundColor==='transparent'){
+        background=false;
+        backgroundColor='#000000';
+      }
+      else{
+        background=true;
+        backgroundColor=textBox.backgroundColor;
+      }
+
+      const border = textBox.borderWidth>0?true:false;
       this.addTextBox(
         textBox.text,
         textBox.fontSize,
         textBox.fontColor,
         textBox.fontFamily,
-        textBox.textAlignment
+        textBox.textAlignment,
+        background,
+        backgroundColor,
+        border,
+        textBox.borderColor
       );
 
       // Wait for the next tick to ensure the DOM is updated

@@ -60,3 +60,8 @@ ul.list-group::-webkit-scrollbar{
     border-color: var(--primary-color);
     color: white;
 }
+
+#BorderInput{
+    border-color: rgb(108,117,125,0.6);
+    margin: 0px;
+}

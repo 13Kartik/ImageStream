@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 })
 export class DbServiceService {
 
-  private api:string='http://192.168.1.94:8032/api';
+  private api:string='https://broadly-dominant-lemming.ngrok-free.app/api';
 
   private httpOptions = {
     headers:new HttpHeaders({

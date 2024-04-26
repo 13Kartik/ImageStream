@@ -5,6 +5,13 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    background-image: url("https://test-k8o5.onrender.com/generate-image"); /* The image used */
+    background-color: #cccccc; /* Used if the image is unavailable */
+    height: 700px; /* You must set a specified height */
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat; /* Do not repeat the image */
+    background-size: cover;
 }
 
 form{

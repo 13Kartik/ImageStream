@@ -8,7 +8,9 @@ import { Observable } from 'rxjs';
 })
 export class DbServiceService {
 
-  private api:string='http://192.168.1.17:8056/api/';
+  api:string='http://192.168.1.17:8056/api/';
+  // private userId:string = '9e051ee3-4858-428d-a98b-d5baad632110';
+  public userId:string|null = localStorage.getItem("userId");
 
   private httpOptions = {
     headers:new HttpHeaders({
@@ -18,17 +20,49 @@ export class DbServiceService {
   constructor(private http:HttpClient) {}
 
   login(userData:object):Observable<any>{
-    return this.http.post<any>(this.api+'/Auth/login',userData,this.httpOptions);
+    return this.http.post<any>(this.api+'StoredProcedure/executeSp',userData,this.httpOptions);
   }
 
   signUp(userData:object):Observable<any>{
-    return this.http.post<any>(this.api+'/Auth/Signup',userData,this.httpOptions);
+    return this.http.post<any>(this.api+'StoredProcedure/executeSp',userData,this.httpOptions);
   }
-  upload(file:any):Observable<any>{
-    return this.http.post<any>(this.api+'/Image/uploadImage',file);
+
+  uploadImage(file:any):Observable<any>{
+    return this.http.post<any>(this.api+'ImageBlockGeneration/UploadImage?userId='+this.userId,file);
   }
 
   uploadImageBlock(blockData:object){
-    return this.http.post<any>(this.api+'/NewStaticImages/upload',blockData);
+    console.log('uploaded imageBlock');
+    console.log(blockData);
+    return this.http.post<any>(`${this.api}ImageBlockGeneration/GenerateImage`,blockData,this.httpOptions);
   }
+
+  getUploadedImages(){
+    return this.http.get<any>(`${this.api}ImageBlockGeneration/GetAllImage/${this.userId}`);
+  }
+
+  getPlaceHolders(){
+    return this.http.get<any>(`${this.api}ImageBlockGeneration`);
+  }
+
+  getImageBlock(imageBlockId:string){
+    return this.http.get<any>(`${this.api}ImageBlockGeneration/GetUserImageBlock/${imageBlockId}`);
+  }
+
+  updateImageBlock(blockData:object){
+    return this.http.post<any>(`${this.api}ImageBlockGeneration/UpdateUserImageBlock`,blockData,this.httpOptions);
+  }
+
+  getLoggedUserImageBlockes(){
+    return this.http.get<any>(`${this.api}ImageBlockGeneration/${this.userId}`);
+  }
+
+  getCounter(date:string){
+    return `${this.api}DynamicCounter/DynamicCounter.GIF?validity=${date}`;
+  }
+
+  deleteImageBlock(imageBlockId:string){
+    return this.http.post<any>(`${this.api}ImageBlockGeneration/DeleteBlock?generationId=${imageBlockId}`,this.httpOptions);
+  }
+
 }

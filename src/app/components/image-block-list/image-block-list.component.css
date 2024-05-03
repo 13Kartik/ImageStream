@@ -1,0 +1,62 @@
+.box{
+    padding: 8px;
+    border: 1px solid black;
+    border-radius: 10px;
+}
+
+/* (start) Copy icon hide/show style */
+.list-group-item .show-icons-on-hover {
+    display: none; /* Initially hide the copy icon */
+}
+
+.list-group-item:hover .show-icons-on-hover {
+    display: inline-block; /* Display the copy icon on hover */
+}
+/* (end) Copy icon hide/show style */
+
+/* image block item hover */
+.hover-bg:hover{
+    background-color: #162b58;
+}
+
+/* crete-image model header style */
+.my-custom-header-color {
+    background-color: #88d2e1 ;
+}
+
+/* Image Preview */
+.img-preview{
+    max-height: 100%;
+    max-width: 100%;
+    align-items: center;
+}
+
+.img-body{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.warning-message{
+    color: red;
+}
+
+/* Sidebar style(From ng Material UI) */
+.example-container {
+  width: 100%;
+  height: 100%;
+}
+
+.example-sidenav-content {
+  /* display: flex; */
+  height: 100%;
+  /* align-items: center; */
+  /* justify-content: center; */
+}
+
+.example-sidenav {
+  padding: 20px;
+  color: white;
+  /* border: 1px solid black; */
+  background-color: #44609c;
+}

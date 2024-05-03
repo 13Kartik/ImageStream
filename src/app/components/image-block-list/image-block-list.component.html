@@ -1,0 +1,145 @@
+<!-- Material UI Sidebar code -->
+<mat-drawer-container class="example-container" autosize>
+  <mat-drawer #drawer class="example-sidenav" mode="over" position="end">
+    <!-- create an div for showing an user profile details -->
+    <div class="d-flex justify-content-center align-items-center">
+        <div class="d-flex flex-column justify-content-center align-items-center">
+            <div class="d-flex justify-content-center align-items-center">
+                <img src="../../../assets/images/user.png" alt="User Profile" class="rounded-circle" width="100" height="100">
+            </div>
+            <!-- [strat] User Details div -->
+            <div class="d-flex flex-column justify-content-center align-items-center">
+                <h4 class="">{{userName}}</h4>
+            </div>
+            <!-- [end] User Details div -->
+            <div class="d-flex justify-content-center align-items-center">
+                <button class="btn btn-dark" type="button" (click)="logout()">
+                    Logout
+                </button>
+            </div>
+        </div>
+    </div>
+  </mat-drawer>
+
+  <div class="example-sidenav-content">
+    <!-- main-content start -->
+    <app-navbar></app-navbar>
+    <div class="container p-5 text-light">
+        <div class="box primary-background">
+            <div class="d-flex justify-content-between align-items-center mx-3">
+                <h2 class="text-center my-3">Image Block List</h2>
+                <button class="btn btn-dark" type="button" (click)="openVerticallyCentered(createImg)">Create</button>
+            </div>
+            <!-- (starts) List of Images block -->
+            <ul class="list-group">
+                @for (block of imageBlocks | slice: (page-1) * pageSize : page * pageSize; track block.createdOn; let idx = $index) {
+                    <div class="btn list-group-item-action hover-bg" >
+                        <li 
+                            class="list-group-item d-flex justify-content-between align-items-start"
+                            (click)="openFullscreen(content, block.generatedURL, block.generationName)"
+                        >
+                            <div class="ms-2 me-auto">
+                                <div class="fw-bold">{{ block.generationName }}</div>
+                                <span class="text-secondary">Category - 1</span>
+                                <span class="text-secondary mx-2">{{ block.createdOn | date:'MM/dd/yyyy HH:mm:ss' }}</span>
+                            </div>
+                            <button class="btn" (click)="editGeneratedImage($event,block.generationId)" >
+                                <fa-icon [icon]="editImageIcon" class="primary-text-color fs-5 show-icons-on-hover"  title="Edit Image"></fa-icon>
+                            </button>
+                            <button class="btn" (click)="copyImageSrc($event,block.generatedURL, idx)" >
+                                <fa-icon [icon]="copyImageLinkIcon" class="primary-text-color fs-5 show-icons-on-hover"  title="Copy Image Link"></fa-icon>
+                            </button>
+                            <button class="btn" (click)="deleteImageBlock($event,block.generationId)" >
+                                <fa-icon [icon]="deleteIcon" class="primary-text-color fs-5 show-icons-on-hover"  title="Delete Block"></fa-icon>
+                            </button>
+                        </li>
+                    </div>
+                }
+                @empty {
+                    <p [ngStyle]="{'padding-left': '15px'}">There are No Image Blocks.</p>
+                }
+    
+            </ul>
+            <!-- (ends) List of Images block -->
+        </div>
+    </div>
+
+    <!-- Pagination Code -->
+    <ngb-pagination class="d-flex justify-content-center" [collectionSize]="totalImageBlocks" [(page)]="page" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="onPageChange($event)"/>
+    <!-- Pagination Code -->
+
+    <!-- [STARTS] Create Model Code -->
+    <ng-template #createImg let-modal>
+        <div class="modal-header primary-background">
+            <h4 class="modal-title font-color">Enter Image Name</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        </div>
+        <form [formGroup]="createNewImgForm" (ngSubmit)="createNewImage(); modal.dismiss('Cross click')">
+        <div class="modal-body">
+                <div class="form-group my-4">
+                    <input type="email" class="form-control" id="email" placeholder="Enter Image Name" formControlName="imageName">
+                    <!-- [start] ImageName Validation error message -->
+                    @if(createNewImgForm.get('imageName')?.errors?.['required'] && createNewImgForm.get('imageName')?.touched)
+                    {
+                        <p class="warning-message">Image Name is required.</p>
+                    }
+                    <!-- [end] ImageName Validation error message -->
+                </div>
+                <div class="form-group my-4">
+                    <select class="form-select" formControlName="imageCategory">
+                        <option value="" disabled selected>Choose category</option>
+                        <option value="static">Static Image</option>
+                        <option value="dynamic">Dynamic Image</option>
+                        <option value="counter">Image with Counter</option>
+                    </select>
+                    <!-- [start] ImageCategory Validation error message -->
+                    @if(createNewImgForm.get('imageCategory')?.errors?.['required'] && createNewImgForm.get('imageCategory')?.touched)
+                    {
+                        <p class="warning-message">Image Category is required.</p>
+                    }
+                    <!-- [end] ImageCategory Validation error message -->
+                </div>
+            </div>
+            <div class="modal-footer justify-content-center primary-background">
+                <button type="submit" class="btn btn-dark">Create</button>
+            </div>
+        </form>
+    </ng-template>
+    <!-- [END] Create Model Code -->
+
+    <!-- Image Show Model Code -->
+    <ng-template #content let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title">{{ imageName }}</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        </div>
+        <div class="modal-body img-body">
+            <img class="img-preview" [src]="imageUrl" alt="Generate Image">
+        </div>
+        <div class="modal-footer justify-content-center ">
+            <button type="button" class="btn btn-dark" (click)="modal.close('Close click')">Close</button>
+        </div>
+    </ng-template>    
+    <!-- Image Show Model Code -->
+
+    <!-- Date Picker Model Code -->
+    <ng-template #datePicker let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title">{{ createNewImgForm.get('imageName')?.value }}</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        </div>
+        <div class="modal-body d-flex justify-content-center">
+            <mat-card style="width: 350px;">
+                <mat-calendar [(selected)]="selected" [minDate]="minDate"></mat-calendar>
+            </mat-card>
+        </div>
+        <div class="modal-footer justify-content-center">
+            <button type="button" class="btn btn-dark" (click)="generateCounter()">Generate</button>
+        </div>
+    </ng-template>
+    <!-- Date Picker Model Code -->
+
+    <!-- main-content end -->
+  </div>
+
+</mat-drawer-container>

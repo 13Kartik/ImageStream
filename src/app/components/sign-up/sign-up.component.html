@@ -1,12 +1,12 @@
-<div class="login-container bg-primary main-bg">
+<div class="login-container primary-background main-bg">
     <form class="card text-secondary p-3" [formGroup]="signupForm" (ngSubmit)="onSubmit()">
         <div class="text-center mb-3">
             <a href="javascript:;">
                 <img src="../../../assets/images/logo.PNG" alt="Logo" class="img-fluid">
-            </a>
+            </a>    
         </div>
         <div class="text-center mb-3">
-            <h2 class="text-primary">Sign Up</h2>
+            <h2 class="primary-text-color">Sign Up</h2>
         </div>
 
         <!-- seprate div for first and last name start -->
@@ -14,20 +14,20 @@
             <!-- first name input field end -->
             <div class="col mb-3">
                 <div class="form-floating">
-                    <input type="text" class="form-control" id="firstName" placeholder="First Name"
-                        formControlName="firstName">
-                    <label for="firstName">First Name</label>
+                    <input type="text" class="form-control" id="FirstName" placeholder="First Name"
+                        formControlName="FirstName">
+                    <label for="FirstName">First Name</label>
                 </div>
                 
                 <!-- first name validation start -->
                 <div class="form-text text-danger">
-                    @if(firstNameValidation?.errors?.['required'] && firstNameValidation?.touched){
+                    @if(FirstNameValidation?.errors?.['required'] && FirstNameValidation?.touched){
                         <div>First name is required.</div>
                     }
-                    @else if(firstNameValidation?.errors?.['pattern']){
+                    @else if(FirstNameValidation?.errors?.['pattern']){
                         <div >Only characters are allowed!</div>
                         }
-                        @else if(firstNameValidation?.errors?.['minlength'])
+                        @else if(FirstNameValidation?.errors?.['minlength'])
                         {
                             <div>Atleast 3 character's required!
                             </div>
@@ -40,21 +40,21 @@
             <!-- last name input field -->
             <div class="col mb-3">
                 <div class="form-floating">
-                    <input type="text" class="form-control" id="lastName" placeholder="Last Name"
-                    formControlName="lastName">
-                    <label for="lastName">Last Name</label>
+                    <input type="text" class="form-control" id="LastName" placeholder="Last Name"
+                    formControlName="LastName">
+                    <label for="LastName">Last Name</label>
                 </div>
                 
                 
                 <!-- last name validation start -->
                 <div class="form-text text-danger">
-                    @if(lastNameValidation?.errors?.['required'] &&  lastNameValidation?.touched){
+                    @if(LastNameValidation?.errors?.['required'] &&  LastNameValidation?.touched){
                         <div>Last name is required.</div>
                     }
-                    @else if(lastNameValidation?.errors?.['pattern']){
+                    @else if(LastNameValidation?.errors?.['pattern']){
                         <div >Only characters are allowed!</div>
                     }
-                    @else if(lastNameValidation?.errors?.['minlength'])
+                    @else if(LastNameValidation?.errors?.['minlength'])
                     {
                         <div>Atleast 3 character's required!
                         </div>
@@ -67,41 +67,42 @@
         <!-- seprate div for first and last name end -->
         
 
-        <!-- user email start -->
+        <!-- user Email start -->
         <div class="mb-3">
             <div class="form-floating">
                 <!-- <div class="input-group-text">
                 </div> -->
-                <input type="email" class="form-control" id="email"
-                placeholder="name@example.com" formControlName="email">
-                <label for="email">
-                    <fa-icon [icon]="mailIcon" class="text-primary me-1"></fa-icon> 
+                <input type="Email" class="form-control" id="Email"
+                placeholder="name@example.com" formControlName="Email">
+                <label for="Email">
+                    <fa-icon [icon]="mailIcon" class="primary-text-color me-1"></fa-icon> 
                     Email
                 </label>
             </div>
 
-            <!-- email validation start -->
+            <!-- Email validation start -->
             <div class="form-text text-danger">
-                @if(emailValidation?.errors?.['required'] && emailValidation?.touched)
+                @if(EmailValidation?.errors?.['required'] && EmailValidation?.touched)
                 {
                     <div>Email is required.</div>
                 }
-                @else if(emailValidation?.errors?.['pattern']){
-                    <div>Incorrect email formate</div>
+                @else if(EmailValidation?.errors?.['pattern']){
+                    <div>Incorrect email format</div>
                 }
             </div>
-            <!-- email validation end -->
+            <!-- Email validation end -->
         </div>
-        <!-- user email end -->
+        <!-- user Email end -->
 
         <!-- user password start-->
         <div class="mb-3">
             <div class="password-container">
+            <!-- <div> -->
                 <div class="form-floating">
                     <input type={{passwordType}} class="form-control" id="password" placeholder="Password"
-                    formControlName="password" #password>
+                    formControlName="PasswordHash" #password>
                     <label for="password">
-                        <fa-icon [icon]="passwordIcon" class="text-primary me-1"></fa-icon>
+                        <fa-icon [icon]="passwordIcon" class="primary-text-color me-1"></fa-icon>
                         Password
                     </label>
                 </div>
@@ -127,19 +128,20 @@
 
         <!-- confirm password start -->
         <div class="mb-3">
-            <div class="password-container">
+            <!-- <div class="password-container"> -->
+            <div>
                 <div class="form-floating">
                     <input type={{confirmPasswordType}} class="form-control" id="confirmPassword" placeholder="Confirm Password"
                     formControlName="confirmPassword" #confirmPassword>
                     <label for="confirmPassword">
-                        <fa-icon [icon]="passwordIcon" class="text-primary me-1"></fa-icon>
+                        <fa-icon [icon]="passwordIcon" class="primary-text-color me-1"></fa-icon>
                         Confirm Password
                     </label>
                     
                 </div>
-                <div>
+                <!-- <div>
                     <fa-icon [icon]="eyeIconConfirmPassword" class="btn-sm text-primary" (click)="toggleConfirmPassword(confirmPassword.type)"></fa-icon> 
-                </div>
+                </div> -->
             </div>
     
             <!-- confirm validation -->
@@ -159,7 +161,7 @@
 
         <!-- Submit button strat -->
         <div class="text-center">
-            <button type="submit" class="btn btn-primary mb-3" [disabled]="signupForm.invalid">
+            <button type="submit" class="btn btn-signup mb-3" [disabled]="signupForm.invalid">
                 <fa-icon [icon]="loginIcon"></fa-icon> SignUp
             </button>
             <div class="text-center col-12 login-tag" style="margin-bottom: 2%;">

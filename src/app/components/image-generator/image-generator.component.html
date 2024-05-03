@@ -1,0 +1,88 @@
+<form
+  [formGroup]="activeTextBox"
+  class="page"
+  (submit)="onSubmit()"
+  (dragover)="onDragOver($event)"
+  (drop)="onDrop()"
+>
+  <div class="row">
+    @if(img_src===undefined){
+        <div
+        id="img-preview"
+        class="col-12 d-flex justify-content-center align-items-center"
+        >
+        <div
+            class="card w-50 h-50 d-flex justify-content-center align-items-center border-primary"
+            (click)="openSelectImageModal()"
+        >
+            <fa-icon
+            [icon]="uploadIcon"
+            class="primary-text-color"
+            style="font-size: 60px"
+            ></fa-icon>
+            <h5 class="text-secondary">Set Image</h5>
+        </div>
+        </div>
+    } @else {
+
+        <app-options-menu
+        class="col-3"
+        [options]="activeTextBox.controls"
+        [placeHolders]="placeHolders"
+        [imageOpacity]="imageOpacity"
+        [imageBlockName]="imageBlockName"
+        (onOpacityChange)="setOpacity($event)"
+        (onNameChange)="setName($event)"
+        (onAddTextBox)="this.addTextBox()"
+        (onPlaceHolderDrag)="onPlaceHolderDrag($event)"
+        >
+        </app-options-menu>
+
+        <div
+        id="img-preview"
+        class="col-9 d-flex justify-content-center align-items-center"
+        >
+            <div
+                class="d-flex align-items-center justify-content-end change-img-btn"
+                style="width: 5%"
+            >
+                <div class="btn primary-background" placement="left" ngbTooltip="change Image">
+                    <fa-icon
+                        [icon]="changeImgIcon"
+                        class="text-white fs-3"
+                        (click)="openSelectImageModal()"
+                    ></fa-icon>
+                </div>
+            </div>
+            <div
+                #imgContainer
+                class="img-container"
+                [ngStyle]="{
+                            'height':portrait?'100%':'auto',
+                            'width':portrait?'auto':'100%',
+                            'aspect-ratio':this.aspectRatio,
+                            'background-image': 'linear-gradient(rgba(255, 255, 255,'+(1-imageOpacity)+'), rgba(255, 255, 255, '+(1-imageOpacity)+')), url(' + img_src + ')',
+                            'margin-right':'5%',
+                            }"
+            >
+                <app-text-box
+                *ngFor="let textBox of textBoxes; let index = index"
+                [id]="'textBox_' + index"
+                [fontControls]="textBox.controls"
+                (click)="changeTextBox(index)"
+                (onDelete)="deleteTextBox(index)"
+                (onPlaceHolderDrop)="onPlaceHolderDrop(index)"
+                >
+                </app-text-box>
+            </div>
+        </div>
+    }
+  </div>
+</form>
+
+<!-- Modal -->
+<app-generated-link-modal #generatedLinkModalRef></app-generated-link-modal>
+<app-select-image
+  #appSelectImageRef
+  (onSetImage)="handleImageUrl($event)"
+></app-select-image>

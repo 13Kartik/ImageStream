@@ -1,0 +1,7 @@
+.alert-container{
+    width: 100%;
+    position: fixed;
+    justify-content: center;
+    left:0%;
+    bottom: 15%;
+}

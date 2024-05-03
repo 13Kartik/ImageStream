@@ -5,21 +5,24 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
 
-    background-image: url("https://test-k8o5.onrender.com/generate-image"); /* The image used */
-    background-color: #cccccc; /* Used if the image is unavailable */
-    height: 700px; /* You must set a specified height */
-    background-position: center; /* Center the image */
-    background-repeat: no-repeat; /* Do not repeat the image */
-    background-size: cover;
+h2{
+    font-size: 22px !important;
 }
 
 form{
     width: 500px;
+    border-radius: 15px !important;
 }
 
 #RememberInput{
     border-color: rgb(108,117,125,0.6);
+}
+
+.btn-login{
+    background-color: #074eb3;
+    color: white;
 }
 
 a.dotted{

@@ -1,4 +1,4 @@
-<div class="login-container bg-primary">
+<div class="login-container primary-background">
 
     <form class="card text-secondary p-3" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
 
@@ -7,23 +7,23 @@
         </div>
 
         <div class="text-center mb-3">
-            <h2 class="text-primary">Welcome</h2>
+            <h2 class="primary-text-color">Welcome</h2>
         </div>
 
         <div class="form-floating mb-3">
-            <input type="email" class="form-control" id="emailInput" placeholder="name@example.com" formControlName="email">
+            <input type="email" class="form-control" id="emailInput" placeholder="name@example.com" formControlName="Email">
             <label for="emailInput" class="form-label">
-                <fa-icon [icon]="mailIcon" class="text-primary me-1"></fa-icon>
+                <fa-icon [icon]="mailIcon" class="primary-text-color me-1"></fa-icon>
                 Email address
             </label>
 
             <!-- validation -->
-            <div *ngIf="email?.touched"
+            <div *ngIf="Email?.touched"
               class="text-danger ms-2">
-              @if(email?.errors?.['pattern']){
+              @if(Email?.errors?.['pattern']){
                 Enter valid mail.
               }
-              @else if (email?.errors?.['required']) {
+              @else if (Email?.errors?.['required']) {
                 Email is required.
               }
             </div>
@@ -31,24 +31,24 @@
 
         <div class="password-container">
             <div class="form-floating">
-                <input [type]="passwordType" class="form-control" id="passwordInput" placeholder="Password" formControlName="password" (focus)="clear_err_msg()">
+                <input [type]="passwordType" class="form-control" id="passwordInput" placeholder="Password" formControlName="Password" (focus)="clear_err_msg()">
                 <label for="passwordInput" class="form-label">
-                    <fa-icon [icon]="passwordIcon" class="text-primary me-1"></fa-icon>
+                    <fa-icon [icon]="passwordIcon" class="primary-text-color me-1"></fa-icon>
                     Password
                 </label>
             </div>
             <div>
-                <fa-icon [icon]="eyeIcon" class="btn text-primary" (click)="togglePassword()"></fa-icon>  
+                <fa-icon [icon]="eyeIcon" class="btn primary-text-color" (click)="togglePassword()"></fa-icon>  
             </div> 
         </div>
 
         <!-- validation -->
-        <div *ngIf="password?.touched"
+        <div *ngIf="Password?.touched"
             class="text-danger ms-2">
             @if(err_msg.length){
                 {{err_msg}}
             }
-            @else if(password?.errors?.['required']){
+            @else if(Password?.errors?.['required']){
                 Password is required.
             }
         </div>
@@ -59,12 +59,12 @@
                 <label class="form-check-label" for="RememberInput">Remember me</label>
             </div>
             <div class="text-end col-6">
-                <a class="me-3" href="./forgotPassword" style="text-decoration: none;">Forgot Password</a>
+                <a class="me-3 primary-text-color" href="./forgotPassword" style="text-decoration: none;">Forgot Password</a>
             </div>
         </div>
 
         <div class="text-center mb-3">
-            <button type="submit" class="btn btn-primary" [disabled]="loginForm.invalid">Login <fa-icon [icon]="loginIcon" class="ms-1"></fa-icon> </button>
+            <button type="submit" class="btn btn-login" [disabled]="loginForm.invalid">Login <fa-icon [icon]="loginIcon" class="ms-1"></fa-icon> </button>
         </div>
         <div class="text-center fs-6 mb-3">
             not a member? <a routerLink="/signup" class="dotted text-secondary">Sign up now</a>

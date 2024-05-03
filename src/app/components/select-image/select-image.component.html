@@ -1,0 +1,37 @@
+<ng-template #selectImageModal let-modal>
+    <div class="page-container">
+        <div class="modal-header">
+            <h4 class="modal-title ms-3">Select Image</h4>
+            <button type="button" class="btn-close me-3" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        </div>
+        <div class="image-list modal-body">
+            @if(page===1){
+                <div class="image-row">
+                    <div class="image-item upload-btn btn card border-primary" (click)="fileInput.click()">
+                        <input #fileInput type="file" [style.display]="'none'" (change)="uploadImage($event)">
+                        <fa-icon class="primary-text-color fs-1" [icon]="imgIcon"></fa-icon>
+                        <p class="text-secondary">Upload New Image</p>
+                    </div>
+                    <div *ngFor="let img of img_row_1" class="image-item card" (click)="setImage(img.imageId,storagePath+img.imagePath)">
+                        <img class="rounded" height="100%" width="auto" [src]="storagePath+img.imagePath">
+                    </div>
+                </div>
+                <div *ngFor="let row of imgLinkList_2d.slice(0,2)" class="image-row">
+                    <div *ngFor="let img of row" class="image-item" (click)="setImage(img.imageId,storagePath+img.imagePath)">
+                        <img class="rounded" height="100%" width="100%" [src]="storagePath+img.imagePath">
+                    </div>
+                </div>
+            }
+            @else {
+                <div *ngFor="let row of imgLinkList_2d.slice(3*page-4,3*page-1)" class="image-row">
+                    <div *ngFor="let img of row" class="image-item" (click)="setImage(img.imageId,storagePath+img.imagePath)">
+                        <img class="rounded" height="100%" width="100%" [src]="storagePath+img.imagePath">
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="modal-footer">
+            <ngb-pagination [collectionSize]="collectionSize" [(page)]="page" [pageSize]="15" [maxSize]="3" size="3" [rotate]="true" [boundaryLinks]="true"/>
+        </div>
+    </div>
+</ng-template>

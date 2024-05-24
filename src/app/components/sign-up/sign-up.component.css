@@ -50,6 +50,11 @@ fa-icon{
   color: white;
 }
 
+.btn-signup{
+  background-color: #074eb3;
+  color: white;
+}
+
 a.dotted{
     text-decoration:underline dotted;
 }

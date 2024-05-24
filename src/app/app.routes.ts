@@ -1,8 +1,7 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './components/login/login.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
-import { ImageGeneratorComponent } from './components/user/image-generator/image-generator.component';
-import { UserComponent } from './components/user/user.component';
+import { ImageGeneratorComponent } from './components/image-generator/image-generator.component';
 import { SignUpComponent } from './components/sign-up/sign-up.component';
 import { ImageBlockListComponent } from './components/image-block-list/image-block-list.component';
 
@@ -12,7 +11,7 @@ import { SelectImageComponent } from './components/select-image/select-image.com
 export const routes: Routes = [
     {
         path:'',
-        redirectTo:'/login',
+        redirectTo:localStorage.getItem('userId') ? '/imageList' : '/login',
         pathMatch:'full'    
     },
     {
@@ -25,12 +24,8 @@ export const routes: Routes = [
         title: 'Image List'
     },
     {
-        path:'user',
-        component:UserComponent,
-        children:[{
-            path:'ImageGenerator',
-            component:ImageGeneratorComponent
-        }]
+        path:'imageGenerator',
+        component:ImageGeneratorComponent,
     },
     {
         path: 'signup',

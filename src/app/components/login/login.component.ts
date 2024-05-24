@@ -75,6 +75,7 @@ export class LoginComponent {
           console.log(res);
           this.router.navigate(['/imageList']);
           localStorage.setItem("userId", res.userId);
+          localStorage.setItem("userName", res.userName);
         },
       error:(error) => {
           if (error.status === 400) {

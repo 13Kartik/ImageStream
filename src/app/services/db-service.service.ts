@@ -34,7 +34,7 @@ export class DbServiceService {
   uploadImageBlock(blockData:object){
     console.log('uploaded imageBlock');
     console.log(blockData);
-    return this.http.post<any>(`${this.api}ImageBlockGeneration/GenerateImage`,blockData);
+    return this.http.post<any>(`${this.api}ImageBlockGeneration/GenerateImage`,blockData,this.httpOptions);
   }
 
   getUploadedImages(){
@@ -50,7 +50,7 @@ export class DbServiceService {
   }
 
   updateImageBlock(blockData:object){
-    return this.http.post<any>(`${this.api}ImageBlockGeneration/UpdateUserImageBlock`,blockData);
+    return this.http.post<any>(`${this.api}ImageBlockGeneration/UpdateUserImageBlock`,blockData,this.httpOptions);
   }
 
   getLoggedUserImageBlockes(){
